@@ -1,4 +1,4 @@
-package de.blackforestsolutions.dravelopsotgstargateservice.configuration;
+package de.blackforestsolutions.dravelopsstargateservice.configuration;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringBootConfiguration;

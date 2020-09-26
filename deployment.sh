@@ -2,7 +2,7 @@
 
 DOCKER_TAG=$1
 DOCKERFILE_PATH=Dockerfile
-IMAGE_NAME=dravelopsotgstargateservice
+IMAGE_NAME=dravelopsstargateservice
 DOCKER_REPO=blackforestsolutions
 targetImage=$DOCKER_REPO/$IMAGE_NAME
 targetImageTagged=$targetImage:$DOCKER_TAG

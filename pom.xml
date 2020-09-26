@@ -5,8 +5,8 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.springframework</groupId>
-    <artifactId>dravelopsotgstargateservice</artifactId>
-    <version>0.0.0</version>
+    <artifactId>dravelopsstargateservice</artifactId>
+    <version>0.0.1</version>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -239,8 +239,8 @@
                         <configuration>
                             <excludes>
                                 <!-- configuration exclude -->
-                                <exclude>**/*de/blackforestsolutions/dravelopsotgstargateservice/configuration/*</exclude>
-                                <exclude>**/*de/blackforestsolutions/dravelopsotgstargateservice/Application.class</exclude>
+                                <exclude>**/*de/blackforestsolutions/dravelopsstargateservice/configuration/*</exclude>
+                                <exclude>**/*de/blackforestsolutions/dravelopsstargateservice/Application.class</exclude>
                             </excludes>
                             <rules>
                                 <rule>

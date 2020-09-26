@@ -1,4 +1,4 @@
-package de.blackforestsolutions.dravelopsotgstargateservice;
+package de.blackforestsolutions.dravelopsstargateservice;
 
 public class Dummy {
 
