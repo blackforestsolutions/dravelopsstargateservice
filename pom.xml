@@ -20,7 +20,7 @@
         <lombok.version>1.18.8</lombok.version>
         <jaxws.version>2.3.2</jaxws.version>
         <blackforestsolutions.dravelopsdatamodel.version>0.1.0</blackforestsolutions.dravelopsdatamodel.version>
-        <blackforestsolutions.dravelopsfrontenddatamodel.version>0.1.0</blackforestsolutions.dravelopsfrontenddatamodel.version>
+        <blackforestsolutions.dravelopstestdatamodel.version>0.3.0</blackforestsolutions.dravelopstestdatamodel.version>
         <blackforestsolutions.dravelopsgeneratedcontent.version>0.1.0</blackforestsolutions.dravelopsgeneratedcontent.version>
         <!-- Maven test Dependencies -->
         <assertj.version>3.9.0</assertj.version>
@@ -86,11 +86,6 @@
         </dependency>
         <dependency>
             <groupId>com.github.blackforestsolutions</groupId>
-            <artifactId>dravelopsdatamodel</artifactId>
-            <version>${blackforestsolutions.dravelopsfrontenddatamodel.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.github.blackforestsolutions</groupId>
             <artifactId>dravelopsgeneratedcontent</artifactId>
             <version>${blackforestsolutions.dravelopsgeneratedcontent.version}</version>
         </dependency>
@@ -141,6 +136,13 @@
             <groupId>io.projectreactor</groupId>
             <artifactId>reactor-test</artifactId>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.github.blackforestsolutions</groupId>
+            <artifactId>dravelopstestdatamodel</artifactId>
+            <version>${blackforestsolutions.dravelopstestdatamodel.version}</version>
+            <scope>test</scope>
+            <type>test-jar</type>
         </dependency>
     </dependencies>
 
