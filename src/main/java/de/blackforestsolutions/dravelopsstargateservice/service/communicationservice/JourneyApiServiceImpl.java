@@ -1,6 +1,7 @@
 package de.blackforestsolutions.dravelopsstargateservice.service.communicationservice;
 
 import de.blackforestsolutions.dravelopsdatamodel.Journey;
+import de.blackforestsolutions.dravelopsdatamodel.Optimization;
 import de.blackforestsolutions.dravelopsdatamodel.util.ApiToken;
 import de.blackforestsolutions.dravelopsdatamodel.util.DravelOpsExceptionHandler;
 import de.blackforestsolutions.dravelopsstargateservice.service.supportservice.RequestTokenHandlerService;
@@ -30,9 +31,9 @@ public class JourneyApiServiceImpl implements JourneyApiService {
     }
 
     @Override
-    public Mono<List<Journey>> retrieveJourneysFromApiService(float departureLongitude, float departureLatitude, float arrivalLongitude, float arrivalLatitude, ZonedDateTime dateTime, boolean isArrivalDateTime, Locale language) {
+    public Mono<List<Journey>> retrieveJourneysFromApiService(float departureLongitude, float departureLatitude, float arrivalLongitude, float arrivalLatitude, ZonedDateTime dateTime, boolean isArrivalDateTime, Optimization optimize, Locale language) {
         return Mono.just(PLACEHOLDER)
-                .map(placeholder -> requestTokenHandlerService.getRequestApiTokenWith(departureLongitude, departureLatitude, arrivalLongitude, arrivalLatitude, dateTime, isArrivalDateTime, language))
+                .map(placeholder -> requestTokenHandlerService.getRequestApiTokenWith(departureLongitude, departureLatitude, arrivalLongitude, arrivalLatitude, dateTime, isArrivalDateTime, optimize, language))
                 .map(userRequestToken -> requestTokenHandlerService.getRequestApiTokenWith(userRequestToken, mapperServiceApiToken))
                 .flatMapMany(otpMapperApiService::getJourneysBy)
                 .flatMap(dravelOpsExceptionHandler::handleExceptions)

@@ -1,5 +1,6 @@
 package de.blackforestsolutions.dravelopsstargateservice.service.supportservice;
 
+import de.blackforestsolutions.dravelopsdatamodel.Optimization;
 import de.blackforestsolutions.dravelopsdatamodel.util.ApiToken;
 import org.springframework.data.geo.Point;
 import org.springframework.stereotype.Service;
@@ -11,11 +12,12 @@ import java.util.Locale;
 public class RequestTokenHandlerServiceImpl implements RequestTokenHandlerService {
 
     @Override
-    public ApiToken getRequestApiTokenWith(float departureLongitude, float departureLatitude, float arrivalLongitude, float arrivalLatitude, ZonedDateTime dateTime, boolean isArrivalDateTime, Locale language) {
+    public ApiToken getRequestApiTokenWith(float departureLongitude, float departureLatitude, float arrivalLongitude, float arrivalLatitude, ZonedDateTime dateTime, boolean isArrivalDateTime, Optimization optimize, Locale language) {
         return new ApiToken.ApiTokenBuilder()
                 .setDepartureCoordinate(new Point(departureLongitude, departureLatitude))
                 .setArrivalCoordinate(new Point(arrivalLongitude, arrivalLatitude))
                 .setDateTime(dateTime)
+                .setOptimize(optimize)
                 .setIsArrivalDateTime(isArrivalDateTime)
                 .setLanguage(language)
                 .build();
