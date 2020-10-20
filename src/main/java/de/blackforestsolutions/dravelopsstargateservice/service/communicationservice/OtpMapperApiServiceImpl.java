@@ -29,7 +29,8 @@ public class OtpMapperApiServiceImpl implements OtpMapperApiService {
     @Override
     public Flux<CallStatus<Journey>> getJourneysBy(ApiToken apiToken) {
         try {
-            return executeJourneyRequestWith(apiToken);
+            return executeJourneyRequestWith(apiToken)
+                    .onErrorResume(e -> Flux.just(new CallStatus<>(null, Status.FAILED, e)));
         } catch (Exception e) {
             return Flux.just(new CallStatus<>(null, Status.FAILED, e));
         }

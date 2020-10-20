@@ -9,5 +9,5 @@ import java.util.Locale;
 public interface RequestTokenHandlerService {
     ApiToken getRequestApiTokenWith(float departureLongitude, float departureLatitude, float arrivalLongitude, float arrivalLatitude, ZonedDateTime dateTime, boolean isArrivalDateTime, Optimization optimize, Locale language);
 
-    ApiToken getRequestApiTokenWith(ApiToken request, ApiToken configuredRequestData);
+    ApiToken getRequestApiTokenWith(ApiToken userRequest, ApiToken configuredRequestData);
 }

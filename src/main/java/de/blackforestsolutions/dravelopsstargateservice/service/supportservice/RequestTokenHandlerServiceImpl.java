@@ -24,16 +24,16 @@ public class RequestTokenHandlerServiceImpl implements RequestTokenHandlerServic
     }
 
     @Override
-    public ApiToken getRequestApiTokenWith(ApiToken request, ApiToken configuredRequestData) {
+    public ApiToken getRequestApiTokenWith(ApiToken userRequest, ApiToken configuredRequestData) {
         ApiToken.ApiTokenBuilder builderCopy = new ApiToken.ApiTokenBuilder(configuredRequestData);
-        builderCopy.setArrival(request.getArrival());
-        builderCopy.setArrivalCoordinate(request.getArrivalCoordinate());
-        builderCopy.setDeparture(request.getDeparture());
-        builderCopy.setDepartureCoordinate(request.getDepartureCoordinate());
-        builderCopy.setDateTime(request.getDateTime());
-        builderCopy.setOptimize(request.getOptimize());
-        builderCopy.setIsArrivalDateTime(request.getIsArrivalDateTime());
-        builderCopy.setLanguage(request.getLanguage());
+        builderCopy.setArrival(userRequest.getArrival());
+        builderCopy.setArrivalCoordinate(userRequest.getArrivalCoordinate());
+        builderCopy.setDeparture(userRequest.getDeparture());
+        builderCopy.setDepartureCoordinate(userRequest.getDepartureCoordinate());
+        builderCopy.setDateTime(userRequest.getDateTime());
+        builderCopy.setOptimize(userRequest.getOptimize());
+        builderCopy.setIsArrivalDateTime(userRequest.getIsArrivalDateTime());
+        builderCopy.setLanguage(userRequest.getLanguage());
         return builderCopy.build();
     }
 }

@@ -17,7 +17,7 @@ import java.time.ZonedDateTime;
 import java.util.Locale;
 
 import static de.blackforestsolutions.dravelopsdatamodel.util.DravelOpsHttpCallBuilder.buildUrlWith;
-import static de.blackforestsolutions.dravelopsstargateservice.testutils.TestUtils.retrieveJsonToPojo;
+import static de.blackforestsolutions.dravelopstestdatamodel.testutils.TestUtils.retrieveJsonToPojo;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -53,7 +53,6 @@ class OtpMapperCallServiceIT {
                     return true;
                 })
                 .verifyComplete();
-
     }
 
 

@@ -3,7 +3,7 @@ package de.blackforestsolutions.dravelopsstargateservice.service.communicationse
 import de.blackforestsolutions.dravelopsdatamodel.Journey;
 import de.blackforestsolutions.dravelopsdatamodel.Optimization;
 import de.blackforestsolutions.dravelopsdatamodel.util.ApiToken;
-import de.blackforestsolutions.dravelopsdatamodel.util.DravelOpsExceptionHandler;
+import de.blackforestsolutions.dravelopsstargateservice.exceptionhandling.ExceptionHandlerService;
 import de.blackforestsolutions.dravelopsstargateservice.service.supportservice.RequestTokenHandlerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,13 +18,14 @@ public class JourneyApiServiceImpl implements JourneyApiService {
 
     private static final String PLACEHOLDER = "placeholder";
 
-    private final DravelOpsExceptionHandler dravelOpsExceptionHandler = new DravelOpsExceptionHandler();
+    private final ExceptionHandlerService exceptionHandlerService;
     private final RequestTokenHandlerService requestTokenHandlerService;
     private final OtpMapperApiService otpMapperApiService;
     private final ApiToken mapperServiceApiToken;
 
     @Autowired
-    public JourneyApiServiceImpl(RequestTokenHandlerService requestTokenHandlerService, OtpMapperApiService otpMapperApiService, ApiToken mapperServiceApiToken) {
+    public JourneyApiServiceImpl(ExceptionHandlerService exceptionHandlerService, RequestTokenHandlerService requestTokenHandlerService, OtpMapperApiService otpMapperApiService, ApiToken mapperServiceApiToken) {
+        this.exceptionHandlerService = exceptionHandlerService;
         this.requestTokenHandlerService = requestTokenHandlerService;
         this.otpMapperApiService = otpMapperApiService;
         this.mapperServiceApiToken = mapperServiceApiToken;
@@ -36,9 +37,9 @@ public class JourneyApiServiceImpl implements JourneyApiService {
                 .map(placeholder -> requestTokenHandlerService.getRequestApiTokenWith(departureLongitude, departureLatitude, arrivalLongitude, arrivalLatitude, dateTime, isArrivalDateTime, optimize, language))
                 .map(userRequestToken -> requestTokenHandlerService.getRequestApiTokenWith(userRequestToken, mapperServiceApiToken))
                 .flatMapMany(otpMapperApiService::getJourneysBy)
-                .flatMap(dravelOpsExceptionHandler::handleExceptions)
+                .flatMap(exceptionHandlerService::handleExceptions)
                 .collectList()
-                .doOnError(dravelOpsExceptionHandler::handleExceptions);
+                .doOnError(exceptionHandlerService::handleExceptions);
     }
 
 }
