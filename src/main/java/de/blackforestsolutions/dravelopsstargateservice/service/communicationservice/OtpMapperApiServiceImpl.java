@@ -62,6 +62,6 @@ public class OtpMapperApiServiceImpl implements OtpMapperApiService {
         return Mono.just(json)
                 .flatMap(journeyJson -> mapper.mapJsonToPojo(journeyJson, Journey.class))
                 .map(journey -> new CallStatus<>(journey, Status.SUCCESS, null))
-                .doOnError(error -> new CallStatus<>(null, Status.FAILED, error));
+                .onErrorResume(error -> Mono.just(new CallStatus<>(null, Status.FAILED, error)));
     }
 }

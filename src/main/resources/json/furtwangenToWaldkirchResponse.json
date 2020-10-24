@@ -1,0 +1,178 @@
+{
+  "legs" : [ {
+    "departure" : {
+      "name" : "Am Großhausberg 8",
+      "point" : {
+        "x" : 8.209972,
+        "y" : 48.04832
+      },
+      "arrivalTime" : null,
+      "departureTime" : "2020-09-30T13:08:13+02:00",
+      "platform" : ""
+    },
+    "arrival" : {
+      "name" : "Furtwangen Ilbenstraße",
+      "point" : {
+        "x" : 8.198995,
+        "y" : 48.047922
+      },
+      "arrivalTime" : "2020-09-30T13:20:59+02:00",
+      "departureTime" : "2020-09-30T13:21:00+02:00",
+      "platform" : ""
+    },
+    "delayInMinutes" : 0,
+    "distanceInKilometers" : 0.977,
+    "vehicleType" : "WALK",
+    "waypoints" : [ {
+      "x" : 7.95293,
+      "y" : 48.09047
+    } ],
+    "travelProvider" : null,
+    "vehicleNumber" : "",
+    "vehicleName" : "",
+    "intermediateStops" : [ ]
+  }, {
+    "departure" : {
+      "name" : "Furtwangen Ilbenstraße",
+      "point" : {
+        "x" : 8.198995,
+        "y" : 48.047922
+      },
+      "arrivalTime" : "2020-09-30T13:20:59+02:00",
+      "departureTime" : "2020-09-30T13:21:00+02:00",
+      "platform" : ""
+    },
+    "arrival" : {
+      "name" : "Bleibach SEV",
+      "point" : {
+        "x" : 7.998644,
+        "y" : 48.127233
+      },
+      "arrivalTime" : "2020-09-30T14:05:00+02:00",
+      "departureTime" : "2020-09-30T14:12:00+02:00",
+      "platform" : ""
+    },
+    "delayInMinutes" : 0,
+    "distanceInKilometers" : 26.394,
+    "vehicleType" : "BUS",
+    "waypoints" : [ {
+      "x" : 7.95293,
+      "y" : 48.09047
+    } ],
+    "travelProvider" : {
+      "name" : "Sonstige",
+      "url" : "https://www.suedbadenbus.de/suedbadenbus/view/index.shtml"
+    },
+    "vehicleNumber" : "272",
+    "vehicleName" : "Waldkirch Gymnasium - Furtwangen Rößleplatz",
+    "intermediateStops" : [ {
+      "name" : "Gütenbach Rathaus",
+      "point" : {
+        "x" : 8.138826,
+        "y" : 48.044378
+      },
+      "arrivalTime" : "2020-09-30T13:31:00+02:00",
+      "departureTime" : "2020-09-30T13:31:00+02:00",
+      "platform" : ""
+    }, {
+      "name" : "Simonswald Rathaus",
+      "point" : {
+        "x" : 8.056936,
+        "y" : 48.100225
+      },
+      "arrivalTime" : "2020-09-30T13:52:00+02:00",
+      "departureTime" : "2020-09-30T13:52:00+02:00",
+      "platform" : ""
+    } ]
+  }, {
+    "departure" : {
+      "name" : "Bleibach SEV",
+      "point" : {
+        "x" : 7.998644,
+        "y" : 48.127233
+      },
+      "arrivalTime" : "2020-09-30T14:05:00+02:00",
+      "departureTime" : "2020-09-30T14:12:00+02:00",
+      "platform" : ""
+    },
+    "arrival" : {
+      "name" : "Waldkirch Kastelberghalle",
+      "point" : {
+        "x" : 7.952947,
+        "y" : 48.090458
+      },
+      "arrivalTime" : "2020-09-30T14:29:00+02:00",
+      "departureTime" : "2020-09-30T14:29:01+02:00",
+      "platform" : ""
+    },
+    "delayInMinutes" : 0,
+    "distanceInKilometers" : 6.784,
+    "vehicleType" : "BUS",
+    "waypoints" : [ {
+      "x" : 7.95293,
+      "y" : 48.09047
+    } ],
+    "travelProvider" : {
+      "name" : "Sonstige",
+      "url" : "https://www.suedbadenbus.de/suedbadenbus/view/index.shtml"
+    },
+    "vehicleNumber" : "201",
+    "vehicleName" : "Oberprechtal Forellenhof - Emmendingen Bahnhof/ZOB",
+    "intermediateStops" : [ {
+      "name" : "Kollnau Bf (Bus)",
+      "point" : {
+        "x" : 7.972467,
+        "y" : 48.101665
+      },
+      "arrivalTime" : "2020-09-30T14:22:00+02:00",
+      "departureTime" : "2020-09-30T14:22:00+02:00",
+      "platform" : ""
+    }, {
+      "name" : "Waldkirch Stadtmitte",
+      "point" : {
+        "x" : 7.961104,
+        "y" : 48.093896
+      },
+      "arrivalTime" : "2020-09-30T14:26:00+02:00",
+      "departureTime" : "2020-09-30T14:26:00+02:00",
+      "platform" : ""
+    } ]
+  }, {
+    "departure" : {
+      "name" : "Waldkirch Kastelberghalle",
+      "point" : {
+        "x" : 7.952947,
+        "y" : 48.090458
+      },
+      "arrivalTime" : "2020-09-30T14:29:00+02:00",
+      "departureTime" : "2020-09-30T14:29:01+02:00",
+      "platform" : ""
+    },
+    "arrival" : {
+      "name" : "Sick AG",
+      "point" : {
+        "x" : 7.950507,
+        "y" : 48.088204
+      },
+      "arrivalTime" : "2020-09-30T14:34:56+02:00",
+      "departureTime" : null,
+      "platform" : ""
+    },
+    "delayInMinutes" : 0,
+    "distanceInKilometers" : 0.445,
+    "vehicleType" : "WALK",
+    "waypoints" : [ {
+      "x" : 7.95293,
+      "y" : 48.09047
+    } ],
+    "travelProvider" : null,
+    "vehicleNumber" : "",
+    "vehicleName" : "",
+    "intermediateStops" : [ ]
+  } ],
+  "prices" : [ {
+    "priceType" : "REGULAR",
+    "currencyCode" : "EUR",
+    "smallestCurrencyValue" : 200
+  } ]
+}

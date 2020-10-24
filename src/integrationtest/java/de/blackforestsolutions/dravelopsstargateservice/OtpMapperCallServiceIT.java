@@ -17,7 +17,7 @@ import java.time.ZonedDateTime;
 import java.util.Locale;
 
 import static de.blackforestsolutions.dravelopsdatamodel.util.DravelOpsHttpCallBuilder.buildUrlWith;
-import static de.blackforestsolutions.dravelopstestdatamodel.testutils.TestUtils.retrieveJsonToPojo;
+import static de.blackforestsolutions.dravelopsdatamodel.testutil.TestUtils.retrieveJsonToPojo;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -32,7 +32,7 @@ class OtpMapperCallServiceIT {
     private ApiToken mapperServiceApiToken;
 
     @Test
-    void test_journey() {
+    void test_journey_returns_journeys() {
         ApiToken.ApiTokenBuilder testData = new ApiToken.ApiTokenBuilder(mapperServiceApiToken);
         testData.setOptimize(Optimization.QUICK);
         testData.setIsArrivalDateTime(false);
@@ -57,7 +57,7 @@ class OtpMapperCallServiceIT {
 
 
     @Test
-    void test_journey_without_being_inside_area() {
+    void test_journey_without_being_inside_area_returns_no_journeys() {
         ApiToken.ApiTokenBuilder testData = new ApiToken.ApiTokenBuilder(mapperServiceApiToken);
         testData.setOptimize(Optimization.QUICK);
         testData.setIsArrivalDateTime(false);

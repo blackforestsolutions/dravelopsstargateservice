@@ -7,7 +7,7 @@ scalar Locale
 
 
 type Query {
-    getJourneysBy(departureLongitude: Float!, departureLatitude: Float!, arrivalLongitude: Float!, arrivalLatitude: Float!, dateTime: ZonedDateTime!, isArrivalDateTime: Boolean = true, optimize: Optimization = "QUICK", language: Locale = "de"): [Journey]
+    getJourneysBy(departureLongitude: Float!, departureLatitude: Float!, arrivalLongitude: Float!, arrivalLatitude: Float!, dateTime: String!, isArrivalDateTime: Boolean = true, optimize: Optimization = "QUICK", language: String = "de"): [Journey]
 }
 
 type Journey {
@@ -18,10 +18,10 @@ type Journey {
 type Leg {
     departure: TravelPoint,
     arrival: TravelPoint,
-    delay: Duration,
+    delayInMinutes: Duration,
     distanceInKilometers: Distance,
     vehicleType: VehicleType,
-    track: [Point],
+    waypoints: [Point],
     travelProvider: TravelProvider,
     vehicleNumber: String,
     vehicleName: String,
@@ -41,7 +41,7 @@ type Point {
 
 type TravelPoint {
     name: String,
-    coordinates: Point,
+    point: Point,
     arrivalTime: ZonedDateTime,
     departureTime: ZonedDateTime,
     platform: String

@@ -13,9 +13,9 @@ import org.springframework.http.HttpHeaders;
 import reactor.core.publisher.Flux;
 import reactor.test.StepVerifier;
 
-import static de.blackforestsolutions.dravelopstestdatamodel.objectmothers.ApiTokenObjectMother.getOtpMapperApiToken;
-import static de.blackforestsolutions.dravelopstestdatamodel.objectmothers.JourneyObjectMother.getFurtwangenToWaldkirchJourney;
-import static de.blackforestsolutions.dravelopstestdatamodel.testutils.TestUtils.toJson;
+import static de.blackforestsolutions.dravelopsdatamodel.objectmothers.ApiTokenObjectMother.getOtpMapperApiToken;
+import static de.blackforestsolutions.dravelopsdatamodel.objectmothers.JourneyObjectMother.getFurtwangenToWaldkirchJourney;
+import static de.blackforestsolutions.dravelopsdatamodel.testutil.TestUtils.toJson;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -120,6 +120,23 @@ class OtpMapperApiServiceTest {
     void test_getJourneysBy_apiToken_as_null_returns_failed_call_status_when_exception_is_thrown_outside_of_stream() {
 
         Flux<CallStatus<Journey>> result = classUnderTest.getJourneysBy(null);
+
+        StepVerifier.create(result)
+                .assertNext(error -> {
+                    assertThat(error.getStatus()).isEqualTo(Status.FAILED);
+                    assertThat(error.getCalledObject()).isNull();
+                    assertThat(error.getThrowable()).isInstanceOf(Exception.class);
+                })
+                .verifyComplete();
+    }
+
+    @Test
+    void test_getJourneysBy_apiToken_and_error_by_call_service_returns_failed_call_status() {
+        ApiToken testApiToken = getOtpMapperApiToken();
+        when(callService.post(anyString(), anyString(), any(HttpHeaders.class)))
+                .thenReturn(Flux.error(new Exception()));
+
+        Flux<CallStatus<Journey>> result = classUnderTest.getJourneysBy(testApiToken);
 
         StepVerifier.create(result)
                 .assertNext(error -> {
