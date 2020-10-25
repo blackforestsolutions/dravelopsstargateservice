@@ -1,8 +1,9 @@
 name: JAVA & DOCKER CICD
 
 on:
-  release:
-    types: [ published ]
+  push:
+    branches:
+      - master
 
 jobs:
   build:
@@ -10,6 +11,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Check out code
+        uses: actions/checkout@master
+        with:
+          fetch-depth: '0'
+
       - uses: actions/checkout@v1
 
       - name: Set up JDK 11
@@ -27,6 +33,17 @@ jobs:
       - name: Build with Maven
         run: mvn -B package --file pom.xml
 
+      - name: Bump version and push tag
+        uses: ChloePlanet/github-tag-action@master
+        id: tag-version
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          WITH_V: true
+          RELEASE_BRANCHES: master
+
+      - name: echo new tag
+        run: echo ${{ steps.tag-version.outputs.new_tag }}
+
       - name: Read Active Profile from Properties
         id: read_profile
         uses: christian-draeger/read-properties@1.0.1
@@ -41,8 +58,8 @@ jobs:
           password: ${{ secrets.DOCKER_PASS }}
 
       - name: Build Docker Image
-        run: docker build . --file Dockerfile --tag ${{ github.repository }}:${{ steps.read_profile.outputs.value }}-v${{ github.event.release.tag_name }}
+        run: docker build . --file Dockerfile --tag ${{ github.repository }}:${{ steps.read_profile.outputs.value }}-${{ steps.tag-version.outputs.new_tag }}
 
 
       - name: Push Docker Image
-        run: docker push ${{ github.repository }}:${{ steps.read_profile.outputs.value }}-v${{ github.event.release.tag_name }}
+        run: docker push ${{ github.repository }}:${{ steps.read_profile.outputs.value }}-${{ steps.tag-version.outputs.new_tag }}

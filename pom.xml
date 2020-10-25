@@ -21,7 +21,8 @@
         <jaxws.version>2.3.2</jaxws.version>
         <blackforestsolutions.dravelopsdatamodel.version>0.1.0</blackforestsolutions.dravelopsdatamodel.version>
         <blackforestsolutions.dravelopstestdatamodel.version>0.3.0</blackforestsolutions.dravelopstestdatamodel.version>
-        <blackforestsolutions.dravelopsgeneratedcontent.version>0.1.0</blackforestsolutions.dravelopsgeneratedcontent.version>
+        <blackforestsolutions.dravelopsgeneratedcontent.version>0.1.0
+        </blackforestsolutions.dravelopsgeneratedcontent.version>
         <!-- Maven test Dependencies -->
         <assertj.version>3.9.0</assertj.version>
         <junit.version>5.0.0</junit.version>
@@ -242,7 +243,8 @@
                             <excludes>
                                 <!-- configuration exclude -->
                                 <exclude>**/*de/blackforestsolutions/dravelopsstargateservice/configuration/*</exclude>
-                                <exclude>**/*de/blackforestsolutions/dravelopsstargateservice/Application.class</exclude>
+                                <exclude>**/*de/blackforestsolutions/dravelopsstargateservice/Application.class
+                                </exclude>
                             </excludes>
                             <rules>
                                 <rule>
@@ -291,38 +293,4 @@
             </plugin>
         </plugins>
     </build>
-
-    <profiles>
-        <profile>
-            <id>windows</id>
-            <activation>
-                <os>
-                    <family>windows</family>
-                </os>
-            </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <artifactId>exec-maven-plugin</artifactId>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <executions>
-                            <execution><!-- Automated Docker Push -->
-                                <id>Docker Push</id>
-                                <phase>verify</phase>
-                                <goals>
-                                    <goal>exec</goal>
-                                </goals>
-                                <configuration>
-                                    <executable>${basedir}/deployment.bat</executable>
-                                    <arguments>
-                                        <argument>${project.version}</argument>
-                                    </arguments>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
 </project>
