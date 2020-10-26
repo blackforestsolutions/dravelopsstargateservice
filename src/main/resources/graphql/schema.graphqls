@@ -8,7 +8,9 @@ scalar Locale
 
 type Query {
     getJourneysBy(departureLongitude: Float!, departureLatitude: Float!, arrivalLongitude: Float!, arrivalLatitude: Float!, dateTime: String!, isArrivalDateTime: Boolean = true, optimize: Optimization = "QUICK", language: String = "de"): [Journey]
+    getTravelPointsBy(text: String, language: String = "de"): [TravelPoint]
 }
+
 
 type Journey {
     legs: [Leg],

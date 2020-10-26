@@ -21,11 +21,11 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
-class OtpMapperApiServiceTest {
+class BackendApiServiceTest {
 
     private final CallService callService = mock(CallService.class);
 
-    private final OtpMapperApiService classUnderTest = new OtpMapperApiServiceImpl(callService);
+    private final BackendApiService classUnderTest = new BackendApiServiceImpl(callService);
 
     @BeforeEach
     void init() {
@@ -38,7 +38,7 @@ class OtpMapperApiServiceTest {
     void test_getJourneysBy_apiToken_returns_journeys() {
         ApiToken testApiToken = getOtpMapperApiToken();
 
-        Flux<CallStatus<Journey>> result = classUnderTest.getJourneysBy(testApiToken);
+        Flux<CallStatus<Journey>> result = classUnderTest.getManyBy(testApiToken, Journey.class);
 
         StepVerifier.create(result)
                 .assertNext(journey -> {
@@ -55,7 +55,7 @@ class OtpMapperApiServiceTest {
         when(callService.post(anyString(), anyString(), any(HttpHeaders.class)))
                 .thenReturn(Flux.empty());
 
-        Flux<CallStatus<Journey>> result = classUnderTest.getJourneysBy(testApiToken);
+        Flux<CallStatus<Journey>> result = classUnderTest.getManyBy(testApiToken, Journey.class);
 
         StepVerifier.create(result)
                 .expectNextCount(0L)
@@ -69,7 +69,7 @@ class OtpMapperApiServiceTest {
         ArgumentCaptor<String> bodyArg = ArgumentCaptor.forClass(String.class);
         ArgumentCaptor<HttpHeaders> httpHeadersArg = ArgumentCaptor.forClass(HttpHeaders.class);
 
-        classUnderTest.getJourneysBy(testApiToken).collectList().block();
+        classUnderTest.getManyBy(testApiToken, Journey.class).collectList().block();
 
         verify(callService, times(1)).post(urlArg.capture(), bodyArg.capture(), httpHeadersArg.capture());
         assertThat(urlArg.getValue()).isEqualTo("http://localhost:8084/otp/journeys/get");
@@ -82,7 +82,7 @@ class OtpMapperApiServiceTest {
         ApiToken.ApiTokenBuilder testApiToken = new ApiToken.ApiTokenBuilder(getOtpMapperApiToken());
         testApiToken.setHost(null);
 
-        Flux<CallStatus<Journey>> result = classUnderTest.getJourneysBy(testApiToken.build());
+        Flux<CallStatus<Journey>> result = classUnderTest.getManyBy(testApiToken.build(), Journey.class);
 
         StepVerifier.create(result)
                 .assertNext(error -> {
@@ -100,7 +100,7 @@ class OtpMapperApiServiceTest {
         when(callService.post(anyString(), anyString(), any(HttpHeaders.class)))
                 .thenReturn(Flux.just(toJson(mockedJourney), "error"));
 
-        Flux<CallStatus<Journey>> result = classUnderTest.getJourneysBy(testApiToken);
+        Flux<CallStatus<Journey>> result = classUnderTest.getManyBy(testApiToken, Journey.class);
 
         StepVerifier.create(result)
                 .assertNext(journey -> {
@@ -119,7 +119,7 @@ class OtpMapperApiServiceTest {
     @Test
     void test_getJourneysBy_apiToken_as_null_returns_failed_call_status_when_exception_is_thrown_outside_of_stream() {
 
-        Flux<CallStatus<Journey>> result = classUnderTest.getJourneysBy(null);
+        Flux<CallStatus<Journey>> result = classUnderTest.getManyBy(null, Journey.class);
 
         StepVerifier.create(result)
                 .assertNext(error -> {
@@ -136,7 +136,7 @@ class OtpMapperApiServiceTest {
         when(callService.post(anyString(), anyString(), any(HttpHeaders.class)))
                 .thenReturn(Flux.error(new Exception()));
 
-        Flux<CallStatus<Journey>> result = classUnderTest.getJourneysBy(testApiToken);
+        Flux<CallStatus<Journey>> result = classUnderTest.getManyBy(testApiToken, Journey.class);
 
         StepVerifier.create(result)
                 .assertNext(error -> {

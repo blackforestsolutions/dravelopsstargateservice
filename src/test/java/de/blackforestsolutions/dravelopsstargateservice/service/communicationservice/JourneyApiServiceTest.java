@@ -3,7 +3,6 @@ package de.blackforestsolutions.dravelopsstargateservice.service.communicationse
 import de.blackforestsolutions.dravelopsdatamodel.CallStatus;
 import de.blackforestsolutions.dravelopsdatamodel.Journey;
 import de.blackforestsolutions.dravelopsdatamodel.Status;
-import de.blackforestsolutions.dravelopsdatamodel.testutil.TestUtils;
 import de.blackforestsolutions.dravelopsdatamodel.util.ApiToken;
 import de.blackforestsolutions.dravelopsstargateservice.exceptionhandling.ExceptionHandlerService;
 import de.blackforestsolutions.dravelopsstargateservice.exceptionhandling.ExceptionHandlerServiceImpl;
@@ -29,20 +28,20 @@ class JourneyApiServiceTest {
 
     private final ExceptionHandlerService exceptionHandlerService = spy(ExceptionHandlerServiceImpl.class);
     private final RequestTokenHandlerService requestTokenHandlerService = mock(RequestTokenHandlerServiceImpl.class);
-    private final OtpMapperApiService otpMapperApiService = mock(OtpMapperApiServiceImpl.class);
+    private final BackendApiService backendApiService = mock(BackendApiServiceImpl.class);
     private final ApiToken mapperServiceApiToken = getConfiguredOtpMapperApiToken();
 
-    private final JourneyApiService classUnderTest = new JourneyApiServiceImpl(exceptionHandlerService, requestTokenHandlerService, otpMapperApiService, mapperServiceApiToken);
+    private final JourneyApiService classUnderTest = new JourneyApiServiceImpl(exceptionHandlerService, requestTokenHandlerService, backendApiService, mapperServiceApiToken);
 
     @BeforeEach
     void init() {
-        when(otpMapperApiService.getJourneysBy(any(ApiToken.class)))
+        when(backendApiService.getManyBy(any(ApiToken.class), Journey.class))
                 .thenReturn(Flux.just(
                         new CallStatus<>(getFurtwangenToWaldkirchJourney(), Status.SUCCESS, null),
                         new CallStatus<>(null, Status.FAILED, new Exception())
                 ));
 
-        when(requestTokenHandlerService.mergeApiTokensWith(any(ApiToken.class), any(ApiToken.class)))
+        when(requestTokenHandlerService.mergeJourneyApiTokensWith(any(ApiToken.class), any(ApiToken.class)))
                 .thenReturn(getOtpMapperApiToken());
     }
 
@@ -70,9 +69,9 @@ class JourneyApiServiceTest {
 
         classUnderTest.retrieveJourneysFromApiService(testData).block();
 
-        InOrder inOrder = inOrder(requestTokenHandlerService, exceptionHandlerService, otpMapperApiService);
-        inOrder.verify(requestTokenHandlerService, times(1)).mergeApiTokensWith(userRequestTokenArg.capture(),configuredTokenArg.capture());
-        inOrder.verify(otpMapperApiService, times(1)).getJourneysBy(mergedTokenArg.capture());
+        InOrder inOrder = inOrder(requestTokenHandlerService, exceptionHandlerService, backendApiService);
+        inOrder.verify(requestTokenHandlerService, times(1)).mergeJourneyApiTokensWith(userRequestTokenArg.capture(),configuredTokenArg.capture());
+        inOrder.verify(backendApiService, times(1)).getManyBy(mergedTokenArg.capture(), Journey.class);
         inOrder.verify(exceptionHandlerService, times(2)).handleExceptions(callStatusArg.capture());
         inOrder.verifyNoMoreInteractions();
         assertThat(userRequestTokenArg.getValue()).isEqualToComparingFieldByField(getUserRequestToken());
@@ -90,7 +89,7 @@ class JourneyApiServiceTest {
     @Test
     void test_retrieveJourneysFromApiService_with_userRequestToken_and_thrown_exception_by_mocked_service_returns_zero_journeys() {
         ApiToken testData = getUserRequestToken();
-        when(requestTokenHandlerService.mergeApiTokensWith(any(ApiToken.class), any(ApiToken.class)))
+        when(requestTokenHandlerService.mergeJourneyApiTokensWith(any(ApiToken.class), any(ApiToken.class)))
                 .thenThrow(new NullPointerException());
 
         Mono<List<Journey>> result = classUnderTest.retrieveJourneysFromApiService(testData);
@@ -104,7 +103,7 @@ class JourneyApiServiceTest {
     @Test
     void test_retrieveJourneysFromApiService_with_userRequestToken_and_error_stream_by_service_returns_zero_journeys() {
         ApiToken testData = getUserRequestToken();
-        when(otpMapperApiService.getJourneysBy(any(ApiToken.class)))
+        when(backendApiService.getManyBy(any(ApiToken.class), Journey.class))
                 .thenReturn(Flux.error(new Exception()));
 
         Mono<List<Journey>> result = classUnderTest.retrieveJourneysFromApiService(testData);
@@ -118,7 +117,7 @@ class JourneyApiServiceTest {
     @Test
     void test_retrieveJourneysFromApiService_with_userRequestToken_returns_zero_journeys_when_apiService_failed() {
         ApiToken testData = getUserRequestToken();
-        when(otpMapperApiService.getJourneysBy(any(ApiToken.class)))
+        when(backendApiService.getManyBy(any(ApiToken.class), Journey.class))
                 .thenReturn(Flux.just(new CallStatus<>(null, Status.FAILED, new Exception())));
 
         Mono<List<Journey>> result = classUnderTest.retrieveJourneysFromApiService(testData);
