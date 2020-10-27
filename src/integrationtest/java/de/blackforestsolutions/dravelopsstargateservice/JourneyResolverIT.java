@@ -14,7 +14,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class JourneyResolverIT {
 
     @Autowired
-    public GraphQLTestTemplate graphQLTestTemplate;
+    private GraphQLTestTemplate graphQLTestTemplate;
 
     @Test
     void test_getJourneysBy_min_parameters_graphql_file_returns_journeys() throws IOException {
@@ -29,7 +29,7 @@ public class JourneyResolverIT {
     @Test
     void test_getJourneysBy_no_result_graphql_file_returns_zero_journey() throws IOException {
 
-        GraphQLResponse response = graphQLTestTemplate.postForResource("graphql/get-journeys-no-result.graphql");
+        GraphQLResponse response = graphQLTestTemplate.postForResource("graphql/bw-get-journeys-no-result.graphql");
 
         assertThat(response.isOk()).isTrue();
         assertThat(response.readTree().get("data").get("getJourneysBy").size()).isEqualTo(0);
