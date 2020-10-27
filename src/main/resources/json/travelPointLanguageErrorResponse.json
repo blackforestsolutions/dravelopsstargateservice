@@ -1,0 +1,23 @@
+{
+  "errors": [
+    {
+      "message": "Exception while fetching data (/getTravelPointsBy) : Language is represented as a two letter country code. For example 'de', 'en', 'es'...",
+      "locations": [
+        {
+          "line": 2,
+          "column": 3
+        }
+      ],
+      "path": [
+        "getTravelPointsBy"
+      ],
+      "extensions": {
+        "invalidField": "language",
+        "classification": "DataFetchingException"
+      }
+    }
+  ],
+  "data": {
+    "getTravelPointsBy": null
+  }
+}
