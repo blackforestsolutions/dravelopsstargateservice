@@ -27,7 +27,7 @@ public class TravelPointApiServiceImpl implements TravelPointApiService {
     }
 
     @Override
-    public Mono<List<TravelPoint>> retrieveJourneysFromApiService(ApiToken userRequestToken) {
+    public Mono<List<TravelPoint>> retrieveTravelPointsFromApiService(ApiToken userRequestToken) {
         return Mono.just(userRequestToken)
                 .map(token -> requestTokenHandlerService.mergeTravelPointApiTokensWith(token, polygonServiceApiToken))
                 .flatMapMany(apiToken -> backendApiService.getManyBy(apiToken, TravelPoint.class))

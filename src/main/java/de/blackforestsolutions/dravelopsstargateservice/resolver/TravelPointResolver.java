@@ -24,7 +24,7 @@ public class TravelPointResolver implements GraphQLQueryResolver {
 
     public CompletableFuture<List<TravelPoint>> getTravelPointsBy(String text, String language) {
         ApiToken apiToken = buildRequestApiTokenWith(text, language);
-        return travelPointApiService.retrieveJourneysFromApiService(apiToken)
+        return travelPointApiService.retrieveTravelPointsFromApiService(apiToken)
                 .toFuture();
     }
 

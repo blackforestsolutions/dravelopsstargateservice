@@ -1,0 +1,13 @@
+query getTravelPoints {
+    getTravelPointsBy(text: "Sick AG") {
+        name
+        point {
+            x
+            y
+        }
+        arrivalTime
+        departureTime
+        platform
+    }
+}
+

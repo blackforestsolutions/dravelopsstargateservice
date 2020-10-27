@@ -7,5 +7,5 @@ import reactor.core.publisher.Mono;
 import java.util.List;
 
 public interface TravelPointApiService {
-    Mono<List<TravelPoint>> retrieveJourneysFromApiService(ApiToken userRequestToken);
+    Mono<List<TravelPoint>> retrieveTravelPointsFromApiService(ApiToken userRequestToken);
 }

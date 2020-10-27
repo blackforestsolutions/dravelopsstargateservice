@@ -1,0 +1,9 @@
+query getTravelPoints {
+    getTravelPointsBy(text: "Sick AG", language: "de") {
+        name
+        point {
+            x
+            y
+        }
+    }
+}
