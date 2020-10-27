@@ -1,0 +1,17 @@
+{
+  "errors" : [ {
+    "message" : "Exception while fetching data (/getJourneysBy) : Language is represented as a two letter country code. For example 'de', 'en', 'es'...",
+    "locations" : [ {
+      "line" : 2,
+      "column" : 5
+    } ],
+    "path" : [ "getJourneysBy" ],
+    "extensions" : {
+      "invalidField" : "language",
+      "classification" : "DataFetchingException"
+    }
+  } ],
+  "data" : {
+    "getJourneysBy" : null
+  }
+}

@@ -1,0 +1,85 @@
+scalar Duration
+scalar Distance
+scalar Currency
+scalar ZonedDateTime
+scalar URL
+scalar Locale
+
+
+type Query {
+    getJourneysBy(departureLongitude: Float!, departureLatitude: Float!, arrivalLongitude: Float!, arrivalLatitude: Float!, dateTime: String!, isArrivalDateTime: Boolean = true, optimize: Optimization = "QUICK", language: String = "de"): [Journey]
+}
+
+type Journey {
+    legs: [Leg],
+    prices: [Price]
+}
+
+type Leg {
+    departure: TravelPoint,
+    arrival: TravelPoint,
+    delayInMinutes: Duration,
+    distanceInKilometers: Distance,
+    vehicleType: VehicleType,
+    waypoints: [Point],
+    travelProvider: TravelProvider,
+    vehicleNumber: String,
+    vehicleName: String,
+    intermediateStops: [TravelPoint]
+}
+
+type Price {
+    priceType: PriceType,
+    currencyCode: Currency,
+    smallestCurrencyValue: Int
+}
+
+type Point {
+    x: Float,
+    y: Float
+}
+
+type TravelPoint {
+    name: String,
+    point: Point,
+    arrivalTime: ZonedDateTime,
+    departureTime: ZonedDateTime,
+    platform: String
+}
+
+type TravelProvider {
+    name: String,
+    url: URL
+}
+
+enum Optimization {
+    QUICK,
+    GREENWAYS,
+    TRANSFERS,
+    FLAT
+}
+
+enum PriceType {
+    REGULAR,
+    STUDENT,
+    SENIOR,
+    TRAM,
+    SPECIAL,
+    YOUTH
+}
+
+enum VehicleType {
+    WALK,
+    BICYCLE,
+    CAR,
+    TRAM,
+    SUBWAY,
+    RAIL,
+    BUS,
+    FERRY,
+    CABLE_CAR,
+    GONDOLA,
+    FUNICULAR,
+    TRANSIT,
+    AIRPLANE
+}

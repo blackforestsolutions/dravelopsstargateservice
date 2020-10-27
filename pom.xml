@@ -19,10 +19,10 @@
         <apache.lang-version>2.6</apache.lang-version>
         <lombok.version>1.18.8</lombok.version>
         <jaxws.version>2.3.2</jaxws.version>
-        <blackforestsolutions.dravelopsdatamodel.version>0.1.0</blackforestsolutions.dravelopsdatamodel.version>
-        <blackforestsolutions.dravelopstestdatamodel.version>0.3.0</blackforestsolutions.dravelopstestdatamodel.version>
-        <blackforestsolutions.dravelopsgeneratedcontent.version>0.1.0
-        </blackforestsolutions.dravelopsgeneratedcontent.version>
+        <graphql.spring.boot.starter.version>7.0.1</graphql.spring.boot.starter.version>
+        <graphql.java.tools.version>6.0.2</graphql.java.tools.version>
+        <blackforestsolutions.dravelopsdatamodel.version>2.0.0</blackforestsolutions.dravelopsdatamodel.version>
+        <blackforestsolutions.dravelopsgeneratedcontent.version>0.1.0</blackforestsolutions.dravelopsgeneratedcontent.version>
         <!-- Maven test Dependencies -->
         <assertj.version>3.9.0</assertj.version>
         <junit.version>5.0.0</junit.version>
@@ -52,6 +52,21 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-webflux</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.graphql-java-kickstart</groupId>
+            <artifactId>graphql-spring-boot-starter</artifactId>
+            <version>${graphql.spring.boot.starter.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.graphql-java-kickstart</groupId>
+            <artifactId>playground-spring-boot-starter</artifactId>
+            <version>${graphql.spring.boot.starter.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.graphql-java-kickstart</groupId>
+            <artifactId>graphql-java-tools</artifactId>
+            <version>${graphql.java.tools.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -105,6 +120,12 @@
             </exclusions>
         </dependency>
         <dependency>
+            <groupId>com.graphql-java-kickstart</groupId>
+            <artifactId>graphql-spring-boot-starter-test</artifactId>
+            <version>${graphql.spring.boot.starter.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>org.assertj</groupId>
             <artifactId>assertj-core</artifactId>
             <version>${assertj.version}</version>
@@ -140,8 +161,8 @@
         </dependency>
         <dependency>
             <groupId>com.github.blackforestsolutions</groupId>
-            <artifactId>dravelopstestdatamodel</artifactId>
-            <version>${blackforestsolutions.dravelopstestdatamodel.version}</version>
+            <artifactId>dravelopsdatamodel</artifactId>
+            <version>${blackforestsolutions.dravelopsdatamodel.version}</version>
             <scope>test</scope>
             <type>test-jar</type>
         </dependency>

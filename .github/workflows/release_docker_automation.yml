@@ -41,9 +41,6 @@ jobs:
           WITH_V: true
           RELEASE_BRANCHES: master
 
-      - name: echo new tag
-        run: echo ${{ steps.tag-version.outputs.new_tag }}
-
       - name: Read Active Profile from Properties
         id: read_profile
         uses: christian-draeger/read-properties@1.0.1
@@ -59,7 +56,6 @@ jobs:
 
       - name: Build Docker Image
         run: docker build . --file Dockerfile --tag ${{ github.repository }}:${{ steps.read_profile.outputs.value }}-${{ steps.tag-version.outputs.new_tag }}
-
 
       - name: Push Docker Image
         run: docker push ${{ github.repository }}:${{ steps.read_profile.outputs.value }}-${{ steps.tag-version.outputs.new_tag }}
