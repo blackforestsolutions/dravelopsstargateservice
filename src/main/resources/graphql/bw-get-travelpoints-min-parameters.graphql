@@ -1,13 +1,10 @@
-query getTravelPoints {
+query GetTravelPoints {
     getTravelPointsBy(text: "Sick AG") {
         name
         point {
             x
             y
         }
-        arrivalTime
-        departureTime
-        platform
     }
 }
 

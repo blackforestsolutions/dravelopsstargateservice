@@ -1,4 +1,4 @@
-query getTravelPoints {
+query GetTravelPoints {
     getTravelPointsBy(text: "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX") {
         name
         point {

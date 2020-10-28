@@ -1,4 +1,4 @@
-query getTravelPoints {
+query GetTravelPoints {
     getTravelPointsBy(text: "Sick AG", language: "de") {
         name
         point {

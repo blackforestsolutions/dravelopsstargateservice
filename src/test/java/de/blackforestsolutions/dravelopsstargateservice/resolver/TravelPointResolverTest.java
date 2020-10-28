@@ -74,7 +74,7 @@ class TravelPointResolverTest {
     }
 
     @Test
-    void test_getTravelPointsBy_userRequestToken_and_wrong_language_format_throws_dateTimeParsingException() {
+    void test_getTravelPointsByo_userRequestToken_and_wrong_language_format_throws_dateTimeParsingException() {
         String wrongLanguage = "";
         ApiToken testData = getTravelPointUserRequestToken();
 

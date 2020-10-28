@@ -13,7 +13,7 @@ class RequestTokenHandlerServiceTest {
 
     @Test
     void test_mergeJourneyApiTokensWith_userRequestToken_and_configuredOtpMapperApiToken_returns_merged_token_for_mapperServceCall() {
-        ApiToken userRequestApiToken = getUserRequestToken();
+        ApiToken userRequestApiToken = getJourneyUserRequestToken();
         ApiToken configuredOtpMapperApiToken = getConfiguredOtpMapperApiToken();
 
         ApiToken result = classUnderTest.mergeJourneyApiTokensWith(userRequestApiToken, configuredOtpMapperApiToken);
@@ -23,7 +23,7 @@ class RequestTokenHandlerServiceTest {
 
     @Test
     void test_mergeJourneyApiTokensWith_userRequestToken_optimize_as_null_and_configuredOtpMapperApiToken_throws_exception() {
-        ApiToken.ApiTokenBuilder userRequestApiToken = new ApiToken.ApiTokenBuilder(getUserRequestToken());
+        ApiToken.ApiTokenBuilder userRequestApiToken = new ApiToken.ApiTokenBuilder(getJourneyUserRequestToken());
         userRequestApiToken.setOptimize(null);
         ApiToken configuredOtpMapperApiToken = getConfiguredOtpMapperApiToken();
 
@@ -32,7 +32,7 @@ class RequestTokenHandlerServiceTest {
 
     @Test
     void test_mergeJourneyApiTokensWith_userRequestToken_dateTime_as_null_and_configuredOtpMapperApiToken_throws_exception() {
-        ApiToken.ApiTokenBuilder userRequestApiToken = new ApiToken.ApiTokenBuilder(getUserRequestToken());
+        ApiToken.ApiTokenBuilder userRequestApiToken = new ApiToken.ApiTokenBuilder(getJourneyUserRequestToken());
         userRequestApiToken.setDateTime(null);
         ApiToken configuredOtpMapperApiToken = getConfiguredOtpMapperApiToken();
 
@@ -41,7 +41,7 @@ class RequestTokenHandlerServiceTest {
 
     @Test
     void test_mergeJourneyApiTokensWith_userRequestToken_departureCoordinate_as_null_and_configuredOtpMapperApiToken_throws_exception() {
-        ApiToken.ApiTokenBuilder userRequestApiToken = new ApiToken.ApiTokenBuilder(getUserRequestToken());
+        ApiToken.ApiTokenBuilder userRequestApiToken = new ApiToken.ApiTokenBuilder(getJourneyUserRequestToken());
         userRequestApiToken.setDepartureCoordinate(null);
         ApiToken configuredOtpMapperApiToken = getConfiguredOtpMapperApiToken();
 
@@ -50,7 +50,7 @@ class RequestTokenHandlerServiceTest {
 
     @Test
     void test_mergeJourneyApiTokensWith_userRequestToken_arrivalCoordinate_as_null_and_configuredOtpMapperApiToken_throws_exception() {
-        ApiToken.ApiTokenBuilder userRequestApiToken = new ApiToken.ApiTokenBuilder(getUserRequestToken());
+        ApiToken.ApiTokenBuilder userRequestApiToken = new ApiToken.ApiTokenBuilder(getJourneyUserRequestToken());
         userRequestApiToken.setArrivalCoordinate(null);
         ApiToken configuredOtpMapperApiToken = getConfiguredOtpMapperApiToken();
 
@@ -59,7 +59,7 @@ class RequestTokenHandlerServiceTest {
 
     @Test
     void test_mergeJourneyApiTokensWith_userRequestToken_language_as_null_and_configuredOtpMapperApiToken_throws_exception() {
-        ApiToken.ApiTokenBuilder userRequestApiToken = new ApiToken.ApiTokenBuilder(getUserRequestToken());
+        ApiToken.ApiTokenBuilder userRequestApiToken = new ApiToken.ApiTokenBuilder(getJourneyUserRequestToken());
         userRequestApiToken.setLanguage(null);
         ApiToken configuredOtpMapperApiToken = getConfiguredOtpMapperApiToken();
 

@@ -3,7 +3,6 @@ package de.blackforestsolutions.dravelopsstargateservice.service.communicationse
 import de.blackforestsolutions.dravelopsdatamodel.CallStatus;
 import de.blackforestsolutions.dravelopsdatamodel.Journey;
 import de.blackforestsolutions.dravelopsdatamodel.Status;
-import de.blackforestsolutions.dravelopsdatamodel.TravelPoint;
 import de.blackforestsolutions.dravelopsdatamodel.util.ApiToken;
 import de.blackforestsolutions.dravelopsstargateservice.exceptionhandling.ExceptionHandlerService;
 import de.blackforestsolutions.dravelopsstargateservice.exceptionhandling.ExceptionHandlerServiceImpl;
@@ -48,7 +47,7 @@ class JourneyApiServiceTest {
 
     @Test
     void test_retrieveJourneysFromApiService_with_userRequestToken_returns_correct_journey_list() {
-        ApiToken testData = getUserRequestToken();
+        ApiToken testData = getJourneyUserRequestToken();
 
         Mono<List<Journey>> result = classUnderTest.retrieveJourneysFromApiService(testData);
 
@@ -62,7 +61,7 @@ class JourneyApiServiceTest {
 
     @Test
     void test_retrieveJourneysFromApiService_with_userApiToken_requestTokenHandler_exceptionHandler_and_apiService_is_executed_correctly() {
-        ApiToken testData = getUserRequestToken();
+        ApiToken testData = getJourneyUserRequestToken();
         ArgumentCaptor<ApiToken> userRequestTokenArg = ArgumentCaptor.forClass(ApiToken.class);
         ArgumentCaptor<ApiToken> configuredTokenArg = ArgumentCaptor.forClass(ApiToken.class);
         ArgumentCaptor<ApiToken> mergedTokenArg = ArgumentCaptor.forClass(ApiToken.class);
@@ -75,7 +74,7 @@ class JourneyApiServiceTest {
         inOrder.verify(backendApiService, times(1)).getManyBy(mergedTokenArg.capture(), eq(Journey.class));
         inOrder.verify(exceptionHandlerService, times(2)).handleExceptions(callStatusArg.capture());
         inOrder.verifyNoMoreInteractions();
-        assertThat(userRequestTokenArg.getValue()).isEqualToComparingFieldByField(getUserRequestToken());
+        assertThat(userRequestTokenArg.getValue()).isEqualToComparingFieldByField(getJourneyUserRequestToken());
         assertThat(configuredTokenArg.getValue()).isEqualToComparingFieldByField(getConfiguredOtpMapperApiToken());
         assertThat(mergedTokenArg.getValue()).isEqualToComparingFieldByField(getOtpMapperApiToken());
         assertThat(callStatusArg.getAllValues().size()).isEqualTo(2);
@@ -89,7 +88,7 @@ class JourneyApiServiceTest {
 
     @Test
     void test_retrieveJourneysFromApiService_with_userRequestToken_and_thrown_exception_by_mocked_service_returns_zero_journeys() {
-        ApiToken testData = getUserRequestToken();
+        ApiToken testData = getJourneyUserRequestToken();
         when(requestTokenHandlerService.mergeJourneyApiTokensWith(any(ApiToken.class), any(ApiToken.class)))
                 .thenThrow(new NullPointerException());
 
@@ -103,7 +102,7 @@ class JourneyApiServiceTest {
 
     @Test
     void test_retrieveJourneysFromApiService_with_userRequestToken_and_error_stream_by_service_returns_zero_journeys() {
-        ApiToken testData = getUserRequestToken();
+        ApiToken testData = getJourneyUserRequestToken();
         when(backendApiService.getManyBy(any(ApiToken.class), eq(Journey.class)))
                 .thenReturn(Flux.error(new Exception()));
 
@@ -117,7 +116,7 @@ class JourneyApiServiceTest {
 
     @Test
     void test_retrieveJourneysFromApiService_with_userRequestToken_returns_zero_journeys_when_apiService_failed() {
-        ApiToken testData = getUserRequestToken();
+        ApiToken testData = getJourneyUserRequestToken();
         when(backendApiService.getManyBy(any(ApiToken.class), eq(Journey.class)))
                 .thenReturn(Flux.just(new CallStatus<>(null, Status.FAILED, new Exception())));
 
