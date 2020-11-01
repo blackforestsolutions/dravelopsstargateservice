@@ -1,0 +1,12 @@
+query GetTravelPoints {
+    getTravelPointsBy(text: "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX") {
+        name
+        point {
+            x
+            y
+        }
+        arrivalTime
+        departureTime
+        platform
+    }
+}

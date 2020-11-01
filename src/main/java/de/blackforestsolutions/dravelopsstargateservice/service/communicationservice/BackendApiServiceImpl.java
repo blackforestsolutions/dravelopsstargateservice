@@ -1,7 +1,6 @@
 package de.blackforestsolutions.dravelopsstargateservice.service.communicationservice;
 
 import de.blackforestsolutions.dravelopsdatamodel.CallStatus;
-import de.blackforestsolutions.dravelopsdatamodel.Journey;
 import de.blackforestsolutions.dravelopsdatamodel.Status;
 import de.blackforestsolutions.dravelopsdatamodel.util.ApiToken;
 import de.blackforestsolutions.dravelopsdatamodel.util.DravelOpsJsonMapper;
@@ -17,51 +16,47 @@ import java.net.URL;
 import static de.blackforestsolutions.dravelopsdatamodel.util.DravelOpsHttpCallBuilder.buildUrlWith;
 
 @Service
-public class OtpMapperApiServiceImpl implements OtpMapperApiService {
+public class BackendApiServiceImpl implements BackendApiService {
 
     private final CallService callService;
 
     @Autowired
-    public OtpMapperApiServiceImpl(CallService callService) {
+    public BackendApiServiceImpl(CallService callService) {
         this.callService = callService;
     }
 
     @Override
-    public Flux<CallStatus<Journey>> getJourneysBy(ApiToken apiToken) {
+    public <T> Flux<CallStatus<T>> getManyBy(ApiToken apiToken, Class<T> type) {
         try {
-            return executeJourneyRequestWith(apiToken)
+            return executeRequestWith(apiToken, type)
                     .onErrorResume(e -> Flux.just(new CallStatus<>(null, Status.FAILED, e)));
         } catch (Exception e) {
             return Flux.just(new CallStatus<>(null, Status.FAILED, e));
         }
     }
 
-    private Flux<CallStatus<Journey>> executeJourneyRequestWith(ApiToken apiToken) {
+    private <T> Flux<CallStatus<T>> executeRequestWith(ApiToken apiToken, Class<T> type) {
         return Mono.just(apiToken)
-                .flatMap(token -> Mono.zip(
-                            getJourneyRequestString(token),
-                            getJourneyRequestBody(token)
-                        )
-                )
+                .flatMap(token -> Mono.zip(getRequestString(token), getRequestBody(token)))
                 .flatMapMany(request -> callService.post(request.getT1(), request.getT2(), HttpHeaders.EMPTY))
-                .flatMap(this::getJourneyResponseBody);
+                .flatMap(jsonResponse -> getResponseBody(jsonResponse, type));
     }
 
-    private Mono<String> getJourneyRequestString(ApiToken apiToken) {
+    private Mono<String> getRequestString(ApiToken apiToken) {
         URL requestUrl = buildUrlWith(apiToken);
         return Mono.just(requestUrl.toString());
     }
 
-    private Mono<String> getJourneyRequestBody(ApiToken apiToken) {
+    private Mono<String> getRequestBody(ApiToken apiToken) {
         DravelOpsJsonMapper mapper = new DravelOpsJsonMapper();
         return mapper.map(apiToken);
     }
 
-    private Mono<CallStatus<Journey>> getJourneyResponseBody(String json) {
+    private <T> Mono<CallStatus<T>> getResponseBody(String json, Class<T> type) {
         DravelOpsJsonMapper mapper = new DravelOpsJsonMapper();
         return Mono.just(json)
-                .flatMap(journeyJson -> mapper.mapJsonToPojo(journeyJson, Journey.class))
-                .map(journey -> new CallStatus<>(journey, Status.SUCCESS, null))
+                .flatMap(j -> mapper.mapJsonToPojo(j, type))
+                .map(pojo -> new CallStatus<>(pojo, Status.SUCCESS, null))
                 .onErrorResume(error -> Mono.just(new CallStatus<>(null, Status.FAILED, error)));
     }
 }

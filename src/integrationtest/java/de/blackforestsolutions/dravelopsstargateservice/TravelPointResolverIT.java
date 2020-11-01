@@ -11,27 +11,27 @@ import java.io.IOException;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class JourneyResolverIT {
+public class TravelPointResolverIT {
 
     @Autowired
     private GraphQLTestTemplate graphQLTestTemplate;
 
     @Test
-    void test_getJourneysBy_min_parameters_graphql_file_returns_journeys() throws IOException {
+    void test_getTravelPointsBy_min_parameters_graphql_file_returns_travelPoints() throws IOException {
 
-        GraphQLResponse response = graphQLTestTemplate.postForResource("graphql/bw-get-journeys-min-parameters.graphql");
+        GraphQLResponse response = graphQLTestTemplate.postForResource("graphql/bw-get-travelpoints-min-parameters.graphql");
 
         assertThat(response.isOk()).isTrue();
-        assertThat(response.readTree().findValues("getJourneysBy").size()).isEqualTo(1);
-        assertThat(response.readTree().get("data").get("getJourneysBy").get(0).size()).isGreaterThan(0);
+        assertThat(response.readTree().findValues("getTravelPointsBy").size()).isEqualTo(1);
+        assertThat(response.readTree().get("data").get("getTravelPointsBy").get(0).size()).isGreaterThan(0);
     }
 
     @Test
     void test_getJourneysBy_no_result_graphql_file_returns_zero_journey() throws IOException {
 
-        GraphQLResponse response = graphQLTestTemplate.postForResource("graphql/bw-get-journeys-no-result.graphql");
+        GraphQLResponse response = graphQLTestTemplate.postForResource("graphql/get-travelpoints-no-result.graphql");
 
         assertThat(response.isOk()).isTrue();
-        assertThat(response.readTree().get("data").get("getJourneysBy").size()).isEqualTo(0);
+        assertThat(response.readTree().get("data").get("getTravelPointsBy").size()).isEqualTo(0);
     }
 }

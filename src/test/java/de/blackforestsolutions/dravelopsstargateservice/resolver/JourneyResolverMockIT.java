@@ -45,7 +45,7 @@ class JourneyResolverMockIT {
     void test_getJourneysBy_no_result_graphql_file_returns_zero_journey() throws IOException {
         doReturn(Mono.just(Collections.emptyList())).when(journeyApiServiceMock).retrieveJourneysFromApiService(any(ApiToken.class));
 
-        GraphQLResponse response = graphQLTestTemplate.postForResource("graphql/get-journeys-no-result.graphql");
+        GraphQLResponse response = graphQLTestTemplate.postForResource("graphql/bw-get-journeys-no-result.graphql");
 
         assertThat(response.isOk()).isTrue();
         assertThat(response.readTree().get("data").get("getJourneysBy").size()).isEqualTo(0);
@@ -75,7 +75,7 @@ class JourneyResolverMockIT {
 
     @Test
     void test_getJourneysBy_graphql_file_with_language_error_returns_error_json_with_languageParsingException() throws IOException {
-        String expectedErrorJson = getResourceFileAsString("json/languageErrorResponse.json");
+        String expectedErrorJson = getResourceFileAsString("json/journeyLanguageErrorResponse.json");
 
         GraphQLResponse response = graphQLTestTemplate.postForResource("graphql/get-journeys-language-error.graphql");
 

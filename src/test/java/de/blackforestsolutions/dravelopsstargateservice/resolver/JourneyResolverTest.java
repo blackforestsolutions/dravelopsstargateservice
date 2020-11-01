@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
-import static de.blackforestsolutions.dravelopsdatamodel.objectmothers.ApiTokenObjectMother.getUserRequestToken;
+import static de.blackforestsolutions.dravelopsdatamodel.objectmothers.ApiTokenObjectMother.getJourneyUserRequestToken;
 import static de.blackforestsolutions.dravelopsdatamodel.objectmothers.JourneyObjectMother.getFurtwangenToWaldkirchJourney;
 import static de.blackforestsolutions.dravelopsdatamodel.testutil.TestUtils.toJson;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -39,7 +39,7 @@ class JourneyResolverTest {
 
     @Test
     void test_getJourneysBy_userRequestToken_returns_journey() throws ExecutionException, InterruptedException {
-        ApiToken testData = getUserRequestToken();
+        ApiToken testData = getJourneyUserRequestToken();
         Journey expectedJourney = getFurtwangenToWaldkirchJourney();
 
         CompletableFuture<List<Journey>> result = classUnderTest.getJourneysBy(
@@ -60,7 +60,7 @@ class JourneyResolverTest {
 
     @Test
     void test_getJourneysBy_userRequestToken_is_executed_in_right_order_and_passes_arguments_correctly() {
-        ApiToken testData = getUserRequestToken();
+        ApiToken testData = getJourneyUserRequestToken();
         Point testDeparture = testData.getDepartureCoordinate();
         Point testArrival = testData.getArrivalCoordinate();
         ArgumentCaptor<ApiToken> userRequestArg = ArgumentCaptor.forClass(ApiToken.class);
@@ -79,12 +79,12 @@ class JourneyResolverTest {
         InOrder inOrder = inOrder(journeyApiService);
         inOrder.verify(journeyApiService, times(1)).retrieveJourneysFromApiService(userRequestArg.capture());
         inOrder.verifyNoMoreInteractions();
-        assertThat(userRequestArg.getValue()).isEqualToComparingFieldByField(getUserRequestToken());
+        assertThat(userRequestArg.getValue()).isEqualToComparingFieldByField(getJourneyUserRequestToken());
     }
 
     @Test
     void test_getJourneysBy_userRequestToken_returns_an_empty_list_when_no_results_are_in_response_list() throws ExecutionException, InterruptedException {
-        ApiToken testData = getUserRequestToken();
+        ApiToken testData = getJourneyUserRequestToken();
         Point testDeparture = testData.getDepartureCoordinate();
         Point testArrival = testData.getArrivalCoordinate();
         when(journeyApiService.retrieveJourneysFromApiService(any(ApiToken.class)))
@@ -107,7 +107,7 @@ class JourneyResolverTest {
     @Test
     void test_getJourneysBy_userRequestToken_and_wrong_dateTime_format_throws_dateTimeParsingException() {
         String wrongDateTime = "2020";
-        ApiToken testData = getUserRequestToken();
+        ApiToken testData = getJourneyUserRequestToken();
         Point testDeparture = testData.getDepartureCoordinate();
         Point testArrival = testData.getArrivalCoordinate();
 
@@ -126,7 +126,7 @@ class JourneyResolverTest {
     @Test
     void test_getJourneysBy_userRequestToken_and_wrong_language_format_throws_dateTimeParsingException() {
         String wrongLanguage = "";
-        ApiToken testData = getUserRequestToken();
+        ApiToken testData = getJourneyUserRequestToken();
         Point testDeparture = testData.getDepartureCoordinate();
         Point testArrival = testData.getArrivalCoordinate();
 
