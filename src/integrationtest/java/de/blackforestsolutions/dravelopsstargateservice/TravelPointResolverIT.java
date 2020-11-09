@@ -19,7 +19,7 @@ public class TravelPointResolverIT {
     @Test
     void test_getTravelPointsBy_min_parameters_graphql_file_returns_travelPoints() throws IOException {
 
-        GraphQLResponse response = graphQLTestTemplate.postForResource("graphql/bw-get-travelpoints-min-parameters.graphql");
+        GraphQLResponse response = graphQLTestTemplate.postForResource("customer/bw-get-travelpoints-min-parameters.graphql");
 
         assertThat(response.isOk()).isTrue();
         assertThat(response.readTree().findValues("getTravelPointsBy").size()).isEqualTo(1);

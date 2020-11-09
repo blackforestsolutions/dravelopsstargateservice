@@ -8,22 +8,22 @@ import org.springframework.context.annotation.Bean;
 @SpringBootConfiguration
 public class PolygonConfiguration {
 
-    @Value("${polygonservice.protocol}")
-    private String polygonServiceProtocol;
-    @Value("${polygonservice.host}")
-    private String polygonServiceHost;
-    @Value("${polygonservice.port}")
-    private int polygonServicePort;
-    @Value("${polygonservice.get.journey.path}")
-    private String polygonServiceJourneyPath;
+    @Value("${polygon.protocol}")
+    private String polygonProtocol;
+    @Value("${polygon.host}")
+    private String polygonHost;
+    @Value("${polygon.port}")
+    private int polygonPort;
+    @Value("${polygon.get.journey.path}")
+    private String polygonJourneyPath;
 
-    @Bean(name = "polygonServiceApiToken")
+    @Bean(name = "polygonApiToken")
     public ApiToken apiToken() {
         return new ApiToken.ApiTokenBuilder()
-                .setProtocol(polygonServiceProtocol)
-                .setHost(polygonServiceHost)
-                .setPort(polygonServicePort)
-                .setPath(polygonServiceJourneyPath)
+                .setProtocol(polygonProtocol)
+                .setHost(polygonHost)
+                .setPort(polygonPort)
+                .setPath(polygonJourneyPath)
                 .build();
     }
 }

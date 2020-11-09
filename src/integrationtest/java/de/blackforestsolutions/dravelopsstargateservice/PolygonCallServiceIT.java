@@ -3,19 +3,21 @@ package de.blackforestsolutions.dravelopsstargateservice;
 import de.blackforestsolutions.dravelopsdatamodel.TravelPoint;
 import de.blackforestsolutions.dravelopsdatamodel.util.ApiToken;
 import de.blackforestsolutions.dravelopsdatamodel.util.DravelOpsJsonMapper;
+import de.blackforestsolutions.dravelopsstargateservice.configuration.PolygonTestConfiguration;
 import de.blackforestsolutions.dravelopsstargateservice.service.communicationservice.restcalls.CallService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpHeaders;
 import reactor.core.publisher.Flux;
 import reactor.test.StepVerifier;
 
-import static de.blackforestsolutions.dravelopsdatamodel.objectmothers.ApiTokenObjectMother.getPolygonApiToken;
 import static de.blackforestsolutions.dravelopsdatamodel.testutil.TestUtils.retrieveJsonToPojo;
 import static de.blackforestsolutions.dravelopsdatamodel.util.DravelOpsHttpCallBuilder.buildUrlWith;
 import static org.assertj.core.api.Assertions.assertThat;
 
+@Import(PolygonTestConfiguration.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class PolygonCallServiceIT {
 
@@ -24,12 +26,14 @@ public class PolygonCallServiceIT {
     @Autowired
     private CallService classUnderTest;
 
+    @Autowired
+    public ApiToken danke;
+
     @Test
     void test_travelPoint_returns_travelPoints() {
-        ApiToken testData = getPolygonApiToken();
-        String testBody = mapper.map(testData).block();
+        String testBody = mapper.map(danke).block();
 
-        Flux<String> result = classUnderTest.post(buildUrlWith(testData).toString(), testBody, HttpHeaders.EMPTY);
+        Flux<String> result = classUnderTest.post(buildUrlWith(danke).toString(), testBody, HttpHeaders.EMPTY);
 
         StepVerifier.create(result)
                 .expectNextCount(1L)

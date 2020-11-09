@@ -16,20 +16,20 @@ public class JourneyApiServiceImpl implements JourneyApiService {
     private final ExceptionHandlerService exceptionHandlerService;
     private final RequestTokenHandlerService requestTokenHandlerService;
     private final BackendApiService backendApiService;
-    private final ApiToken mapperServiceApiToken;
+    private final ApiToken otpmapperApiToken;
 
     @Autowired
-    public JourneyApiServiceImpl(ExceptionHandlerService exceptionHandlerService, RequestTokenHandlerService requestTokenHandlerService, BackendApiService backendApiService, ApiToken mapperServiceApiToken) {
+    public JourneyApiServiceImpl(ExceptionHandlerService exceptionHandlerService, RequestTokenHandlerService requestTokenHandlerService, BackendApiService backendApiService, ApiToken otpmapperApiToken) {
         this.exceptionHandlerService = exceptionHandlerService;
         this.requestTokenHandlerService = requestTokenHandlerService;
         this.backendApiService = backendApiService;
-        this.mapperServiceApiToken = mapperServiceApiToken;
+        this.otpmapperApiToken = otpmapperApiToken;
     }
 
     @Override
     public Mono<List<Journey>> retrieveJourneysFromApiService(ApiToken userRequestToken) {
         return Mono.just(userRequestToken)
-                .map(token -> requestTokenHandlerService.mergeJourneyApiTokensWith(token, mapperServiceApiToken))
+                .map(token -> requestTokenHandlerService.mergeJourneyApiTokensWith(token, otpmapperApiToken))
                 .flatMapMany(apiToken -> backendApiService.getManyBy(apiToken, Journey.class))
                 .flatMap(exceptionHandlerService::handleExceptions)
                 .onErrorResume(exceptionHandlerService::handleExceptions)

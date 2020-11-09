@@ -16,20 +16,20 @@ public class TravelPointApiServiceImpl implements TravelPointApiService {
     private final ExceptionHandlerService exceptionHandlerService;
     private final RequestTokenHandlerService requestTokenHandlerService;
     private final BackendApiService backendApiService;
-    private final ApiToken polygonServiceApiToken;
+    private final ApiToken polygonApiToken;
 
     @Autowired
-    public TravelPointApiServiceImpl(ExceptionHandlerService exceptionHandlerService, RequestTokenHandlerService requestTokenHandlerService, BackendApiService backendApiService, ApiToken polygonServiceApiToken) {
+    public TravelPointApiServiceImpl(ExceptionHandlerService exceptionHandlerService, RequestTokenHandlerService requestTokenHandlerService, BackendApiService backendApiService, ApiToken polygonApiToken) {
         this.exceptionHandlerService = exceptionHandlerService;
         this.requestTokenHandlerService = requestTokenHandlerService;
         this.backendApiService = backendApiService;
-        this.polygonServiceApiToken = polygonServiceApiToken;
+        this.polygonApiToken = polygonApiToken;
     }
 
     @Override
     public Mono<List<TravelPoint>> retrieveTravelPointsFromApiService(ApiToken userRequestToken) {
         return Mono.just(userRequestToken)
-                .map(token -> requestTokenHandlerService.mergeTravelPointApiTokensWith(token, polygonServiceApiToken))
+                .map(token -> requestTokenHandlerService.mergeTravelPointApiTokensWith(token, polygonApiToken))
                 .flatMapMany(apiToken -> backendApiService.getManyBy(apiToken, TravelPoint.class))
                 .flatMap(exceptionHandlerService::handleExceptions)
                 .onErrorResume(exceptionHandlerService::handleExceptions)

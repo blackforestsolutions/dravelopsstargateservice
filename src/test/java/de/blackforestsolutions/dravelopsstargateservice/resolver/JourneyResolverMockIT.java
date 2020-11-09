@@ -34,7 +34,7 @@ class JourneyResolverMockIT {
         String expectedJourneyJson = getResourceFileAsString("json/furtwangenToWaldkirchResponse.json");
         doReturn(Mono.just(List.of(getFurtwangenToWaldkirchJourney()))).when(journeyApiServiceMock).retrieveJourneysFromApiService(any(ApiToken.class));
 
-        GraphQLResponse response = graphQLTestTemplate.postForResource("graphql/bw-get-journeys-min-parameters.graphql");
+        GraphQLResponse response = graphQLTestTemplate.postForResource("customer/bw-get-journeys-min-parameters.graphql");
 
         assertThat(response.isOk()).isTrue();
         assertThat(response.readTree().findValues("getJourneysBy").size()).isEqualTo(1);
@@ -45,7 +45,7 @@ class JourneyResolverMockIT {
     void test_getJourneysBy_no_result_graphql_file_returns_zero_journey() throws IOException {
         doReturn(Mono.just(Collections.emptyList())).when(journeyApiServiceMock).retrieveJourneysFromApiService(any(ApiToken.class));
 
-        GraphQLResponse response = graphQLTestTemplate.postForResource("graphql/bw-get-journeys-no-result.graphql");
+        GraphQLResponse response = graphQLTestTemplate.postForResource("graphql/get-journeys-no-result.graphql");
 
         assertThat(response.isOk()).isTrue();
         assertThat(response.readTree().get("data").get("getJourneysBy").size()).isEqualTo(0);
