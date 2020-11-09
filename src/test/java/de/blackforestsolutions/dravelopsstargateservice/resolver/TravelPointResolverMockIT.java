@@ -34,7 +34,7 @@ public class TravelPointResolverMockIT {
         String expectedTravelPointJson = getResourceFileAsString("json/travelPointResponse.json");
         doReturn(Mono.just(List.of(getStuttgarterStreetOneTravelPoint()))).when(travelPointApiServiceMock).retrieveTravelPointsFromApiService(any(ApiToken.class));
 
-        GraphQLResponse response = graphQLTestTemplate.postForResource("graphql/bw-get-travelpoints-min-parameters.graphql");
+        GraphQLResponse response = graphQLTestTemplate.postForResource("customer/bw-get-travelpoints-min-parameters.graphql");
 
         assertThat(response.isOk()).isTrue();
         assertThat(response.readTree().findValues("getTravelPointsBy").size()).isGreaterThan(0);
@@ -45,7 +45,7 @@ public class TravelPointResolverMockIT {
     void test_getTravelPointsBy_no_result_graphql_file_returns_zero_travelPoints() throws IOException {
         doReturn(Mono.just(Collections.emptyList())).when(travelPointApiServiceMock).retrieveTravelPointsFromApiService(any(ApiToken.class));
 
-        GraphQLResponse response = graphQLTestTemplate.postForResource("graphql/bw-get-travelpoints-min-parameters.graphql");
+        GraphQLResponse response = graphQLTestTemplate.postForResource("customer/bw-get-travelpoints-min-parameters.graphql");
 
         assertThat(response.isOk()).isTrue();
         assertThat(response.readTree().get("data").get("getTravelPointsBy").size()).isEqualTo(0);

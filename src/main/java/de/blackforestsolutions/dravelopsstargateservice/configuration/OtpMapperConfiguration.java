@@ -8,22 +8,22 @@ import org.springframework.context.annotation.Bean;
 @SpringBootConfiguration
 public class OtpMapperConfiguration {
 
-    @Value("${mapperservice.protocol}")
-    private String mapperServiceProtocol;
-    @Value("${mapperservice.host}")
-    private String mapperServiceHost;
-    @Value("${mapperservice.port}")
-    private int mapperServicePort;
-    @Value("${mapperservice.get.journey.path}")
-    private String mapperServiceJourneyPath;
+    @Value("${otpmapper.protocol}")
+    private String otpMapperProtocol;
+    @Value("${otpmapper.host}")
+    private String otpMapperHost;
+    @Value("${otpmapper.port}")
+    private int otpMapperPort;
+    @Value("${otpmapper.get.journey.path}")
+    private String otpMapperJourneyPath;
 
-    @Bean(name = "mapperServiceApiToken")
+    @Bean(name = "otpmapperApiToken")
     public ApiToken apiToken() {
         return new ApiToken.ApiTokenBuilder()
-                .setProtocol(mapperServiceProtocol)
-                .setHost(mapperServiceHost)
-                .setPort(mapperServicePort)
-                .setPath(mapperServiceJourneyPath)
+                .setProtocol(otpMapperProtocol)
+                .setHost(otpMapperHost)
+                .setPort(otpMapperPort)
+                .setPath(otpMapperJourneyPath)
                 .build();
     }
 
