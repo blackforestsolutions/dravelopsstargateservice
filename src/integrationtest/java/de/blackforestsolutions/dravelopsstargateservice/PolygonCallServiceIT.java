@@ -27,13 +27,13 @@ public class PolygonCallServiceIT {
     private CallService classUnderTest;
 
     @Autowired
-    public ApiToken danke;
+    public ApiToken polygonApiTokenIT;
 
     @Test
     void test_travelPoint_returns_travelPoints() {
-        String testBody = mapper.map(danke).block();
+        String testBody = mapper.map(polygonApiTokenIT).block();
 
-        Flux<String> result = classUnderTest.post(buildUrlWith(danke).toString(), testBody, HttpHeaders.EMPTY);
+        Flux<String> result = classUnderTest.post(buildUrlWith(polygonApiTokenIT).toString(), testBody, HttpHeaders.EMPTY);
 
         StepVerifier.create(result)
                 .expectNextCount(1L)

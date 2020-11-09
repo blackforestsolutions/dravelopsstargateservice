@@ -38,7 +38,7 @@ public class OtpMapperTestConfiguration {
     @Value("${test.apitokens.otpmapper.language}")
     private String language;
 
-    @Bean(name = "hallo")
+    @Bean(name = "otpMapperApiToken")
     public ApiToken apiToken() {
         return new ApiToken.ApiTokenBuilder()
                 .setProtocol(protocol)

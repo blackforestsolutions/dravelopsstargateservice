@@ -23,7 +23,7 @@ public class PolygonTestConfiguration {
     @Value("${test.apitokens.polygon.language}")
     private String language;
 
-    @Bean(name = "danke")
+    @Bean(name = "polygonApiTokenIT")
     public ApiToken apiToken() {
         return new ApiToken.ApiTokenBuilder()
                 .setProtocol(protocol)

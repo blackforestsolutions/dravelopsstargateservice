@@ -14,6 +14,11 @@ import org.springframework.http.HttpHeaders;
 import reactor.core.publisher.Flux;
 import reactor.test.StepVerifier;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
 import static de.blackforestsolutions.dravelopsdatamodel.testutil.TestUtils.retrieveJsonToPojo;
 import static de.blackforestsolutions.dravelopsdatamodel.util.DravelOpsHttpCallBuilder.buildUrlWith;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -28,12 +33,12 @@ class OtpMapperCallServiceIT {
     private CallService classUnderTest;
 
     @Autowired
-    private ApiToken hallo;
+    private ApiToken otpMapperApiToken;
 
     @Test
     void test_journey_returns_journeys() {
 
-        Flux<String> result = classUnderTest.post(buildUrlWith(hallo).toString(), mapper.map(hallo).block(), HttpHeaders.EMPTY);
+        Flux<String> result = classUnderTest.post(buildUrlWith(otpMapperApiToken).toString(), mapper.map(otpMapperApiToken).block(), HttpHeaders.EMPTY);
 
         StepVerifier.create(result)
                 .expectNextCount(1L)
@@ -48,7 +53,7 @@ class OtpMapperCallServiceIT {
 
     @Test
     void test_journey_without_being_inside_area_returns_no_journeys() {
-        ApiToken.ApiTokenBuilder testData = new ApiToken.ApiTokenBuilder(hallo);
+        ApiToken.ApiTokenBuilder testData = new ApiToken.ApiTokenBuilder(otpMapperApiToken);
         testData.setDepartureCoordinate(new Point(0.0d, 0.0d));
         testData.setDeparture("Mittelpunkt der Erde");
         testData.setArrivalCoordinate(new Point(0.1d, 0.1d));
