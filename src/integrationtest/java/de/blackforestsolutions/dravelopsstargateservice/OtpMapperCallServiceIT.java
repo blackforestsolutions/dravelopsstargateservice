@@ -33,12 +33,12 @@ class OtpMapperCallServiceIT {
     private CallService classUnderTest;
 
     @Autowired
-    private ApiToken otpMapperApiToken;
+    private ApiToken.ApiTokenBuilder otpMapperApiToken;
 
     @Test
     void test_journey_returns_journeys() {
 
-        Flux<String> result = classUnderTest.post(buildUrlWith(otpMapperApiToken).toString(), mapper.map(otpMapperApiToken).block(), HttpHeaders.EMPTY);
+        Flux<String> result = classUnderTest.post(buildUrlWith(otpMapperApiToken.build()).toString(), mapper.map(otpMapperApiToken).block(), HttpHeaders.EMPTY);
 
         StepVerifier.create(result)
                 .expectNextCount(1L)
@@ -53,7 +53,7 @@ class OtpMapperCallServiceIT {
 
     @Test
     void test_journey_without_being_inside_area_returns_no_journeys() {
-        ApiToken.ApiTokenBuilder testData = new ApiToken.ApiTokenBuilder(otpMapperApiToken);
+        ApiToken.ApiTokenBuilder testData = new ApiToken.ApiTokenBuilder(otpMapperApiToken.build());
         testData.setDepartureCoordinate(new Point(0.0d, 0.0d));
         testData.setDeparture("Mittelpunkt der Erde");
         testData.setArrivalCoordinate(new Point(0.1d, 0.1d));

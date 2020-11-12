@@ -27,7 +27,7 @@ public class TravelPointResolverIT {
     }
 
     @Test
-    void test_getJourneysBy_no_result_graphql_file_returns_zero_journey() throws IOException {
+    void test_getTravelPointsBy_no_result_graphql_file_returns_zero_travelPoints() throws IOException {
 
         GraphQLResponse response = graphQLTestTemplate.postForResource("graphql/get-travelpoints-no-result.graphql");
 
