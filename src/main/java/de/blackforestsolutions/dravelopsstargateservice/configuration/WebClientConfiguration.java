@@ -1,9 +1,12 @@
 package de.blackforestsolutions.dravelopsstargateservice.configuration;
 
+import de.blackforestsolutions.dravelopsdatamodel.util.DravelOpsJsonMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.codec.json.Jackson2JsonDecoder;
+import org.springframework.http.codec.json.Jackson2JsonEncoder;
 import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -19,29 +22,17 @@ public class WebClientConfiguration {
     @Bean
     public WebClient webClient() {
         return WebClient.builder()
-                .exchangeStrategies(ExchangeStrategies.builder()
-                        .codecs(configurer -> configurer.defaultCodecs().maxInMemorySize(maxBufferSizeMb * BIT_HIGHER_UNIT * BIT_HIGHER_UNIT))
-                        .build()
-                )
-//                .filter(logRequest())
-//                .filter(logResponse())
+                .exchangeStrategies(exchangeStrategies())
                 .build();
     }
 
-//    private ExchangeFilterFunction logRequest() {
-//        return (clientRequest, next) -> {
-//            log.info("Request: {} {}", clientRequest.method(), clientRequest.url());
-//            clientRequest.headers()
-//                    .forEach((name, values) -> values.forEach(value -> log.info("{}={}", name, value)));
-//            log.info("Body: ", clientRequest.body());
-//            return next.exchange(clientRequest);
-//        };
-//    }
-//
-//    private ExchangeFilterFunction logResponse() {
-//        return ExchangeFilterFunction.ofResponseProcessor(clientResponse -> {
-//            log.info("Response: {}", clientResponse.headers().asHttpHeaders().get("property-header"));
-//            return Mono.just(clientResponse);
-//        });
-//    }
+    private ExchangeStrategies exchangeStrategies() {
+        return ExchangeStrategies.builder()
+                .codecs(configurer -> {
+                    configurer.defaultCodecs().maxInMemorySize(maxBufferSizeMb * BIT_HIGHER_UNIT * BIT_HIGHER_UNIT);
+                    configurer.defaultCodecs().jackson2JsonEncoder(new Jackson2JsonEncoder(new DravelOpsJsonMapper()));
+                    configurer.defaultCodecs().jackson2JsonDecoder(new Jackson2JsonDecoder(new DravelOpsJsonMapper()));
+                })
+                .build();
+    }
 }

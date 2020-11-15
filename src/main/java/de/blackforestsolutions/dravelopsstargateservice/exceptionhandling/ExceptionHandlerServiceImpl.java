@@ -4,6 +4,7 @@ import de.blackforestsolutions.dravelopsdatamodel.CallStatus;
 import de.blackforestsolutions.dravelopsdatamodel.Status;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.Optional;
@@ -13,9 +14,9 @@ import java.util.Optional;
 public class ExceptionHandlerServiceImpl implements ExceptionHandlerService {
 
     @Override
-    public <T> Mono<T> handleExceptions(Throwable exception) {
+    public <T> Flux<T> handleExceptions(Throwable exception) {
         logError(exception);
-        return Mono.empty();
+        return Flux.empty();
     }
 
     @Override

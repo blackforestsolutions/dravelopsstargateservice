@@ -1,11 +1,13 @@
 package de.blackforestsolutions.dravelopsstargateservice.service.communicationservice.restcalls;
 
+import de.blackforestsolutions.dravelopsdatamodel.util.ApiToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 @Service
 public class CallServiceImpl implements CallService {
@@ -18,14 +20,14 @@ public class CallServiceImpl implements CallService {
     }
 
     @Override
-    public Flux<String> post(String url, String body, HttpHeaders httpHeaders) {
+    public <T> Flux<T> postMany(String url, ApiToken body, HttpHeaders httpHeaders, Class<T> returnType) {
         return webClient
                 .post()
                 .uri(url)
-                .bodyValue(body)
+                .body(Mono.just(body), ApiToken.class)
                 .headers(headers -> httpHeaders.forEach(headers::addAll))
                 .accept(MediaType.TEXT_EVENT_STREAM)
                 .retrieve()
-                .bodyToFlux(String.class);
+                .bodyToFlux(returnType);
     }
 }

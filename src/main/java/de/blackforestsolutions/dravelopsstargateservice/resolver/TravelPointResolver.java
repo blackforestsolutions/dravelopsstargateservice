@@ -3,7 +3,8 @@ package de.blackforestsolutions.dravelopsstargateservice.resolver;
 import de.blackforestsolutions.dravelopsdatamodel.TravelPoint;
 import de.blackforestsolutions.dravelopsdatamodel.util.ApiToken;
 import de.blackforestsolutions.dravelopsstargateservice.model.exception.LanguageParsingException;
-import de.blackforestsolutions.dravelopsstargateservice.service.communicationservice.TravelPointApiService;
+import de.blackforestsolutions.dravelopsstargateservice.service.communicationservice.BackendApiService;
+import de.blackforestsolutions.dravelopsstargateservice.service.supportservice.RequestTokenHandlerService;
 import graphql.kickstart.tools.GraphQLQueryResolver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -15,16 +16,21 @@ import java.util.concurrent.CompletableFuture;
 @Component
 public class TravelPointResolver implements GraphQLQueryResolver {
 
-    private final TravelPointApiService travelPointApiService;
+    private final BackendApiService backendApiService;
+    private final RequestTokenHandlerService requestTokenHandlerService;
+    private final ApiToken polygonApiToken;
 
     @Autowired
-    public TravelPointResolver(TravelPointApiService travelPointApiService) {
-        this.travelPointApiService = travelPointApiService;
+    public TravelPointResolver(BackendApiService backendApiService, RequestTokenHandlerService requestTokenHandlerService, ApiToken polygonApiToken) {
+        this.backendApiService = backendApiService;
+        this.requestTokenHandlerService = requestTokenHandlerService;
+        this.polygonApiToken = polygonApiToken;
     }
 
     public CompletableFuture<List<TravelPoint>> getTravelPointsBy(String text, String language) {
         ApiToken apiToken = buildRequestApiTokenWith(text, language);
-        return travelPointApiService.retrieveTravelPointsFromApiService(apiToken)
+        return backendApiService.getManyBy(apiToken, polygonApiToken, requestTokenHandlerService::mergeTravelPointApiTokensWith, TravelPoint.class)
+                .collectList()
                 .toFuture();
     }
 

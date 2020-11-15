@@ -1,9 +1,8 @@
 package de.blackforestsolutions.dravelopsstargateservice.service.communicationservice;
 
-import de.blackforestsolutions.dravelopsdatamodel.CallStatus;
 import de.blackforestsolutions.dravelopsdatamodel.util.ApiToken;
 import reactor.core.publisher.Flux;
 
 public interface BackendApiService {
-    <T> Flux<CallStatus<T>> getManyBy(ApiToken apiToken, Class<T> type);
+    <T> Flux<T> getManyBy(ApiToken userRequestToken, ApiToken serviceApiToken, RequestHandlerFunction requestHandlerFunction, Class<T> returnType);
 }
