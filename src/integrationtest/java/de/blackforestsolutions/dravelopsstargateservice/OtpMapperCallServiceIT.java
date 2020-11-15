@@ -2,7 +2,6 @@ package de.blackforestsolutions.dravelopsstargateservice;
 
 import de.blackforestsolutions.dravelopsdatamodel.Journey;
 import de.blackforestsolutions.dravelopsdatamodel.util.ApiToken;
-import de.blackforestsolutions.dravelopsdatamodel.util.DravelOpsJsonMapper;
 import de.blackforestsolutions.dravelopsstargateservice.configuration.OtpMapperTestConfiguration;
 import de.blackforestsolutions.dravelopsstargateservice.service.communicationservice.restcalls.CallService;
 import org.junit.jupiter.api.Test;
@@ -21,18 +20,16 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class OtpMapperCallServiceIT {
 
-    private final DravelOpsJsonMapper mapper = new DravelOpsJsonMapper();
-
     @Autowired
     private CallService classUnderTest;
 
     @Autowired
-    private ApiToken.ApiTokenBuilder otpMapperApiToken;
+    private ApiToken.ApiTokenBuilder otpMapperApiTokenIT;
 
     @Test
     void test_journey_returns_journeys() {
 
-        Flux<Journey> result = classUnderTest.postMany(buildUrlWith(otpMapperApiToken.build()).toString(), otpMapperApiToken.build(), HttpHeaders.EMPTY, Journey.class);
+        Flux<Journey> result = classUnderTest.postMany(buildUrlWith(otpMapperApiTokenIT.build()).toString(), otpMapperApiTokenIT.build(), HttpHeaders.EMPTY, Journey.class);
 
         StepVerifier.create(result)
                 .expectNextCount(1L)
@@ -43,11 +40,11 @@ class OtpMapperCallServiceIT {
 
     @Test
     void test_journey_without_being_inside_area_returns_no_journeys() {
-        ApiToken.ApiTokenBuilder testData = new ApiToken.ApiTokenBuilder(otpMapperApiToken.build());
+        ApiToken.ApiTokenBuilder testData = new ApiToken.ApiTokenBuilder(otpMapperApiTokenIT.build());
         testData.setDepartureCoordinate(new Point(0.0d, 0.0d));
-        testData.setDeparture("Mittelpunkt der Erde");
+        testData.setDeparture("middlepoint of earth");
         testData.setArrivalCoordinate(new Point(0.1d, 0.1d));
-        testData.setArrival("Mittelpunkt der Erde");
+        testData.setArrival("middlepoint of earth");
 
         Flux<Journey> result = classUnderTest.postMany(buildUrlWith(testData.build()).toString(), testData.build(), HttpHeaders.EMPTY, Journey.class);
 

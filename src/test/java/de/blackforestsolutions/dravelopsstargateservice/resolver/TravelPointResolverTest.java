@@ -24,7 +24,6 @@ import static de.blackforestsolutions.dravelopsdatamodel.objectmothers.TravelPoi
 import static de.blackforestsolutions.dravelopsdatamodel.testutil.TestUtils.toJson;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 class TravelPointResolverTest {
