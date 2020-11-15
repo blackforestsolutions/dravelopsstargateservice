@@ -4,37 +4,42 @@ import de.blackforestsolutions.dravelopsdatamodel.Journey;
 import de.blackforestsolutions.dravelopsdatamodel.util.ApiToken;
 import de.blackforestsolutions.dravelopsstargateservice.model.exception.DateTimeParsingException;
 import de.blackforestsolutions.dravelopsstargateservice.model.exception.LanguageParsingException;
-import de.blackforestsolutions.dravelopsstargateservice.service.communicationservice.JourneyApiService;
+import de.blackforestsolutions.dravelopsstargateservice.service.communicationservice.BackendApiService;
+import de.blackforestsolutions.dravelopsstargateservice.service.communicationservice.BackendApiServiceImpl;
+import de.blackforestsolutions.dravelopsstargateservice.service.communicationservice.RequestHandlerFunction;
+import de.blackforestsolutions.dravelopsstargateservice.service.supportservice.RequestTokenHandlerService;
+import de.blackforestsolutions.dravelopsstargateservice.service.supportservice.RequestTokenHandlerServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InOrder;
 import org.springframework.data.geo.Point;
-import reactor.core.publisher.Mono;
+import reactor.core.publisher.Flux;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
+import static de.blackforestsolutions.dravelopsdatamodel.objectmothers.ApiTokenObjectMother.getConfiguredOtpMapperApiToken;
 import static de.blackforestsolutions.dravelopsdatamodel.objectmothers.ApiTokenObjectMother.getJourneyUserRequestToken;
 import static de.blackforestsolutions.dravelopsdatamodel.objectmothers.JourneyObjectMother.getFurtwangenToWaldkirchJourney;
 import static de.blackforestsolutions.dravelopsdatamodel.testutil.TestUtils.toJson;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 class JourneyResolverTest {
 
-    private final JourneyApiService journeyApiService = mock(JourneyApiService.class);
+    private final BackendApiService backendApiService = mock(BackendApiServiceImpl.class);
+    private final RequestTokenHandlerService requestTokenHandlerService = mock(RequestTokenHandlerServiceImpl.class);
+    private final ApiToken configuredOtpMapperApiToken = getConfiguredOtpMapperApiToken();
 
-    private final JourneyResolver classUnderTest = new JourneyResolver(journeyApiService);
+    private final JourneyResolver classUnderTest = new JourneyResolver(backendApiService, requestTokenHandlerService, configuredOtpMapperApiToken);
 
     @BeforeEach
     void init() {
-        when(journeyApiService.retrieveJourneysFromApiService(any(ApiToken.class)))
-                .thenReturn(Mono.just(List.of(getFurtwangenToWaldkirchJourney(), getFurtwangenToWaldkirchJourney())));
+        when(backendApiService.getManyBy(any(ApiToken.class), any(ApiToken.class), any(RequestHandlerFunction.class), eq(Journey.class)))
+                .thenReturn(Flux.just(getFurtwangenToWaldkirchJourney(), getFurtwangenToWaldkirchJourney()));
     }
 
     @Test
@@ -64,6 +69,7 @@ class JourneyResolverTest {
         Point testDeparture = testData.getDepartureCoordinate();
         Point testArrival = testData.getArrivalCoordinate();
         ArgumentCaptor<ApiToken> userRequestArg = ArgumentCaptor.forClass(ApiToken.class);
+        ArgumentCaptor<ApiToken> configuredOtpMapperApiTokenArg = ArgumentCaptor.forClass(ApiToken.class);
 
         classUnderTest.getJourneysBy(
                 testDeparture.getX(),
@@ -76,19 +82,20 @@ class JourneyResolverTest {
                 testData.getLanguage().toString()
         );
 
-        InOrder inOrder = inOrder(journeyApiService);
-        inOrder.verify(journeyApiService, times(1)).retrieveJourneysFromApiService(userRequestArg.capture());
+        InOrder inOrder = inOrder(backendApiService);
+        inOrder.verify(backendApiService, times(1)).getManyBy(userRequestArg.capture(), configuredOtpMapperApiTokenArg.capture(), any(RequestHandlerFunction.class), eq(Journey.class));
         inOrder.verifyNoMoreInteractions();
         assertThat(userRequestArg.getValue()).isEqualToComparingFieldByField(getJourneyUserRequestToken());
+        assertThat(configuredOtpMapperApiTokenArg.getValue()).isEqualToComparingFieldByField(getConfiguredOtpMapperApiToken());
     }
 
     @Test
-    void test_getJourneysBy_userRequestToken_returns_an_empty_list_when_no_results_are_in_response_list() throws ExecutionException, InterruptedException {
+    void test_getJourneysBy_userRequestToken_returns_an_empty_list_when_no_results_are_available() throws ExecutionException, InterruptedException {
         ApiToken testData = getJourneyUserRequestToken();
         Point testDeparture = testData.getDepartureCoordinate();
         Point testArrival = testData.getArrivalCoordinate();
-        when(journeyApiService.retrieveJourneysFromApiService(any(ApiToken.class)))
-                .thenReturn(Mono.just(Collections.emptyList()));
+        when(backendApiService.getManyBy(any(ApiToken.class), any(ApiToken.class), any(RequestHandlerFunction.class), eq(Journey.class)))
+                .thenReturn(Flux.empty());
 
         CompletableFuture<List<Journey>> result = classUnderTest.getJourneysBy(
                 testDeparture.getX(),

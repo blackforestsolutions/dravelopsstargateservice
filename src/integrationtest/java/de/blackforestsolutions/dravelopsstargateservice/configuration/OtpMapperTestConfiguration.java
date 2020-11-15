@@ -44,5 +44,4 @@ public class OtpMapperTestConfiguration {
                 .setArrivalCoordinate(new Point(arrivalCoordinateLongitude, arrivalCoordinateLatitude))
                 .setLanguage(Locale.forLanguageTag(language));
     }
-
 }

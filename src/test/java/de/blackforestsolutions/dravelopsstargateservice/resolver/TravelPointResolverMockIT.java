@@ -2,22 +2,23 @@ package de.blackforestsolutions.dravelopsstargateservice.resolver;
 
 import com.graphql.spring.boot.test.GraphQLResponse;
 import com.graphql.spring.boot.test.GraphQLTestTemplate;
+import de.blackforestsolutions.dravelopsdatamodel.TravelPoint;
 import de.blackforestsolutions.dravelopsdatamodel.util.ApiToken;
-import de.blackforestsolutions.dravelopsstargateservice.service.communicationservice.TravelPointApiService;
+import de.blackforestsolutions.dravelopsstargateservice.service.communicationservice.BackendApiService;
+import de.blackforestsolutions.dravelopsstargateservice.service.communicationservice.RequestHandlerFunction;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import reactor.core.publisher.Mono;
+import reactor.core.publisher.Flux;
 
 import java.io.IOException;
-import java.util.Collections;
-import java.util.List;
 
 import static de.blackforestsolutions.dravelopsdatamodel.objectmothers.TravelPointObjectMother.getStuttgarterStreetOneTravelPoint;
 import static de.blackforestsolutions.dravelopsdatamodel.testutil.TestUtils.getResourceFileAsString;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doReturn;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -27,12 +28,13 @@ public class TravelPointResolverMockIT {
     private GraphQLTestTemplate graphQLTestTemplate;
 
     @MockBean
-    private TravelPointApiService travelPointApiServiceMock;
+    private BackendApiService backendApiService;
 
     @Test
     void test_getTravelPointsBy_min_parameters_graphql_file_returns_a_correct_journey() throws IOException {
         String expectedTravelPointJson = getResourceFileAsString("json/travelPointResponse.json");
-        doReturn(Mono.just(List.of(getStuttgarterStreetOneTravelPoint()))).when(travelPointApiServiceMock).retrieveTravelPointsFromApiService(any(ApiToken.class));
+        doReturn(Flux.just(getStuttgarterStreetOneTravelPoint()))
+                .when(backendApiService).getManyBy(any(ApiToken.class), any(ApiToken.class), any(RequestHandlerFunction.class), eq(TravelPoint.class));
 
         GraphQLResponse response = graphQLTestTemplate.postForResource("graphql/bw-get-travelpoints-min-parameters.graphql");
 
@@ -43,7 +45,7 @@ public class TravelPointResolverMockIT {
 
     @Test
     void test_getTravelPointsBy_no_result_graphql_file_returns_zero_travelPoints() throws IOException {
-        doReturn(Mono.just(Collections.emptyList())).when(travelPointApiServiceMock).retrieveTravelPointsFromApiService(any(ApiToken.class));
+        doReturn(Flux.empty()).when(backendApiService).getManyBy(any(ApiToken.class), any(ApiToken.class), any(RequestHandlerFunction.class), eq(TravelPoint.class));
 
         GraphQLResponse response = graphQLTestTemplate.postForResource("graphql/bw-get-travelpoints-min-parameters.graphql");
 
@@ -54,7 +56,8 @@ public class TravelPointResolverMockIT {
     @Test
     void test_getTravelPointsBy_max_parameters_graphql_file_returns_a_correct_journey() throws IOException {
         String expectedTravelPointJson = getResourceFileAsString("json/travelPointResponse.json");
-        doReturn(Mono.just(List.of(getStuttgarterStreetOneTravelPoint()))).when(travelPointApiServiceMock).retrieveTravelPointsFromApiService(any(ApiToken.class));
+        doReturn(Flux.just(getStuttgarterStreetOneTravelPoint()))
+                .when(backendApiService).getManyBy(any(ApiToken.class), any(ApiToken.class), any(RequestHandlerFunction.class), eq(TravelPoint.class));
 
         GraphQLResponse response = graphQLTestTemplate.postForResource("customer/bw-get-travelpoints-max-parameters.graphql");
 

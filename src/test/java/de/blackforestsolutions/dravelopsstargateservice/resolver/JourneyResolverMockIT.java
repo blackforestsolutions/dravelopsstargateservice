@@ -2,22 +2,23 @@ package de.blackforestsolutions.dravelopsstargateservice.resolver;
 
 import com.graphql.spring.boot.test.GraphQLResponse;
 import com.graphql.spring.boot.test.GraphQLTestTemplate;
+import de.blackforestsolutions.dravelopsdatamodel.Journey;
 import de.blackforestsolutions.dravelopsdatamodel.util.ApiToken;
-import de.blackforestsolutions.dravelopsstargateservice.service.communicationservice.JourneyApiService;
+import de.blackforestsolutions.dravelopsstargateservice.service.communicationservice.BackendApiService;
+import de.blackforestsolutions.dravelopsstargateservice.service.communicationservice.RequestHandlerFunction;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import reactor.core.publisher.Mono;
+import reactor.core.publisher.Flux;
 
 import java.io.IOException;
-import java.util.Collections;
-import java.util.List;
 
 import static de.blackforestsolutions.dravelopsdatamodel.objectmothers.JourneyObjectMother.getFurtwangenToWaldkirchJourney;
 import static de.blackforestsolutions.dravelopsdatamodel.testutil.TestUtils.getResourceFileAsString;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doReturn;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -27,12 +28,13 @@ class JourneyResolverMockIT {
     private GraphQLTestTemplate graphQLTestTemplate;
 
     @MockBean
-    private JourneyApiService journeyApiServiceMock;
+    private BackendApiService backendApiService;
 
     @Test
     void test_getJourneysBy_min_parameters_graphql_file_returns_a_correct_journey() throws IOException {
         String expectedJourneyJson = getResourceFileAsString("json/furtwangenToWaldkirchResponse.json");
-        doReturn(Mono.just(List.of(getFurtwangenToWaldkirchJourney()))).when(journeyApiServiceMock).retrieveJourneysFromApiService(any(ApiToken.class));
+        doReturn(Flux.just(getFurtwangenToWaldkirchJourney()))
+                .when(backendApiService).getManyBy(any(ApiToken.class), any(ApiToken.class), any(RequestHandlerFunction.class), eq(Journey.class));
 
         GraphQLResponse response = graphQLTestTemplate.postForResource("graphql/bw-get-journeys-min-parameters.graphql");
 
@@ -43,7 +45,7 @@ class JourneyResolverMockIT {
 
     @Test
     void test_getJourneysBy_no_result_graphql_file_returns_zero_journey() throws IOException {
-        doReturn(Mono.just(Collections.emptyList())).when(journeyApiServiceMock).retrieveJourneysFromApiService(any(ApiToken.class));
+        doReturn(Flux.empty()).when(backendApiService).getManyBy(any(ApiToken.class), any(ApiToken.class), any(RequestHandlerFunction.class), eq(Journey.class));
 
         GraphQLResponse response = graphQLTestTemplate.postForResource("graphql/get-journeys-no-result.graphql");
 
@@ -54,7 +56,8 @@ class JourneyResolverMockIT {
     @Test
     void test_getJourneysBy_max_parameters_graphql_file_returns_a_correct_journey() throws IOException {
         String expectedJourneyJson = getResourceFileAsString("json/furtwangenToWaldkirchResponse.json");
-        doReturn(Mono.just(List.of(getFurtwangenToWaldkirchJourney()))).when(journeyApiServiceMock).retrieveJourneysFromApiService(any(ApiToken.class));
+        doReturn(Flux.just(getFurtwangenToWaldkirchJourney()))
+                .when(backendApiService).getManyBy(any(ApiToken.class), any(ApiToken.class), any(RequestHandlerFunction.class), eq(Journey.class));
 
         GraphQLResponse response = graphQLTestTemplate.postForResource("customer/bw-get-journeys-max-parameters.graphql");
 
