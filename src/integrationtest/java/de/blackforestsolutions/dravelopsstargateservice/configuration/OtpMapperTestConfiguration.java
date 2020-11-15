@@ -53,5 +53,4 @@ public class OtpMapperTestConfiguration {
                 .setLanguage(Locale.forLanguageTag(language))
                 .build();
     }
-
 }
