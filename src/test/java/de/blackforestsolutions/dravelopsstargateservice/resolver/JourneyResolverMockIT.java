@@ -34,7 +34,7 @@ class JourneyResolverMockIT {
         String expectedJourneyJson = getResourceFileAsString("json/furtwangenToWaldkirchResponse.json");
         doReturn(Mono.just(List.of(getFurtwangenToWaldkirchJourney()))).when(journeyApiServiceMock).retrieveJourneysFromApiService(any(ApiToken.class));
 
-        GraphQLResponse response = graphQLTestTemplate.postForResource("customer/bw-get-journeys-min-parameters.graphql");
+        GraphQLResponse response = graphQLTestTemplate.postForResource("graphql/bw-get-journeys-min-parameters.graphql");
 
         assertThat(response.isOk()).isTrue();
         assertThat(response.readTree().findValues("getJourneysBy").size()).isEqualTo(1);
@@ -56,7 +56,7 @@ class JourneyResolverMockIT {
         String expectedJourneyJson = getResourceFileAsString("json/furtwangenToWaldkirchResponse.json");
         doReturn(Mono.just(List.of(getFurtwangenToWaldkirchJourney()))).when(journeyApiServiceMock).retrieveJourneysFromApiService(any(ApiToken.class));
 
-        GraphQLResponse response = graphQLTestTemplate.postForResource("graphql/bw-get-journeys-max-parameters.graphql");
+        GraphQLResponse response = graphQLTestTemplate.postForResource("customer/bw-get-journeys-max-parameters.graphql");
 
         assertThat(response.isOk()).isTrue();
         assertThat(response.readTree().findValues("getJourneysBy").size()).isEqualTo(1);

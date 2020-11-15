@@ -16,8 +16,6 @@ import java.util.Locale;
 @TestConfiguration
 public class OtpMapperTestConfiguration {
 
-//    @Value("${otpmapper.get.journey.path}")
-//    private String path;
     @Value("${test.apitokens[0].optimize}")
     private Optimization optimize;
     @Value("${test.apitokens[0].isArrivalDateTime}")
@@ -39,7 +37,6 @@ public class OtpMapperTestConfiguration {
     @ConfigurationProperties(prefix = "otpmapper")
     public ApiToken.ApiTokenBuilder apiToken() {
         return new ApiToken.ApiTokenBuilder()
-//                .setPath(path)
                 .setOptimize(optimize)
                 .setIsArrivalDateTime(isArrivalDateTime)
                 .setDateTime(ZonedDateTime.parse(dateTime))
