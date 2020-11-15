@@ -1,11 +1,8 @@
 package de.blackforestsolutions.dravelopsstargateservice.service.communicationservice;
 
-import de.blackforestsolutions.dravelopsdatamodel.CallStatus;
-import de.blackforestsolutions.dravelopsdatamodel.Status;
 import de.blackforestsolutions.dravelopsdatamodel.util.ApiToken;
-import de.blackforestsolutions.dravelopsdatamodel.util.DravelOpsJsonMapper;
+import de.blackforestsolutions.dravelopsstargateservice.exceptionhandling.ExceptionHandlerService;
 import de.blackforestsolutions.dravelopsstargateservice.service.communicationservice.restcalls.CallService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
@@ -19,44 +16,32 @@ import static de.blackforestsolutions.dravelopsdatamodel.util.DravelOpsHttpCallB
 public class BackendApiServiceImpl implements BackendApiService {
 
     private final CallService callService;
+    private final ExceptionHandlerService exceptionHandlerService;
 
-    @Autowired
-    public BackendApiServiceImpl(CallService callService) {
+    public BackendApiServiceImpl(CallService callService, ExceptionHandlerService exceptionHandlerService) {
         this.callService = callService;
+        this.exceptionHandlerService = exceptionHandlerService;
     }
 
     @Override
-    public <T> Flux<CallStatus<T>> getManyBy(ApiToken apiToken, Class<T> type) {
+    public <T> Flux<T> getManyBy(ApiToken userRequestToken, ApiToken serviceApiToken, RequestHandlerFunction requestHandlerFunction, Class<T> returnType) {
         try {
-            return executeRequestWith(apiToken, type)
-                    .onErrorResume(e -> Flux.just(new CallStatus<>(null, Status.FAILED, e)));
+            return executeRequestWith(userRequestToken, serviceApiToken, requestHandlerFunction, returnType)
+                    .onErrorResume(exceptionHandlerService::handleExceptions);
         } catch (Exception e) {
-            return Flux.just(new CallStatus<>(null, Status.FAILED, e));
+            return exceptionHandlerService.handleExceptions(e);
         }
     }
 
-    private <T> Flux<CallStatus<T>> executeRequestWith(ApiToken apiToken, Class<T> type) {
-        return Mono.just(apiToken)
-                .flatMap(token -> Mono.zip(getRequestString(token), getRequestBody(token)))
-                .flatMapMany(request -> callService.post(request.getT1(), request.getT2(), HttpHeaders.EMPTY))
-                .flatMap(jsonResponse -> getResponseBody(jsonResponse, type));
+    private <T> Flux<T> executeRequestWith(ApiToken userRequestToken, ApiToken serviceApiToken, RequestHandlerFunction requestHandlerFunction, Class<T> returnType) {
+        return Mono.just(requestHandlerFunction)
+                .map(handlerFunction -> handlerFunction.merge(userRequestToken, serviceApiToken))
+                .flatMap(this::getRequestString)
+                .flatMapMany(url -> callService.postMany(url, userRequestToken, HttpHeaders.EMPTY, returnType));
     }
 
     private Mono<String> getRequestString(ApiToken apiToken) {
         URL requestUrl = buildUrlWith(apiToken);
         return Mono.just(requestUrl.toString());
-    }
-
-    private Mono<String> getRequestBody(ApiToken apiToken) {
-        DravelOpsJsonMapper mapper = new DravelOpsJsonMapper();
-        return mapper.map(apiToken);
-    }
-
-    private <T> Mono<CallStatus<T>> getResponseBody(String json, Class<T> type) {
-        DravelOpsJsonMapper mapper = new DravelOpsJsonMapper();
-        return Mono.just(json)
-                .flatMap(j -> mapper.mapJsonToPojo(j, type))
-                .map(pojo -> new CallStatus<>(pojo, Status.SUCCESS, null))
-                .onErrorResume(error -> Mono.just(new CallStatus<>(null, Status.FAILED, error)));
     }
 }

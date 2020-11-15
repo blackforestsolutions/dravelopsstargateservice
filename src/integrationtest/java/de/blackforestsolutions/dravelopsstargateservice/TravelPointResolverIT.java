@@ -4,6 +4,7 @@ import com.graphql.spring.boot.test.GraphQLResponse;
 import com.graphql.spring.boot.test.GraphQLTestTemplate;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.io.IOException;
@@ -13,13 +14,16 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class TravelPointResolverIT {
 
+    @Value("${test.graphql.travelpoints[0].path}")
+    private String path;
+
     @Autowired
     private GraphQLTestTemplate graphQLTestTemplate;
 
     @Test
     void test_getTravelPointsBy_min_parameters_graphql_file_returns_travelPoints() throws IOException {
 
-        GraphQLResponse response = graphQLTestTemplate.postForResource("customer/bw-get-travelpoints-min-parameters.graphql");
+        GraphQLResponse response = graphQLTestTemplate.postForResource(path);
 
         assertThat(response.isOk()).isTrue();
         assertThat(response.readTree().findValues("getTravelPointsBy").size()).isEqualTo(1);
@@ -27,7 +31,7 @@ public class TravelPointResolverIT {
     }
 
     @Test
-    void test_getJourneysBy_no_result_graphql_file_returns_zero_journey() throws IOException {
+    void test_getTravelPointsBy_no_result_graphql_file_returns_zero_travelPoints() throws IOException {
 
         GraphQLResponse response = graphQLTestTemplate.postForResource("graphql/get-travelpoints-no-result.graphql");
 

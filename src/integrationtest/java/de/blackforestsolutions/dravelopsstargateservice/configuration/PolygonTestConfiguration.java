@@ -2,36 +2,30 @@ package de.blackforestsolutions.dravelopsstargateservice.configuration;
 
 import de.blackforestsolutions.dravelopsdatamodel.util.ApiToken;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Import;
 
 import java.util.Locale;
 
+@Import(ZonedDateTimeConfiguration.class)
 @TestConfiguration
 public class PolygonTestConfiguration {
 
-    @Value("${polygon.protocol}")
-    private String protocol;
-    @Value("${polygon.host}")
-    private String host;
-    @Value("${polygon.port}")
-    private int port;
     @Value("${polygon.get.journey.path}")
     private String path;
-    @Value("${test.apitokens.polygon.text}")
+    @Value("${test.apitokens[0].text}")
     private String departure;
-    @Value("${test.apitokens.polygon.language}")
-    private String language;
+    @Value("${test.apitokens[0].language}")
+    private Locale language;
 
     @Bean(name = "polygonApiTokenIT")
-    public ApiToken apiToken() {
+    @ConfigurationProperties(prefix = "polygon")
+    public ApiToken.ApiTokenBuilder apiToken() {
         return new ApiToken.ApiTokenBuilder()
-                .setProtocol(protocol)
-                .setHost(host)
-                .setPort(port)
                 .setPath(path)
                 .setDeparture(departure)
-                .setLanguage(Locale.forLanguageTag(language))
-                .build();
+                .setLanguage(language);
     }
 }
