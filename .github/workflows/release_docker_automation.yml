@@ -39,6 +39,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           WITH_V: true
+          DEFAULT_BUMP: minor
           RELEASE_BRANCHES: master
 
       - name: Docker Login
@@ -48,7 +49,10 @@ jobs:
           password: ${{ secrets.DOCKER_PASS }}
 
       - name: Build Docker Image
-        run: docker build . --file Dockerfile --tag ${{ github.repository }}:${{ steps.tag-version.outputs.new_tag }}
+        run: docker build . --file Dockerfile --tag ${{ github.repository }}:${{ steps.tag-version.outputs.new_tag }} --tag ${{ github.repository }}:latest
 
-      - name: Push Docker Image
+      - name: Push versioned Docker Image
         run: docker push ${{ github.repository }}:${{ steps.tag-version.outputs.new_tag }}
+
+      - name: Push latest Docker Image
+        run: docker push ${{ github.repository }}:latest
