@@ -48,7 +48,10 @@ jobs:
           password: ${{ secrets.DOCKER_PASS }}
 
       - name: Build Docker Image
-        run: docker build . --file Dockerfile --tag ${{ github.repository }}:${{ steps.tag-version.outputs.new_tag }}
+        run: docker build . --file Dockerfile --tag ${{ github.repository }}:${{ steps.tag-version.outputs.new_tag }} --tag ${{ github.repository }}:latest
 
-      - name: Push Docker Image
+      - name: Push versioned Docker Image
         run: docker push ${{ github.repository }}:${{ steps.tag-version.outputs.new_tag }}
+
+      - name: Push latest Docker Image
+        run: docker push ${{ github.repository }}:latest
