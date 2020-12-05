@@ -1,6 +1,6 @@
 package de.blackforestsolutions.dravelopsstargateservice.service.supportservice;
 
-import de.blackforestsolutions.dravelopsdatamodel.util.ApiToken;
+import de.blackforestsolutions.dravelopsdatamodel.ApiToken;
 
 public interface RequestTokenHandlerService {
     ApiToken mergeTravelPointApiTokensWith(ApiToken userRequest, ApiToken configuredRequestData);

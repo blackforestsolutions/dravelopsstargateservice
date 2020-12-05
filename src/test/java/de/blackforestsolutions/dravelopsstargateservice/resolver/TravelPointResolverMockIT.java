@@ -3,7 +3,7 @@ package de.blackforestsolutions.dravelopsstargateservice.resolver;
 import com.graphql.spring.boot.test.GraphQLResponse;
 import com.graphql.spring.boot.test.GraphQLTestTemplate;
 import de.blackforestsolutions.dravelopsdatamodel.TravelPoint;
-import de.blackforestsolutions.dravelopsdatamodel.util.ApiToken;
+import de.blackforestsolutions.dravelopsdatamodel.ApiToken;
 import de.blackforestsolutions.dravelopsstargateservice.service.communicationservice.BackendApiService;
 import de.blackforestsolutions.dravelopsstargateservice.service.communicationservice.RequestHandlerFunction;
 import org.junit.jupiter.api.Test;

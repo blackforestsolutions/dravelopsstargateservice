@@ -1,6 +1,6 @@
 package de.blackforestsolutions.dravelopsstargateservice.service.supportservice;
 
-import de.blackforestsolutions.dravelopsdatamodel.util.ApiToken;
+import de.blackforestsolutions.dravelopsdatamodel.ApiToken;
 import org.junit.jupiter.api.Test;
 
 import static de.blackforestsolutions.dravelopsdatamodel.objectmothers.ApiTokenObjectMother.*;

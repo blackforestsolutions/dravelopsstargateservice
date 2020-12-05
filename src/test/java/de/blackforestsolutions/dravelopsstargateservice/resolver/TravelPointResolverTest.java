@@ -1,7 +1,7 @@
 package de.blackforestsolutions.dravelopsstargateservice.resolver;
 
 import de.blackforestsolutions.dravelopsdatamodel.TravelPoint;
-import de.blackforestsolutions.dravelopsdatamodel.util.ApiToken;
+import de.blackforestsolutions.dravelopsdatamodel.ApiToken;
 import de.blackforestsolutions.dravelopsstargateservice.model.exception.LanguageParsingException;
 import de.blackforestsolutions.dravelopsstargateservice.service.communicationservice.BackendApiService;
 import de.blackforestsolutions.dravelopsstargateservice.service.communicationservice.BackendApiServiceImpl;

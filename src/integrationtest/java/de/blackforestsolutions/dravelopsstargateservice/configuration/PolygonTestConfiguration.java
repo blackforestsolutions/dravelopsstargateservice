@@ -1,6 +1,6 @@
 package de.blackforestsolutions.dravelopsstargateservice.configuration;
 
-import de.blackforestsolutions.dravelopsdatamodel.util.ApiToken;
+import de.blackforestsolutions.dravelopsdatamodel.ApiToken;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.test.context.TestConfiguration;

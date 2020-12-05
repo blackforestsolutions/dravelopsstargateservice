@@ -1,6 +1,6 @@
 package de.blackforestsolutions.dravelopsstargateservice.service.communicationservice;
 
-import de.blackforestsolutions.dravelopsdatamodel.util.ApiToken;
+import de.blackforestsolutions.dravelopsdatamodel.ApiToken;
 import de.blackforestsolutions.dravelopsstargateservice.exceptionhandling.ExceptionHandlerService;
 import de.blackforestsolutions.dravelopsstargateservice.service.communicationservice.restcalls.CallService;
 import org.springframework.http.HttpHeaders;
