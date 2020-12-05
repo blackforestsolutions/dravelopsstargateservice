@@ -2,7 +2,7 @@ package de.blackforestsolutions.dravelopsstargateservice.service.communicationse
 
 import de.blackforestsolutions.dravelopsdatamodel.Journey;
 import de.blackforestsolutions.dravelopsdatamodel.TravelPoint;
-import de.blackforestsolutions.dravelopsdatamodel.util.ApiToken;
+import de.blackforestsolutions.dravelopsdatamodel.ApiToken;
 import de.blackforestsolutions.dravelopsstargateservice.exceptionhandling.ExceptionHandlerService;
 import de.blackforestsolutions.dravelopsstargateservice.exceptionhandling.ExceptionHandlerServiceImpl;
 import de.blackforestsolutions.dravelopsstargateservice.service.communicationservice.restcalls.CallService;

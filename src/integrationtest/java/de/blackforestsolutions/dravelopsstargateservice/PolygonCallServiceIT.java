@@ -1,7 +1,7 @@
 package de.blackforestsolutions.dravelopsstargateservice;
 
 import de.blackforestsolutions.dravelopsdatamodel.TravelPoint;
-import de.blackforestsolutions.dravelopsdatamodel.util.ApiToken;
+import de.blackforestsolutions.dravelopsdatamodel.ApiToken;
 import de.blackforestsolutions.dravelopsstargateservice.configuration.PolygonTestConfiguration;
 import de.blackforestsolutions.dravelopsstargateservice.service.communicationservice.restcalls.CallService;
 import org.junit.jupiter.api.Test;

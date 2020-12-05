@@ -1,6 +1,6 @@
 package de.blackforestsolutions.dravelopsstargateservice.service.communicationservice;
 
-import de.blackforestsolutions.dravelopsdatamodel.util.ApiToken;
+import de.blackforestsolutions.dravelopsdatamodel.ApiToken;
 
 
 @FunctionalInterface

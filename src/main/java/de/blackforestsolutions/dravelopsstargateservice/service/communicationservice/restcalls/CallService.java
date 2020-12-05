@@ -1,6 +1,6 @@
 package de.blackforestsolutions.dravelopsstargateservice.service.communicationservice.restcalls;
 
-import de.blackforestsolutions.dravelopsdatamodel.util.ApiToken;
+import de.blackforestsolutions.dravelopsdatamodel.ApiToken;
 import org.springframework.http.HttpHeaders;
 import reactor.core.publisher.Flux;
 
