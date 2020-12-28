@@ -3,7 +3,6 @@ package de.blackforestsolutions.dravelopsstargateservice.resolver;
 import de.blackforestsolutions.dravelopsdatamodel.Journey;
 import de.blackforestsolutions.dravelopsdatamodel.ApiToken;
 import de.blackforestsolutions.dravelopsstargateservice.model.exception.DateTimeParsingException;
-import de.blackforestsolutions.dravelopsstargateservice.model.exception.LanguageParsingException;
 import de.blackforestsolutions.dravelopsstargateservice.service.communicationservice.BackendApiService;
 import de.blackforestsolutions.dravelopsstargateservice.service.communicationservice.BackendApiServiceImpl;
 import de.blackforestsolutions.dravelopsstargateservice.service.communicationservice.RequestHandlerFunction;
@@ -79,7 +78,7 @@ class JourneyResolverTest {
                 testData.getDateTime().toString(),
                 testData.getIsArrivalDateTime(),
                 testData.getOptimize(),
-                testData.getLanguage().toString()
+                testData.getLanguage().toLanguageTag()
         );
 
         InOrder inOrder = inOrder(backendApiService);
@@ -127,25 +126,6 @@ class JourneyResolverTest {
                 testData.getIsArrivalDateTime(),
                 testData.getOptimize(),
                 testData.getLanguage().toString()
-        ));
-    }
-
-    @Test
-    void test_getJourneysBy_userRequestToken_and_wrong_language_format_throws_dateTimeParsingException() {
-        String wrongLanguage = "";
-        ApiToken testData = getJourneyUserRequestToken();
-        Point testDeparture = testData.getDepartureCoordinate();
-        Point testArrival = testData.getArrivalCoordinate();
-
-        assertThrows(LanguageParsingException.class, () -> classUnderTest.getJourneysBy(
-                testDeparture.getX(),
-                testDeparture.getY(),
-                testArrival.getX(),
-                testArrival.getY(),
-                testData.getDateTime().toString(),
-                testData.getIsArrivalDateTime(),
-                testData.getOptimize(),
-                wrongLanguage
         ));
     }
 

@@ -1,5 +1,5 @@
 query GetTravelPoints {
-    getTravelPointsBy(text: "Sick AG", language: "de") {
+    getTravelPointsBy(text: "Sick AG", language: "de-DE") {
         name
         point {
             x

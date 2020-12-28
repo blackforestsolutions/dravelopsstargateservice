@@ -65,14 +65,4 @@ public class TravelPointResolverMockIT {
         assertThat(response.readTree().findValues("getTravelPointsBy").size()).isGreaterThan(0);
         assertThat(response.readTree().get("data").get("getTravelPointsBy").get(0).toPrettyString()).isEqualTo(expectedTravelPointJson);
     }
-
-    @Test
-    void test_getTravelPointsBy_graphql_file_with_language_error_returns_error_json_with_languageParsingException() throws IOException {
-        String expectedErrorJson = getResourceFileAsString("json/travelPointLanguageErrorResponse.json");
-
-        GraphQLResponse response = graphQLTestTemplate.postForResource("graphql/get-travelpoints-language-error.graphql");
-
-        assertThat(response.isOk()).isTrue();
-        assertThat(response.readTree().toPrettyString()).isEqualTo(expectedErrorJson);
-    }
 }

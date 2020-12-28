@@ -76,14 +76,4 @@ class JourneyResolverMockIT {
         assertThat(response.readTree().toPrettyString()).isEqualTo(expectedErrorJson);
     }
 
-    @Test
-    void test_getJourneysBy_graphql_file_with_language_error_returns_error_json_with_languageParsingException() throws IOException {
-        String expectedErrorJson = getResourceFileAsString("json/journeyLanguageErrorResponse.json");
-
-        GraphQLResponse response = graphQLTestTemplate.postForResource("graphql/get-journeys-language-error.graphql");
-
-        assertThat(response.isOk()).isTrue();
-        assertThat(response.readTree().toPrettyString()).isEqualTo(expectedErrorJson);
-    }
-
 }

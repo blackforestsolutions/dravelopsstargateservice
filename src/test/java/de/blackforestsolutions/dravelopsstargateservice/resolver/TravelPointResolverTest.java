@@ -1,8 +1,7 @@
 package de.blackforestsolutions.dravelopsstargateservice.resolver;
 
-import de.blackforestsolutions.dravelopsdatamodel.TravelPoint;
 import de.blackforestsolutions.dravelopsdatamodel.ApiToken;
-import de.blackforestsolutions.dravelopsstargateservice.model.exception.LanguageParsingException;
+import de.blackforestsolutions.dravelopsdatamodel.TravelPoint;
 import de.blackforestsolutions.dravelopsstargateservice.service.communicationservice.BackendApiService;
 import de.blackforestsolutions.dravelopsstargateservice.service.communicationservice.BackendApiServiceImpl;
 import de.blackforestsolutions.dravelopsstargateservice.service.communicationservice.RequestHandlerFunction;
@@ -23,7 +22,6 @@ import static de.blackforestsolutions.dravelopsdatamodel.objectmothers.ApiTokenO
 import static de.blackforestsolutions.dravelopsdatamodel.objectmothers.TravelPointObjectMother.getGermanyTravelPoint;
 import static de.blackforestsolutions.dravelopsdatamodel.testutil.TestUtils.toJson;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 class TravelPointResolverTest {
@@ -58,7 +56,7 @@ class TravelPointResolverTest {
         ArgumentCaptor<ApiToken> userRequestArg = ArgumentCaptor.forClass(ApiToken.class);
         ArgumentCaptor<ApiToken> configuredPolygonApiTokenArg = ArgumentCaptor.forClass(ApiToken.class);
 
-        classUnderTest.getTravelPointsBy(testData.getDeparture(), testData.getLanguage().toString());
+        classUnderTest.getTravelPointsBy(testData.getDeparture(), testData.getLanguage().toLanguageTag());
 
 
         InOrder inOrder = inOrder(backendApiService);
@@ -77,13 +75,5 @@ class TravelPointResolverTest {
         CompletableFuture<List<TravelPoint>> result = classUnderTest.getTravelPointsBy(testData.getDeparture(), testData.getLanguage().toString());
 
         assertThat(result.get().size()).isEqualTo(0);
-    }
-
-    @Test
-    void test_getTravelPointsByo_userRequestToken_and_wrong_language_format_throws_dateTimeParsingException() {
-        String wrongLanguage = "";
-        ApiToken testData = getTravelPointUserRequestToken();
-
-        assertThrows(LanguageParsingException.class, () -> classUnderTest.getTravelPointsBy(testData.getDeparture(), wrongLanguage));
     }
 }
