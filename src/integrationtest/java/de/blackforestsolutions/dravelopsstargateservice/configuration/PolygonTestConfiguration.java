@@ -18,7 +18,7 @@ public class PolygonTestConfiguration {
     @Value("${test.apitokens[0].text}")
     private String departure;
     @Value("${test.apitokens[0].language}")
-    private String language;
+    private Locale language;
 
     @Bean(name = "polygonApiTokenIT")
     @ConfigurationProperties(prefix = "polygon")
@@ -26,6 +26,6 @@ public class PolygonTestConfiguration {
         return new ApiToken.ApiTokenBuilder()
                 .setPath(path)
                 .setDeparture(departure)
-                .setLanguage(Locale.forLanguageTag(language));
+                .setLanguage(language);
     }
 }
