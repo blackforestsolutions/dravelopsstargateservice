@@ -7,6 +7,7 @@ scalar URL
 type Query {
     """The language code consists of the language subtag and region subtag of the IETF BCP 47 standard like de-DE."""
     getJourneysBy(departureLongitude: Float!, departureLatitude: Float!, arrivalLongitude: Float!, arrivalLatitude: Float!, dateTime: String!, isArrivalDateTime: Boolean = true, optimize: Optimization = "QUICK", language: String = "de-DE"): [Journey]
+    """The language code consists of the language subtag and region subtag of the IETF BCP 47 standard like de-DE."""
     getTravelPointsBy(text: String, language: String = "de-DE"): [TravelPoint]
 }
 
