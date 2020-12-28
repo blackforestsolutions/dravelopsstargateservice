@@ -22,8 +22,6 @@ public class OtpMapperTestConfiguration {
     private int port;
     @Value("${otpmapper.get.journey.path}")
     private String path;
-    @Value("${test.apitokens[0].language}")
-    private Locale language;
     @Value("${test.apitokens[0].departureCoordinateLongitude}")
     private Double departureCoordinateLongitude;
     @Value("${test.apitokens[0].departureCoordinateLatitude}")
@@ -41,7 +39,6 @@ public class OtpMapperTestConfiguration {
                 .setHost(host)
                 .setPort(port)
                 .setPath(path)
-                .setLanguage(language)
                 .setDepartureCoordinate(new Point(departureCoordinateLongitude, departureCoordinateLatitude))
                 .setArrivalCoordinate(new Point(arrivalCoordinateLongitude, arrivalCoordinateLatitude));
     }
