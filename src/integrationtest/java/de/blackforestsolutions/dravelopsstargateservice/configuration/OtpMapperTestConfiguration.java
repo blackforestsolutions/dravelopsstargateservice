@@ -1,7 +1,6 @@
 package de.blackforestsolutions.dravelopsstargateservice.configuration;
 
 import de.blackforestsolutions.dravelopsdatamodel.ApiToken;
-import de.blackforestsolutions.dravelopsstargateservice.configuration.converter.ZonedDateTimeConverter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.test.context.TestConfiguration;
@@ -33,7 +32,6 @@ public class OtpMapperTestConfiguration {
     @Bean(name = "otpMapperApiTokenIT")
     @ConfigurationProperties(prefix = "test.apitokens[0]")
     public ApiToken.ApiTokenBuilder apiToken() {
-        ZonedDateTimeConverter zonedDateTimeConverter = new ZonedDateTimeConverter();
         return new ApiToken.ApiTokenBuilder()
                 .setProtocol(protocol)
                 .setHost(host)
