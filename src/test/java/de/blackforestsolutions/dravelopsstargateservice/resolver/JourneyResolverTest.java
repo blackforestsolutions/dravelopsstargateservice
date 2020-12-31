@@ -1,7 +1,7 @@
 package de.blackforestsolutions.dravelopsstargateservice.resolver;
 
-import de.blackforestsolutions.dravelopsdatamodel.Journey;
 import de.blackforestsolutions.dravelopsdatamodel.ApiToken;
+import de.blackforestsolutions.dravelopsdatamodel.Journey;
 import de.blackforestsolutions.dravelopsstargateservice.model.exception.DateTimeParsingException;
 import de.blackforestsolutions.dravelopsstargateservice.model.exception.LanguageParsingException;
 import de.blackforestsolutions.dravelopsstargateservice.service.communicationservice.BackendApiService;
@@ -20,8 +20,7 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
-import static de.blackforestsolutions.dravelopsdatamodel.objectmothers.ApiTokenObjectMother.getConfiguredOtpMapperApiToken;
-import static de.blackforestsolutions.dravelopsdatamodel.objectmothers.ApiTokenObjectMother.getJourneyUserRequestToken;
+import static de.blackforestsolutions.dravelopsdatamodel.objectmothers.ApiTokenObjectMother.*;
 import static de.blackforestsolutions.dravelopsdatamodel.objectmothers.JourneyObjectMother.getFurtwangenToWaldkirchJourney;
 import static de.blackforestsolutions.dravelopsdatamodel.testutil.TestUtils.toJson;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -32,9 +31,9 @@ class JourneyResolverTest {
 
     private final BackendApiService backendApiService = mock(BackendApiServiceImpl.class);
     private final RequestTokenHandlerService requestTokenHandlerService = mock(RequestTokenHandlerServiceImpl.class);
-    private final ApiToken configuredOtpMapperApiToken = getConfiguredOtpMapperApiToken();
+    private final ApiToken configuredRoutePersistenceApiToken = getConfiguredRoutePersistenceApiToken();
 
-    private final JourneyResolver classUnderTest = new JourneyResolver(backendApiService, requestTokenHandlerService, configuredOtpMapperApiToken);
+    private final JourneyResolver classUnderTest = new JourneyResolver(backendApiService, requestTokenHandlerService, configuredRoutePersistenceApiToken);
 
     @BeforeEach
     void init() {
@@ -69,7 +68,7 @@ class JourneyResolverTest {
         Point testDeparture = testData.getDepartureCoordinate();
         Point testArrival = testData.getArrivalCoordinate();
         ArgumentCaptor<ApiToken> userRequestArg = ArgumentCaptor.forClass(ApiToken.class);
-        ArgumentCaptor<ApiToken> configuredOtpMapperApiTokenArg = ArgumentCaptor.forClass(ApiToken.class);
+        ArgumentCaptor<ApiToken> configuredRoutePersistenceApiTokenArg = ArgumentCaptor.forClass(ApiToken.class);
 
         classUnderTest.getJourneysBy(
                 testDeparture.getX(),
@@ -83,10 +82,10 @@ class JourneyResolverTest {
         );
 
         InOrder inOrder = inOrder(backendApiService);
-        inOrder.verify(backendApiService, times(1)).getManyBy(userRequestArg.capture(), configuredOtpMapperApiTokenArg.capture(), any(RequestHandlerFunction.class), eq(Journey.class));
+        inOrder.verify(backendApiService, times(1)).getManyBy(userRequestArg.capture(), configuredRoutePersistenceApiTokenArg.capture(), any(RequestHandlerFunction.class), eq(Journey.class));
         inOrder.verifyNoMoreInteractions();
         assertThat(userRequestArg.getValue()).isEqualToComparingFieldByField(getJourneyUserRequestToken());
-        assertThat(configuredOtpMapperApiTokenArg.getValue()).isEqualToComparingFieldByField(getConfiguredOtpMapperApiToken());
+        assertThat(configuredRoutePersistenceApiTokenArg.getValue()).isEqualToComparingFieldByField(getConfiguredRoutePersistenceApiToken());
     }
 
     @Test

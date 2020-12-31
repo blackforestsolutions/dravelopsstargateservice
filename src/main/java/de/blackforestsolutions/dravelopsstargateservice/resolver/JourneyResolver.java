@@ -22,19 +22,19 @@ public class JourneyResolver implements GraphQLQueryResolver {
 
     private final BackendApiService backendApiService;
     private final RequestTokenHandlerService requestTokenHandlerService;
-    private final ApiToken otpmapperApiToken;
+    private final ApiToken routePersistenceApiToken;
 
     @Autowired
-    public JourneyResolver(BackendApiService backendApiService, RequestTokenHandlerService requestTokenHandlerService, ApiToken otpmapperApiToken) {
+    public JourneyResolver(BackendApiService backendApiService, RequestTokenHandlerService requestTokenHandlerService, ApiToken routePersistenceApiToken) {
         this.backendApiService = backendApiService;
         this.requestTokenHandlerService = requestTokenHandlerService;
-        this.otpmapperApiToken = otpmapperApiToken;
+        this.routePersistenceApiToken = routePersistenceApiToken;
     }
 
     @SuppressWarnings("checkstyle:parameternumber")
     public CompletableFuture<List<Journey>> getJourneysBy(double departureLongitude, double departureLatitude, double arrivalLongitude, double arrivalLatitude, String dateTime, boolean isArrivalDateTime, Optimization optimize, String language) {
         ApiToken apiToken = buildRequestApiTokenWith(departureLongitude, departureLatitude, arrivalLongitude, arrivalLatitude, extractZonedDateTimeFrom(dateTime), isArrivalDateTime, optimize, extractLocaleFrom(language));
-        return backendApiService.getManyBy(apiToken, otpmapperApiToken, requestTokenHandlerService::mergeJourneyApiTokensWith, Journey.class)
+        return backendApiService.getManyBy(apiToken, routePersistenceApiToken, requestTokenHandlerService::mergeJourneyApiTokensWith, Journey.class)
                 .collectList()
                 .toFuture();
     }
