@@ -13,6 +13,7 @@ import org.springframework.data.geo.Point;
 import org.springframework.stereotype.Component;
 
 import java.time.ZonedDateTime;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.CompletableFuture;
@@ -60,11 +61,11 @@ public class JourneyResolver implements GraphQLQueryResolver {
     }
 
     private Locale extractLocaleFrom(String language) {
-        Locale locale = Locale.forLanguageTag(language);
-        if (locale.toString().length() != 2) {
-            throw new LanguageParsingException();
-        }
-        return locale;
+        return Arrays.stream(Locale.getISOLanguages())
+                .filter(isoLanguage -> isoLanguage.equals(language))
+                .findFirst()
+                .map(Locale::new)
+                .orElseThrow(LanguageParsingException::new);
     }
 
 }

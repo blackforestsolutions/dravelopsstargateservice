@@ -9,6 +9,7 @@ import graphql.kickstart.tools.GraphQLQueryResolver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.CompletableFuture;
@@ -42,10 +43,11 @@ public class TravelPointResolver implements GraphQLQueryResolver {
     }
 
     private Locale extractLocaleFrom(String language) {
-        Locale locale = Locale.forLanguageTag(language);
-        if (locale.toString().length() != 2) {
-            throw new LanguageParsingException();
-        }
-        return locale;
+        return Arrays.stream(Locale.getISOLanguages())
+                .filter(isoLanguage -> isoLanguage.equals(language))
+                .findFirst()
+                .map(Locale::new)
+                .orElseThrow(LanguageParsingException::new);
     }
+
 }
