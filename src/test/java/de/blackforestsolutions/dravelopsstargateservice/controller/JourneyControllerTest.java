@@ -32,7 +32,7 @@ class JourneyControllerTest {
 
     @Test
     void test_getJourneysBy_userRequestToken_configuredToken_requestHandlerFunction_returns_journeys_when_journeys_by_backend_are_found() {
-        ApiToken.ApiTokenBuilder testData = new ApiToken.ApiTokenBuilder(getJourneyUserRequestToken());
+        ApiToken testData = getJourneyUserRequestToken();
         ArgumentCaptor<ApiToken> userRequestArg = ArgumentCaptor.forClass(ApiToken.class);
         ArgumentCaptor<ApiToken> configuredTokenCapture = ArgumentCaptor.forClass(ApiToken.class);
         when(backendApiService.getManyBy(any(ApiToken.class), any(ApiToken.class), any(RequestHandlerFunction.class), eq(Journey.class)))
@@ -44,13 +44,13 @@ class JourneyControllerTest {
         StepVerifier.create(result)
                 .assertNext(journey -> assertThat(toJson(journey)).isEqualTo(toJson(getJourneyWithEmptyFields(TEST_UUID_1))))
                 .verifyComplete();
-        assertThat(userRequestArg.getValue()).isEqualToComparingFieldByField(testData.build());
+        assertThat(userRequestArg.getValue()).isEqualToComparingFieldByField(testData);
         assertThat(configuredTokenCapture.getValue()).isEqualToComparingFieldByField(configuredRoutePersistenceApiToken);
     }
 
     @Test
     void test_getJourneysBy_userRequestToken_configuredToken_requestHandlerFunction_returns_zero_journeys_when_no_journeys_by_backend_are_found() {
-        ApiToken.ApiTokenBuilder testData = new ApiToken.ApiTokenBuilder(getJourneyUserRequestToken());
+        ApiToken testData = getJourneyUserRequestToken();
         when(backendApiService.getManyBy(any(ApiToken.class), any(ApiToken.class), any(RequestHandlerFunction.class), eq(Journey.class)))
                 .thenReturn(Flux.empty());
 

@@ -27,9 +27,9 @@ public class JourneyController {
     }
 
     @RequestMapping(value = "/get", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-    public Flux<Journey> getJourneysBy(@RequestBody ApiToken.ApiTokenBuilder userRequestToken) {
+    public Flux<Journey> getJourneysBy(@RequestBody ApiToken userRequestToken) {
         return backendApiService.getManyBy(
-                userRequestToken.build(),
+                userRequestToken,
                 routePersistenceApiToken,
                 requestTokenHandlerService::mergeJourneyApiTokensWith,
                 Journey.class
