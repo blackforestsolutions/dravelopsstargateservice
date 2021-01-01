@@ -1,8 +1,8 @@
 package de.blackforestsolutions.dravelopsstargateservice.resolver;
 
+import de.blackforestsolutions.dravelopsdatamodel.ApiToken;
 import de.blackforestsolutions.dravelopsdatamodel.Journey;
 import de.blackforestsolutions.dravelopsdatamodel.Optimization;
-import de.blackforestsolutions.dravelopsdatamodel.ApiToken;
 import de.blackforestsolutions.dravelopsstargateservice.model.exception.DateTimeParsingException;
 import de.blackforestsolutions.dravelopsstargateservice.model.exception.LanguageParsingException;
 import de.blackforestsolutions.dravelopsstargateservice.service.communicationservice.BackendApiService;
@@ -34,7 +34,17 @@ public class JourneyResolver implements GraphQLQueryResolver {
 
     @SuppressWarnings("checkstyle:parameternumber")
     public CompletableFuture<List<Journey>> getJourneysBy(double departureLongitude, double departureLatitude, double arrivalLongitude, double arrivalLatitude, String dateTime, boolean isArrivalDateTime, Optimization optimize, String language) {
-        ApiToken apiToken = buildRequestApiTokenWith(departureLongitude, departureLatitude, arrivalLongitude, arrivalLatitude, extractZonedDateTimeFrom(dateTime), isArrivalDateTime, optimize, extractLocaleFrom(language));
+        ApiToken apiToken = buildRequestApiTokenWith(
+                departureLongitude,
+                departureLatitude,
+                arrivalLongitude,
+                arrivalLatitude,
+                extractZonedDateTimeFrom(dateTime),
+                isArrivalDateTime,
+                optimize,
+                extractLocaleFrom(language)
+        );
+
         return backendApiService.getManyBy(apiToken, routePersistenceApiToken, requestTokenHandlerService::mergeJourneyApiTokensWith, Journey.class)
                 .collectList()
                 .toFuture();
