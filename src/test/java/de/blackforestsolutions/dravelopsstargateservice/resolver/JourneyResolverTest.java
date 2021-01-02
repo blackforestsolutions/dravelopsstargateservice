@@ -2,6 +2,7 @@ package de.blackforestsolutions.dravelopsstargateservice.resolver;
 
 import de.blackforestsolutions.dravelopsdatamodel.ApiToken;
 import de.blackforestsolutions.dravelopsdatamodel.Journey;
+import de.blackforestsolutions.dravelopsdatamodel.Point;
 import de.blackforestsolutions.dravelopsstargateservice.model.exception.DateTimeParsingException;
 import de.blackforestsolutions.dravelopsstargateservice.model.exception.LanguageParsingException;
 import de.blackforestsolutions.dravelopsstargateservice.service.communicationservice.BackendApiService;
@@ -13,7 +14,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InOrder;
-import org.springframework.data.geo.Point;
 import reactor.core.publisher.Flux;
 
 import java.util.List;
@@ -23,7 +23,6 @@ import java.util.concurrent.ExecutionException;
 import static de.blackforestsolutions.dravelopsdatamodel.objectmothers.ApiTokenObjectMother.getConfiguredRoutePersistenceApiToken;
 import static de.blackforestsolutions.dravelopsdatamodel.objectmothers.ApiTokenObjectMother.getJourneyUserRequestToken;
 import static de.blackforestsolutions.dravelopsdatamodel.objectmothers.JourneyObjectMother.getFurtwangenToWaldkirchJourney;
-import static de.blackforestsolutions.dravelopsdatamodel.testutil.TestUtils.toJson;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
@@ -59,8 +58,8 @@ class JourneyResolverTest {
         );
 
         assertThat(result.get().size()).isEqualTo(2);
-        assertThat(toJson(result.get().get(0))).isEqualTo(toJson(expectedJourney));
-        assertThat(toJson(result.get().get(1))).isEqualTo(toJson(expectedJourney));
+        assertThat(result.get().get(0)).isEqualToComparingFieldByFieldRecursively(expectedJourney);
+        assertThat(result.get().get(1)).isEqualToComparingFieldByFieldRecursively(expectedJourney);
     }
 
     @Test
@@ -85,8 +84,8 @@ class JourneyResolverTest {
         InOrder inOrder = inOrder(backendApiService);
         inOrder.verify(backendApiService, times(1)).getManyBy(userRequestArg.capture(), configuredRoutePersistenceApiTokenArg.capture(), any(RequestHandlerFunction.class), eq(Journey.class));
         inOrder.verifyNoMoreInteractions();
-        assertThat(userRequestArg.getValue()).isEqualToComparingFieldByField(getJourneyUserRequestToken());
-        assertThat(configuredRoutePersistenceApiTokenArg.getValue()).isEqualToComparingFieldByField(getConfiguredRoutePersistenceApiToken());
+        assertThat(userRequestArg.getValue()).isEqualToComparingFieldByFieldRecursively(getJourneyUserRequestToken());
+        assertThat(configuredRoutePersistenceApiTokenArg.getValue()).isEqualToComparingFieldByFieldRecursively(getConfiguredRoutePersistenceApiToken());
     }
 
     @Test

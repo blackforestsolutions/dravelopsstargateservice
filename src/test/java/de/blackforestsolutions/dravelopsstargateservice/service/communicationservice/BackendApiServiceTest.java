@@ -18,7 +18,6 @@ import static de.blackforestsolutions.dravelopsdatamodel.objectmothers.ApiTokenO
 import static de.blackforestsolutions.dravelopsdatamodel.objectmothers.JourneyObjectMother.getFurtwangenToWaldkirchJourney;
 import static de.blackforestsolutions.dravelopsdatamodel.objectmothers.TravelPointObjectMother.getGermanWatchMuseumTravelPoint;
 import static de.blackforestsolutions.dravelopsdatamodel.objectmothers.TravelPointObjectMother.getGermanyTravelPoint;
-import static de.blackforestsolutions.dravelopsdatamodel.testutil.TestUtils.toJson;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
@@ -45,7 +44,7 @@ class BackendApiServiceTest {
         Flux<Journey> result = classUnderTest.getManyBy(userRequestToken, configuredTestToken, requestTokenHandlerService::mergeJourneyApiTokensWith, Journey.class);
 
         StepVerifier.create(result)
-                .assertNext(journey -> assertThat(toJson(journey)).isEqualTo(toJson(getFurtwangenToWaldkirchJourney())))
+                .assertNext(journey -> assertThat(journey).isEqualToComparingFieldByFieldRecursively(getFurtwangenToWaldkirchJourney()))
                 .verifyComplete();
     }
 
@@ -59,8 +58,8 @@ class BackendApiServiceTest {
         Flux<TravelPoint> result = classUnderTest.getManyBy(userRequestToken, configuredTestToken, requestTokenHandlerService::mergeTravelPointApiTokensWith, TravelPoint.class);
 
         StepVerifier.create(result)
-                .assertNext(travelPoint -> assertThat(toJson(travelPoint)).isEqualTo(toJson(getGermanWatchMuseumTravelPoint())))
-                .assertNext(travelPoint -> assertThat(toJson(travelPoint)).isEqualTo(toJson(getGermanyTravelPoint())))
+                .assertNext(travelPoint -> assertThat(travelPoint).isEqualToComparingFieldByFieldRecursively(getGermanWatchMuseumTravelPoint()))
+                .assertNext(travelPoint -> assertThat(travelPoint).isEqualToComparingFieldByFieldRecursively(getGermanyTravelPoint()))
                 .verifyComplete();
     }
 
@@ -90,7 +89,7 @@ class BackendApiServiceTest {
 
         verify(callService, times(1)).postMany(urlArg.capture(), bodyArg.capture(), httpHeadersArg.capture(), eq(Journey.class));
         assertThat(urlArg.getValue()).isEqualTo("http://localhost:8088/otp/journeys/get");
-        assertThat(bodyArg.getValue()).isEqualToComparingFieldByField(getJourneyUserRequestToken());
+        assertThat(bodyArg.getValue()).isEqualToComparingFieldByFieldRecursively(getJourneyUserRequestToken());
         assertThat(httpHeadersArg.getValue()).isEqualTo(HttpHeaders.EMPTY);
     }
 

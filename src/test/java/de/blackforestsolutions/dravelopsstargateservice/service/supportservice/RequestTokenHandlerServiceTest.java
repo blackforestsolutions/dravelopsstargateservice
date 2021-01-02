@@ -18,7 +18,7 @@ class RequestTokenHandlerServiceTest {
 
         ApiToken result = classUnderTest.mergeJourneyApiTokensWith(userRequestApiToken, configuredRoutePersistenceApiToken);
 
-        assertThat(result).isEqualToComparingFieldByField(getRoutePersistenceApiToken());
+        assertThat(result).isEqualToComparingFieldByFieldRecursively(getRoutePersistenceApiToken());
     }
 
     @Test

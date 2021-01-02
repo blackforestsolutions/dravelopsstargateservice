@@ -15,8 +15,6 @@ import reactor.test.StepVerifier;
 import static de.blackforestsolutions.dravelopsdatamodel.objectmothers.ApiTokenObjectMother.getConfiguredRoutePersistenceApiToken;
 import static de.blackforestsolutions.dravelopsdatamodel.objectmothers.ApiTokenObjectMother.getJourneyUserRequestToken;
 import static de.blackforestsolutions.dravelopsdatamodel.objectmothers.JourneyObjectMother.getJourneyWithEmptyFields;
-import static de.blackforestsolutions.dravelopsdatamodel.objectmothers.UUIDObjectMother.TEST_UUID_1;
-import static de.blackforestsolutions.dravelopsdatamodel.testutil.TestUtils.toJson;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -36,13 +34,13 @@ class JourneyControllerTest {
         ArgumentCaptor<ApiToken> userRequestArg = ArgumentCaptor.forClass(ApiToken.class);
         ArgumentCaptor<ApiToken> configuredTokenCapture = ArgumentCaptor.forClass(ApiToken.class);
         when(backendApiService.getManyBy(any(ApiToken.class), any(ApiToken.class), any(RequestHandlerFunction.class), eq(Journey.class)))
-                .thenReturn(Flux.just(getJourneyWithEmptyFields(TEST_UUID_1)));
+                .thenReturn(Flux.just(getJourneyWithEmptyFields()));
 
         Flux<Journey> result = classUnderTest.getJourneysBy(testData);
 
         verify(backendApiService, times(1)).getManyBy(userRequestArg.capture(), configuredTokenCapture.capture(), any(RequestHandlerFunction.class), eq(Journey.class));
         StepVerifier.create(result)
-                .assertNext(journey -> assertThat(toJson(journey)).isEqualTo(toJson(getJourneyWithEmptyFields(TEST_UUID_1))))
+                .assertNext(journey -> assertThat(journey).isEqualToComparingFieldByFieldRecursively(getJourneyWithEmptyFields()))
                 .verifyComplete();
         assertThat(userRequestArg.getValue()).isEqualToComparingFieldByField(testData);
         assertThat(configuredTokenCapture.getValue()).isEqualToComparingFieldByField(configuredRoutePersistenceApiToken);

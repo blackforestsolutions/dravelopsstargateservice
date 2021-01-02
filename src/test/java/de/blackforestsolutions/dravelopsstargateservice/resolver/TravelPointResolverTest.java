@@ -21,7 +21,6 @@ import java.util.concurrent.ExecutionException;
 import static de.blackforestsolutions.dravelopsdatamodel.objectmothers.ApiTokenObjectMother.getConfiguredPolygonApiToken;
 import static de.blackforestsolutions.dravelopsdatamodel.objectmothers.ApiTokenObjectMother.getTravelPointUserRequestToken;
 import static de.blackforestsolutions.dravelopsdatamodel.objectmothers.TravelPointObjectMother.getGermanyTravelPoint;
-import static de.blackforestsolutions.dravelopsdatamodel.testutil.TestUtils.toJson;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
@@ -48,8 +47,8 @@ class TravelPointResolverTest {
         CompletableFuture<List<TravelPoint>> result = classUnderTest.getTravelPointsBy(testData.getDeparture(), testData.getLanguage().toString());
 
         assertThat(result.get().size()).isEqualTo(2);
-        assertThat(toJson(result.get().get(0))).isEqualTo(toJson(expectedTravelPoint));
-        assertThat(toJson(result.get().get(1))).isEqualTo(toJson(expectedTravelPoint));
+        assertThat(result.get().get(0)).isEqualToComparingFieldByFieldRecursively(expectedTravelPoint);
+        assertThat(result.get().get(1)).isEqualToComparingFieldByFieldRecursively(expectedTravelPoint);
     }
 
     @Test

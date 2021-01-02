@@ -3,13 +3,13 @@ package de.blackforestsolutions.dravelopsstargateservice.resolver;
 import de.blackforestsolutions.dravelopsdatamodel.ApiToken;
 import de.blackforestsolutions.dravelopsdatamodel.Journey;
 import de.blackforestsolutions.dravelopsdatamodel.Optimization;
+import de.blackforestsolutions.dravelopsdatamodel.Point;
 import de.blackforestsolutions.dravelopsstargateservice.model.exception.DateTimeParsingException;
 import de.blackforestsolutions.dravelopsstargateservice.model.exception.LanguageParsingException;
 import de.blackforestsolutions.dravelopsstargateservice.service.communicationservice.BackendApiService;
 import de.blackforestsolutions.dravelopsstargateservice.service.supportservice.RequestTokenHandlerService;
 import graphql.kickstart.tools.GraphQLQueryResolver;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.geo.Point;
 import org.springframework.stereotype.Component;
 
 import java.time.ZonedDateTime;
@@ -53,8 +53,8 @@ public class JourneyResolver implements GraphQLQueryResolver {
     @SuppressWarnings("checkstyle:parameternumber")
     private ApiToken buildRequestApiTokenWith(double departureLongitude, double departureLatitude, double arrivalLongitude, double arrivalLatitude, ZonedDateTime dateTime, boolean isArrivalDateTime, Optimization optimize, Locale language) {
         return new ApiToken.ApiTokenBuilder()
-                .setDepartureCoordinate(new Point(departureLongitude, departureLatitude))
-                .setArrivalCoordinate(new Point(arrivalLongitude, arrivalLatitude))
+                .setDepartureCoordinate(new Point.PointBuilder(departureLongitude, departureLatitude).build())
+                .setArrivalCoordinate(new Point.PointBuilder(arrivalLongitude, arrivalLatitude).build())
                 .setDateTime(dateTime)
                 .setOptimize(optimize)
                 .setIsArrivalDateTime(isArrivalDateTime)
