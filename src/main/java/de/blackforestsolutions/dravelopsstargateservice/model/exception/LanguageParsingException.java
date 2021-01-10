@@ -14,7 +14,7 @@ public class LanguageParsingException extends RuntimeException implements GraphQ
     private static final String INVALID_FIELD = "language";
 
     public LanguageParsingException() {
-        super("Language is represented as a two letter country code. For example 'de', 'en', 'es'...");
+        super("Language is represented as a two letter country code (ISO 639-1). For example 'de', 'en', 'es'...");
     }
 
     @Override

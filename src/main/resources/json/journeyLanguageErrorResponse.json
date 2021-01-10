@@ -1,6 +1,6 @@
 {
   "errors" : [ {
-    "message" : "Exception while fetching data (/getJourneysBy) : Language is represented as a two letter country code. For example 'de', 'en', 'es'...",
+    "message" : "Exception while fetching data (/getJourneysBy) : Language is represented as a two letter country code (ISO 639-1). For example 'de', 'en', 'es'...",
     "locations" : [ {
       "line" : 2,
       "column" : 5
