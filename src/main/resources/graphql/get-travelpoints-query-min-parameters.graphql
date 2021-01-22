@@ -7,4 +7,3 @@ query GetTravelPoints {
         }
     }
 }
-

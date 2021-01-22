@@ -36,7 +36,7 @@ public class TravelPointResolverMockIT {
         doReturn(Flux.just(getStuttgarterStreetOneTravelPoint()))
                 .when(backendApiService).getManyBy(any(ApiToken.class), any(ApiToken.class), any(RequestHandlerFunction.class), eq(TravelPoint.class));
 
-        GraphQLResponse response = graphQLTestTemplate.postForResource("graphql/bw-get-travelpoints-min-parameters.graphql");
+        GraphQLResponse response = graphQLTestTemplate.postForResource("graphql/get-travelpoints-query-min-parameters.graphql");
 
         assertThat(response.isOk()).isTrue();
         assertThat(response.readTree().findValues("getTravelPointsBy").size()).isGreaterThan(0);
@@ -47,7 +47,7 @@ public class TravelPointResolverMockIT {
     void test_getTravelPointsBy_no_result_graphql_file_returns_zero_travelPoints() throws IOException {
         doReturn(Flux.empty()).when(backendApiService).getManyBy(any(ApiToken.class), any(ApiToken.class), any(RequestHandlerFunction.class), eq(TravelPoint.class));
 
-        GraphQLResponse response = graphQLTestTemplate.postForResource("graphql/bw-get-travelpoints-min-parameters.graphql");
+        GraphQLResponse response = graphQLTestTemplate.postForResource("graphql/get-travelpoints-query-min-parameters.graphql");
 
         assertThat(response.isOk()).isTrue();
         assertThat(response.readTree().get("data").get("getTravelPointsBy").size()).isEqualTo(0);
@@ -59,7 +59,7 @@ public class TravelPointResolverMockIT {
         doReturn(Flux.just(getStuttgarterStreetOneTravelPoint()))
                 .when(backendApiService).getManyBy(any(ApiToken.class), any(ApiToken.class), any(RequestHandlerFunction.class), eq(TravelPoint.class));
 
-        GraphQLResponse response = graphQLTestTemplate.postForResource("customer/bw-get-travelpoints-max-parameters.graphql");
+        GraphQLResponse response = graphQLTestTemplate.postForResource("customer/bw-get-travelpoints-query-max-parameters.graphql");
 
         assertThat(response.isOk()).isTrue();
         assertThat(response.readTree().findValues("getTravelPointsBy").size()).isGreaterThan(0);
@@ -70,7 +70,7 @@ public class TravelPointResolverMockIT {
     void test_getTravelPointsBy_graphql_file_with_language_error_returns_error_json_with_languageParsingException() throws IOException {
         String expectedErrorJson = getResourceFileAsString("json/travelPointLanguageErrorResponse.json");
 
-        GraphQLResponse response = graphQLTestTemplate.postForResource("graphql/get-travelpoints-language-error.graphql");
+        GraphQLResponse response = graphQLTestTemplate.postForResource("graphql/get-travelpoints-query-language-error.graphql");
 
         assertThat(response.isOk()).isTrue();
         assertThat(response.readTree().toPrettyString()).isEqualTo(expectedErrorJson);

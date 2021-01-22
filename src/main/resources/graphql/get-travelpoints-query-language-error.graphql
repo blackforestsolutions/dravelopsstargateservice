@@ -1,0 +1,12 @@
+query GetTravelPoints {
+    getTravelPointsBy(
+        text: "Stuttgarter Strasse 1, Rottweil, Deu"
+        language: "wrong"
+    ) {
+        name
+        point {
+            x
+            y
+        }
+    }
+}

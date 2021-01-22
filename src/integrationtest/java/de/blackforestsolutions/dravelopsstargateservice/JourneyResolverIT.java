@@ -14,7 +14,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class JourneyResolverIT {
 
-    @Value("${test.graphql.journeys[0].path}")
+    @Value("${test.graphql.query.journeys[0].path}")
     private String path;
 
     @Autowired
@@ -33,7 +33,7 @@ public class JourneyResolverIT {
     @Test
     void test_getJourneysBy_no_result_graphql_file_returns_zero_journey() throws IOException {
 
-        GraphQLResponse response = graphQLTestTemplate.postForResource("graphql/get-journeys-no-result.graphql");
+        GraphQLResponse response = graphQLTestTemplate.postForResource("graphql/get-journeys-subscription-no-result.graphql");
 
         assertThat(response.isOk()).isTrue();
         assertThat(response.readTree().get("data").get("getJourneysBy").size()).isEqualTo(0);
