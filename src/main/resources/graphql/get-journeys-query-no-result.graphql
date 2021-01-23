@@ -1,0 +1,18 @@
+query GetJourneys {
+    getJourneysBy(
+        departureLatitude: 0
+        departureLongitude: 0
+        arrivalLatitude: 0
+        arrivalLongitude: 0
+        dateTime: "2020-09-30T13:00:00+02:00"
+    ) {
+        legs {
+            departure {
+                name
+            }
+            arrival {
+                name
+            }
+        }
+    }
+}

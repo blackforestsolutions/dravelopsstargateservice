@@ -1,4 +1,4 @@
-package de.blackforestsolutions.dravelopsstargateservice.resolver;
+package de.blackforestsolutions.dravelopsstargateservice.subscription;
 
 import de.blackforestsolutions.dravelopsdatamodel.ApiToken;
 import de.blackforestsolutions.dravelopsdatamodel.Journey;
@@ -11,23 +11,24 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InOrder;
+import org.reactivestreams.Publisher;
 import reactor.core.publisher.Flux;
+import reactor.test.StepVerifier;
 
-import java.util.List;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
 import static de.blackforestsolutions.dravelopsdatamodel.objectmothers.ApiTokenObjectMother.getJourneyUserRequestToken;
 import static de.blackforestsolutions.dravelopsdatamodel.objectmothers.JourneyObjectMother.getFurtwangenToWaldkirchJourney;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
-class JourneyResolverTest {
+class JourneySubscriptionTest {
 
     private final JourneyApiService journeyApiService = mock(JourneyApiServiceImpl.class);
 
-    private final JourneyResolver classUnderTest = new JourneyResolver(journeyApiService);
+    private final JourneySubscription classUnderTest = new JourneySubscription(journeyApiService);
 
     @BeforeEach
     void init() {
@@ -44,11 +45,11 @@ class JourneyResolverTest {
     }
 
     @Test
-    void test_getJourneysBy_userRequestToken_returns_journey() throws ExecutionException, InterruptedException {
+    void test_getJourneysBy_userRequestToken_returns_journey() {
         ApiToken testData = getJourneyUserRequestToken();
         Journey expectedJourney = getFurtwangenToWaldkirchJourney();
 
-        CompletableFuture<List<Journey>> result = classUnderTest.getJourneysBy(
+        Publisher<Journey> result = classUnderTest.getJourneysBy(
                 testData.getDepartureCoordinate().getX(),
                 testData.getDepartureCoordinate().getY(),
                 testData.getArrivalCoordinate().getX(),
@@ -59,9 +60,10 @@ class JourneyResolverTest {
                 testData.getLanguage().toString()
         );
 
-        assertThat(result.get().size()).isEqualTo(2);
-        assertThat(result.get().get(0)).isEqualToComparingFieldByFieldRecursively(expectedJourney);
-        assertThat(result.get().get(1)).isEqualToComparingFieldByFieldRecursively(expectedJourney);
+        StepVerifier.create(result)
+                .assertNext(journey -> assertThat(journey).isEqualToComparingFieldByFieldRecursively(expectedJourney))
+                .assertNext(journey -> assertThat(journey).isEqualToComparingFieldByFieldRecursively(expectedJourney))
+                .verifyComplete();
     }
 
     @Test
@@ -127,7 +129,7 @@ class JourneyResolverTest {
                 anyString())
         ).thenReturn(Flux.empty());
 
-        CompletableFuture<List<Journey>> result = classUnderTest.getJourneysBy(
+        Publisher<Journey> result = classUnderTest.getJourneysBy(
                 testDeparture.getX(),
                 testDeparture.getY(),
                 testArrival.getX(),
@@ -138,7 +140,9 @@ class JourneyResolverTest {
                 testData.getLanguage().toString()
         );
 
-        assertThat(result.get().size()).isEqualTo(0);
+        StepVerifier.create(result)
+                .expectNextCount(0L)
+                .verifyComplete();
     }
 
     @Test
@@ -168,6 +172,4 @@ class JourneyResolverTest {
                 testData.getLanguage().toString()
         ));
     }
-
-
 }

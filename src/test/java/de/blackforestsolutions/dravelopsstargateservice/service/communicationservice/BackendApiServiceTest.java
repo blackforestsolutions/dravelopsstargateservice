@@ -18,7 +18,6 @@ import static de.blackforestsolutions.dravelopsdatamodel.objectmothers.ApiTokenO
 import static de.blackforestsolutions.dravelopsdatamodel.objectmothers.JourneyObjectMother.getFurtwangenToWaldkirchJourney;
 import static de.blackforestsolutions.dravelopsdatamodel.objectmothers.TravelPointObjectMother.getGermanWatchMuseumTravelPoint;
 import static de.blackforestsolutions.dravelopsdatamodel.objectmothers.TravelPointObjectMother.getGermanyTravelPoint;
-import static de.blackforestsolutions.dravelopsdatamodel.testutil.TestUtils.toJson;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
@@ -39,13 +38,13 @@ class BackendApiServiceTest {
 
     @Test
     void test_getManyBy_user_token_and_configured_apiToken_returns_journeys() {
-        ApiToken configuredTestToken = getConfiguredOtpMapperApiToken();
+        ApiToken configuredTestToken = getConfiguredRoutePersistenceApiToken();
         ApiToken userRequestToken = getJourneyUserRequestToken();
 
         Flux<Journey> result = classUnderTest.getManyBy(userRequestToken, configuredTestToken, requestTokenHandlerService::mergeJourneyApiTokensWith, Journey.class);
 
         StepVerifier.create(result)
-                .assertNext(journey -> assertThat(toJson(journey)).isEqualTo(toJson(getFurtwangenToWaldkirchJourney())))
+                .assertNext(journey -> assertThat(journey).isEqualToComparingFieldByFieldRecursively(getFurtwangenToWaldkirchJourney()))
                 .verifyComplete();
     }
 
@@ -59,14 +58,14 @@ class BackendApiServiceTest {
         Flux<TravelPoint> result = classUnderTest.getManyBy(userRequestToken, configuredTestToken, requestTokenHandlerService::mergeTravelPointApiTokensWith, TravelPoint.class);
 
         StepVerifier.create(result)
-                .assertNext(travelPoint -> assertThat(toJson(travelPoint)).isEqualTo(toJson(getGermanWatchMuseumTravelPoint())))
-                .assertNext(travelPoint -> assertThat(toJson(travelPoint)).isEqualTo(toJson(getGermanyTravelPoint())))
+                .assertNext(travelPoint -> assertThat(travelPoint).isEqualToComparingFieldByFieldRecursively(getGermanWatchMuseumTravelPoint()))
+                .assertNext(travelPoint -> assertThat(travelPoint).isEqualToComparingFieldByFieldRecursively(getGermanyTravelPoint()))
                 .verifyComplete();
     }
 
     @Test
     void test_getManyBy_user_token_and_configured_apiToken_returns_no_journeys_when_otp_has_no_journeys_found() {
-        ApiToken configuredTestToken = getConfiguredOtpMapperApiToken();
+        ApiToken configuredTestToken = getConfiguredRoutePersistenceApiToken();
         ApiToken userRequestToken = getJourneyUserRequestToken();
         when(callService.postMany(anyString(), any(ApiToken.class), any(HttpHeaders.class), eq(Journey.class)))
                 .thenReturn(Flux.empty());
@@ -80,7 +79,7 @@ class BackendApiServiceTest {
 
     @Test
     void test_getManyBy_user_token_and_configured_apiToken_is_executed_correctly_when_journeys_are_returned() {
-        ApiToken configuredTestToken = getConfiguredOtpMapperApiToken();
+        ApiToken configuredTestToken = getConfiguredRoutePersistenceApiToken();
         ApiToken userRequestToken = getJourneyUserRequestToken();
         ArgumentCaptor<String> urlArg = ArgumentCaptor.forClass(String.class);
         ArgumentCaptor<ApiToken> bodyArg = ArgumentCaptor.forClass(ApiToken.class);
@@ -89,8 +88,8 @@ class BackendApiServiceTest {
         classUnderTest.getManyBy(userRequestToken, configuredTestToken, requestTokenHandlerService::mergeJourneyApiTokensWith, Journey.class).collectList().block();
 
         verify(callService, times(1)).postMany(urlArg.capture(), bodyArg.capture(), httpHeadersArg.capture(), eq(Journey.class));
-        assertThat(urlArg.getValue()).isEqualTo("http://localhost:8084/otp/journeys/get");
-        assertThat(bodyArg.getValue()).isEqualToComparingFieldByField(getJourneyUserRequestToken());
+        assertThat(urlArg.getValue()).isEqualTo("http://localhost:8088/otp/journeys/get");
+        assertThat(bodyArg.getValue()).isEqualToComparingFieldByFieldRecursively(getJourneyUserRequestToken());
         assertThat(httpHeadersArg.getValue()).isEqualTo(HttpHeaders.EMPTY);
     }
 
@@ -115,7 +114,7 @@ class BackendApiServiceTest {
         ArgumentCaptor<Throwable> exceptionArg = ArgumentCaptor.forClass(Throwable.class);
         ApiToken.ApiTokenBuilder userRequestToken = new ApiToken.ApiTokenBuilder(getJourneyUserRequestToken());
         userRequestToken.setLanguage(null);
-        ApiToken configuredTestToken = getConfiguredOtpMapperApiToken();
+        ApiToken configuredTestToken = getConfiguredRoutePersistenceApiToken();
 
         Flux<Journey> result = classUnderTest.getManyBy(userRequestToken.build(), configuredTestToken, requestTokenHandlerService::mergeJourneyApiTokensWith, Journey.class);
 
@@ -129,7 +128,7 @@ class BackendApiServiceTest {
     @Test
     void test_getManyBy_user_token_and_configured_apiToken_and_host_as_null_returns_failed_call_status() {
         ArgumentCaptor<Throwable> exceptionArg = ArgumentCaptor.forClass(Throwable.class);
-        ApiToken.ApiTokenBuilder configuredTestToken = new ApiToken.ApiTokenBuilder(getConfiguredOtpMapperApiToken());
+        ApiToken.ApiTokenBuilder configuredTestToken = new ApiToken.ApiTokenBuilder(getConfiguredRoutePersistenceApiToken());
         ApiToken userRequestToken = getJourneyUserRequestToken();
         configuredTestToken.setHost(null);
 
@@ -154,7 +153,7 @@ class BackendApiServiceTest {
 
     @Test
     void test_getManyBy_apiToken_and_error_by_call_service_returns_failed_call_status() {
-        ApiToken configuredTestToken = getConfiguredOtpMapperApiToken();
+        ApiToken configuredTestToken = getConfiguredRoutePersistenceApiToken();
         ApiToken userRequestToken = getJourneyUserRequestToken();
         when(callService.postMany(anyString(), any(ApiToken.class), any(HttpHeaders.class), eq(Journey.class)))
                 .thenReturn(Flux.error(new Exception()));

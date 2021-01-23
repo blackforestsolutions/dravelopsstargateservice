@@ -12,30 +12,21 @@ import java.io.IOException;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class TravelPointResolverIT {
+public class JourneySubscriptionIT {
 
-    @Value("${test.graphql.query.travelpoints[0].path}")
+    @Value("${test.graphql.subscription.journeys[0].path}")
     private String path;
 
     @Autowired
     private GraphQLTestTemplate graphQLTestTemplate;
 
     @Test
-    void test_getTravelPointsBy_min_parameters_graphql_file_returns_travelPoints() throws IOException {
+    void test_getJourneysBy_max_parameters_graphql_file_returns_journeys() throws IOException {
 
         GraphQLResponse response = graphQLTestTemplate.postForResource(path);
 
         assertThat(response.isOk()).isTrue();
-        assertThat(response.readTree().findValues("getTravelPointsBy").size()).isEqualTo(1);
-        assertThat(response.readTree().get("data").get("getTravelPointsBy").get(0).size()).isGreaterThan(0);
-    }
-
-    @Test
-    void test_getTravelPointsBy_no_result_graphql_file_returns_zero_travelPoints() throws IOException {
-
-        GraphQLResponse response = graphQLTestTemplate.postForResource("graphql/get-travelpoints-query-no-result.graphql");
-
-        assertThat(response.isOk()).isTrue();
-        assertThat(response.readTree().get("data").get("getTravelPointsBy").size()).isEqualTo(0);
+        assertThat(response.getRawResponse().getBody()).isNotEmpty();
+        assertThat(response.getRawResponse().getBody()).contains("id");
     }
 }

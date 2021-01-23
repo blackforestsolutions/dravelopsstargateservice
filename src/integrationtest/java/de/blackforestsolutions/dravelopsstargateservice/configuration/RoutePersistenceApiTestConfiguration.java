@@ -1,24 +1,24 @@
 package de.blackforestsolutions.dravelopsstargateservice.configuration;
 
 import de.blackforestsolutions.dravelopsdatamodel.ApiToken;
+import de.blackforestsolutions.dravelopsdatamodel.Point;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
-import org.springframework.data.geo.Point;
 
 @Import(ZonedDateTimeConfiguration.class)
 @TestConfiguration
-public class OtpMapperTestConfiguration {
+public class RoutePersistenceApiTestConfiguration {
 
-    @Value("${otpmapper.protocol}")
+    @Value("${routepersistence.protocol}")
     private String protocol;
-    @Value("${otpmapper.host}")
+    @Value("${routepersistence.host}")
     private String host;
-    @Value("${otpmapper.port}")
+    @Value("${routepersistence.port}")
     private int port;
-    @Value("${otpmapper.get.journey.path}")
+    @Value("${routepersistence.get.journey.path}")
     private String path;
     @Value("${test.apitokens[0].departureCoordinateLongitude}")
     private Double departureCoordinateLongitude;
@@ -29,7 +29,7 @@ public class OtpMapperTestConfiguration {
     @Value("${test.apitokens[0].arrivalCoordinateLatitude}")
     private Double arrivalCoordinateLatitude;
 
-    @Bean(name = "otpMapperApiTokenIT")
+    @Bean(name = "routePersistenceApiTokenIT")
     @ConfigurationProperties(prefix = "test.apitokens[0]")
     public ApiToken.ApiTokenBuilder apiToken() {
         return new ApiToken.ApiTokenBuilder()
@@ -37,7 +37,7 @@ public class OtpMapperTestConfiguration {
                 .setHost(host)
                 .setPort(port)
                 .setPath(path)
-                .setDepartureCoordinate(new Point(departureCoordinateLongitude, departureCoordinateLatitude))
-                .setArrivalCoordinate(new Point(arrivalCoordinateLongitude, arrivalCoordinateLatitude));
+                .setDepartureCoordinate(new Point.PointBuilder(departureCoordinateLongitude, departureCoordinateLatitude).build())
+                .setArrivalCoordinate(new Point.PointBuilder(arrivalCoordinateLongitude, arrivalCoordinateLatitude).build());
     }
 }
