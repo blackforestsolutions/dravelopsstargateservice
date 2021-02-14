@@ -13,7 +13,7 @@ import java.util.Locale;
 @TestConfiguration
 public class PolygonTestConfiguration {
 
-    @Value("${polygon.get.journey.path}")
+    @Value("${polygon.get.travelpoint.path}")
     private String path;
     @Value("${test.apitokens[0].text}")
     private String departure;

@@ -1,0 +1,10 @@
+query GetAllStations {
+    getAllStations {
+        name
+        point {
+            x
+            y
+        }
+        platform
+    }
+}

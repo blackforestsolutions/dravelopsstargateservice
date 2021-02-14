@@ -8,7 +8,8 @@ type Query {
     """Language param use ISO 639-1"""
     getJourneysBy(departureLongitude: Float!, departureLatitude: Float!, arrivalLongitude: Float!, arrivalLatitude: Float!, dateTime: String!, isArrivalDateTime: Boolean = true, optimize: Optimization = "QUICK", language: String = "de"): [Journey]
     """Language param use ISO 639-1"""
-    getTravelPointsBy(text: String, language: String = "de"): [TravelPoint]
+    getAddressesBy(text: String, language: String = "de"): [TravelPoint]
+    getAllStations: [TravelPoint]
 }
 
 type Subscription {

@@ -21,21 +21,30 @@ public class TravelPointResolverIT {
     private GraphQLTestTemplate graphQLTestTemplate;
 
     @Test
-    void test_getTravelPointsBy_min_parameters_graphql_file_returns_travelPoints() throws IOException {
+    void test_getAddressesBy_min_parameters_graphql_file_returns_travelPoints() throws IOException {
 
         GraphQLResponse response = graphQLTestTemplate.postForResource(path);
 
         assertThat(response.isOk()).isTrue();
-        assertThat(response.readTree().findValues("getTravelPointsBy").size()).isEqualTo(1);
-        assertThat(response.readTree().get("data").get("getTravelPointsBy").get(0).size()).isGreaterThan(0);
+        assertThat(response.readTree().findValues("getAddressesBy").size()).isEqualTo(1);
+        assertThat(response.readTree().get("data").get("getAddressesBy").get(0).size()).isGreaterThan(0);
     }
 
     @Test
-    void test_getTravelPointsBy_no_result_graphql_file_returns_zero_travelPoints() throws IOException {
+    void test_getAddressesBy_no_result_graphql_file_returns_zero_travelPoints() throws IOException {
 
-        GraphQLResponse response = graphQLTestTemplate.postForResource("graphql/get-travelpoints-query-no-result.graphql");
+        GraphQLResponse response = graphQLTestTemplate.postForResource("graphql/get-addresses-query-no-result.graphql");
 
         assertThat(response.isOk()).isTrue();
-        assertThat(response.readTree().get("data").get("getTravelPointsBy").size()).isEqualTo(0);
+        assertThat(response.readTree().get("data").get("getAddressesBy").size()).isEqualTo(0);
+    }
+
+    @Test
+    void test_getAllStations_returns_stations() throws IOException {
+
+        GraphQLResponse response = graphQLTestTemplate.postForResource("graphql/get-all-stations-query.graphql");
+
+        assertThat(response.isOk()).isTrue();
+        assertThat(response.readTree().get("data").get("getAllStations").size()).isGreaterThan(0);
     }
 }
