@@ -1,5 +1,5 @@
 query GetTravelPoints {
-    getTravelPointsBy(
+    getAddressesBy(
         text: "Stuttgarter Strasse 1, Rottweil, Deu"
         language: "wrong"
     ) {

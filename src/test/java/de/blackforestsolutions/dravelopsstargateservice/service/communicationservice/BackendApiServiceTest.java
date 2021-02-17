@@ -1,8 +1,8 @@
 package de.blackforestsolutions.dravelopsstargateservice.service.communicationservice;
 
+import de.blackforestsolutions.dravelopsdatamodel.ApiToken;
 import de.blackforestsolutions.dravelopsdatamodel.Journey;
 import de.blackforestsolutions.dravelopsdatamodel.TravelPoint;
-import de.blackforestsolutions.dravelopsdatamodel.ApiToken;
 import de.blackforestsolutions.dravelopsstargateservice.exceptionhandling.ExceptionHandlerService;
 import de.blackforestsolutions.dravelopsstargateservice.exceptionhandling.ExceptionHandlerServiceImpl;
 import de.blackforestsolutions.dravelopsstargateservice.service.communicationservice.restcalls.CallService;
@@ -16,8 +16,7 @@ import reactor.test.StepVerifier;
 
 import static de.blackforestsolutions.dravelopsdatamodel.objectmothers.ApiTokenObjectMother.*;
 import static de.blackforestsolutions.dravelopsdatamodel.objectmothers.JourneyObjectMother.getFurtwangenToWaldkirchJourney;
-import static de.blackforestsolutions.dravelopsdatamodel.objectmothers.TravelPointObjectMother.getGermanWatchMuseumTravelPoint;
-import static de.blackforestsolutions.dravelopsdatamodel.objectmothers.TravelPointObjectMother.getGermanyTravelPoint;
+import static de.blackforestsolutions.dravelopsdatamodel.objectmothers.TravelPointObjectMother.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
@@ -34,6 +33,10 @@ class BackendApiServiceTest {
         Journey mockedJourney = getFurtwangenToWaldkirchJourney();
         when(callService.postMany(anyString(), any(ApiToken.class), any(HttpHeaders.class), eq(Journey.class)))
                 .thenReturn(Flux.just(mockedJourney));
+
+        TravelPoint mockedTravelPoint = getBadDuerkheimTravelPoint();
+        when(callService.getMany(anyString(), any(HttpHeaders.class), eq(TravelPoint.class)))
+                .thenReturn(Flux.just(mockedTravelPoint));
     }
 
     @Test
@@ -164,4 +167,80 @@ class BackendApiServiceTest {
                 .expectNextCount(0L)
                 .verifyComplete();
     }
+
+    @Test
+    void test_getManyBy_configured_apiToken_returns_travelPoints() {
+        ApiToken configuredTestToken = getConfiguredStationPersistenceApiToken();
+
+        Flux<TravelPoint> result = classUnderTest.getManyBy(configuredTestToken, TravelPoint.class);
+
+        StepVerifier.create(result)
+                .assertNext(travelPoint -> assertThat(travelPoint).isEqualToComparingFieldByFieldRecursively(getBadDuerkheimTravelPoint()))
+                .verifyComplete();
+    }
+
+    @Test
+    void test_getManyBy_configured_apiToken_returns_no_travelPoints_when_nothing_found() {
+        ApiToken configuredTestToken = getConfiguredStationPersistenceApiToken();
+        when(callService.getMany(anyString(), any(HttpHeaders.class), eq(TravelPoint.class)))
+                .thenReturn(Flux.empty());
+
+        Flux<TravelPoint> result = classUnderTest.getManyBy(configuredTestToken, TravelPoint.class);
+
+        StepVerifier.create(result)
+                .expectNextCount(0L)
+                .verifyComplete();
+    }
+
+    @Test
+    void test_getManyBy_configured_apiToken_is_executed_correctly_when_travelPoints_are_returned() {
+        ApiToken configuredTestToken = getConfiguredStationPersistenceApiToken();
+        ArgumentCaptor<String> urlArg = ArgumentCaptor.forClass(String.class);
+        ArgumentCaptor<HttpHeaders> httpHeadersArg = ArgumentCaptor.forClass(HttpHeaders.class);
+
+        classUnderTest.getManyBy(configuredTestToken, TravelPoint.class).collectList().block();
+
+        verify(callService, times(1)).getMany(urlArg.capture(), httpHeadersArg.capture(), eq(TravelPoint.class));
+        assertThat(urlArg.getValue()).isEqualTo("http://localhost:8086/travelpoints/get");
+        assertThat(httpHeadersArg.getValue()).isEqualTo(HttpHeaders.EMPTY);
+    }
+
+    @Test
+    void test_getManyBy_configured_apiToken_and_host_as_null_returns_failed_call_status() {
+        ArgumentCaptor<Throwable> exceptionArg = ArgumentCaptor.forClass(Throwable.class);
+        ApiToken.ApiTokenBuilder configuredTestToken = new ApiToken.ApiTokenBuilder(getConfiguredStationPersistenceApiToken());
+        configuredTestToken.setHost(null);
+
+        Flux<TravelPoint> result = classUnderTest.getManyBy(configuredTestToken.build(), TravelPoint.class);
+
+        StepVerifier.create(result)
+                .expectNextCount(0L)
+                .verifyComplete();
+        verify(exceptionHandlerService, times(1)).handleExceptions(exceptionArg.capture());
+        assertThat(exceptionArg.getValue()).isInstanceOf(NullPointerException.class);
+    }
+
+    @Test
+    void test_getManyBy_configured_apiToken_as_null_returns_no_results_when_exception_is_thrown_outside_of_stream() {
+
+        Flux<TravelPoint> result = classUnderTest.getManyBy(null, TravelPoint.class);
+
+        StepVerifier.create(result)
+                .expectNextCount(0L)
+                .verifyComplete();
+    }
+
+    @Test
+    void test_getManyBy_configured_apiToken_and_error_by_call_service_returns_no_travelPoint() {
+        ApiToken configuredTestToken = getConfiguredStationPersistenceApiToken();
+        when(callService.getMany(anyString(), any(HttpHeaders.class), eq(TravelPoint.class)))
+                .thenReturn(Flux.error(new Exception()));
+
+        Flux<TravelPoint> result = classUnderTest.getManyBy(configuredTestToken, TravelPoint.class);
+
+        StepVerifier.create(result)
+                .expectNextCount(0L)
+                .verifyComplete();
+    }
+
 }

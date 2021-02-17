@@ -1,0 +1,36 @@
+[ {
+  "name" : "Bad Dürkheim Bahnhof",
+  "point" : {
+    "x" : 8.1704281,
+    "y" : 49.4615289
+  },
+  "platform" : "1"
+}, {
+  "name" : "Neckarau Bahnhof",
+  "point" : {
+    "x" : 8.4942986,
+    "y" : 49.4554028
+  },
+  "platform" : "B"
+}, {
+  "name" : "Karlsbader Straße",
+  "point" : {
+    "x" : 8.4040203,
+    "y" : 49.4770297
+  },
+  "platform" : "A"
+}, {
+  "name" : "Furtwangen Birke",
+  "point" : {
+    "x" : 8.203244,
+    "y" : 48.079146
+  },
+  "platform" : ""
+}, {
+  "name" : "Triberg Bahnhofstraße",
+  "point" : {
+    "x" : 8.240066,
+    "y" : 48.137905
+  },
+  "platform" : ""
+} ]

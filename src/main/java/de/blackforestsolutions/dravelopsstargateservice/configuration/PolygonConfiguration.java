@@ -14,8 +14,8 @@ public class PolygonConfiguration {
     private String polygonHost;
     @Value("${polygon.port}")
     private int polygonPort;
-    @Value("${polygon.get.journey.path}")
-    private String polygonJourneyPath;
+    @Value("${polygon.get.travelpoint.path}")
+    private String polygonTravelPointPath;
 
     @Bean(name = "polygonApiToken")
     public ApiToken apiToken() {
@@ -23,7 +23,7 @@ public class PolygonConfiguration {
                 .setProtocol(polygonProtocol)
                 .setHost(polygonHost)
                 .setPort(polygonPort)
-                .setPath(polygonJourneyPath)
+                .setPath(polygonTravelPointPath)
                 .build();
     }
 }

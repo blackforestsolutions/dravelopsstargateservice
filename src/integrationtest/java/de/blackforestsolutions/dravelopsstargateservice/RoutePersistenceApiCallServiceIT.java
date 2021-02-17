@@ -28,8 +28,9 @@ class RoutePersistenceApiCallServiceIT {
 
     @Test
     void test_journey_returns_journeys() {
+        ApiToken testData = routePersistenceApiTokenIT.build();
 
-        Flux<Journey> result = classUnderTest.postMany(buildUrlWith(routePersistenceApiTokenIT.build()).toString(), routePersistenceApiTokenIT.build(), HttpHeaders.EMPTY, Journey.class);
+        Flux<Journey> result = classUnderTest.postMany(buildUrlWith(testData).toString(), routePersistenceApiTokenIT.build(), HttpHeaders.EMPTY, Journey.class);
 
         StepVerifier.create(result)
                 .expectNextCount(1L)

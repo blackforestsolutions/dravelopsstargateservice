@@ -33,11 +33,27 @@ public class BackendApiServiceImpl implements BackendApiService {
         }
     }
 
+    @Override
+    public <T> Flux<T> getManyBy(ApiToken serviceApiToken, Class<T> returnType) {
+        try {
+            return executeRequestWith(serviceApiToken, returnType)
+                    .onErrorResume(exceptionHandlerService::handleExceptions);
+        } catch (Exception e) {
+            return exceptionHandlerService.handleExceptions(e);
+        }
+    }
+
     private <T> Flux<T> executeRequestWith(ApiToken userRequestToken, ApiToken serviceApiToken, RequestHandlerFunction requestHandlerFunction, Class<T> returnType) {
         return Mono.just(requestHandlerFunction)
                 .map(handlerFunction -> handlerFunction.merge(userRequestToken, serviceApiToken))
                 .flatMap(this::getRequestString)
                 .flatMapMany(url -> callService.postMany(url, userRequestToken, HttpHeaders.EMPTY, returnType));
+    }
+
+    private <T> Flux<T> executeRequestWith(ApiToken serviceApiToken, Class<T> returnType) {
+        return Mono.just(serviceApiToken)
+                .flatMap(this::getRequestString)
+                .flatMapMany(url -> callService.getMany(url, HttpHeaders.EMPTY, returnType));
     }
 
     private Mono<String> getRequestString(ApiToken apiToken) {
