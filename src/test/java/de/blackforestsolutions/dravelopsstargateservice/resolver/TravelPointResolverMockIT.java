@@ -23,7 +23,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doReturn;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class TravelPointResolverMockIT {
+class TravelPointResolverMockIT {
 
     @Autowired
     private GraphQLTestTemplate graphQLTestTemplate;

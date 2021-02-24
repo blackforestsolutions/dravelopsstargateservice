@@ -9,13 +9,16 @@ import de.blackforestsolutions.dravelopsstargateservice.service.communicationser
 import de.blackforestsolutions.dravelopsstargateservice.service.supportservice.RequestTokenHandlerServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.locationtech.jts.geom.Polygon;
 import org.mockito.ArgumentCaptor;
 import org.springframework.http.HttpHeaders;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 import static de.blackforestsolutions.dravelopsdatamodel.objectmothers.ApiTokenObjectMother.*;
 import static de.blackforestsolutions.dravelopsdatamodel.objectmothers.JourneyObjectMother.getFurtwangenToWaldkirchJourney;
+import static de.blackforestsolutions.dravelopsdatamodel.objectmothers.PolygonObjectMother.getPolygonWithNoEmptyFields;
 import static de.blackforestsolutions.dravelopsdatamodel.objectmothers.TravelPointObjectMother.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
@@ -37,6 +40,10 @@ class BackendApiServiceTest {
         TravelPoint mockedTravelPoint = getBadDuerkheimTravelPoint();
         when(callService.getMany(anyString(), any(HttpHeaders.class), eq(TravelPoint.class)))
                 .thenReturn(Flux.just(mockedTravelPoint));
+
+        Polygon mockedPolygon = getPolygonWithNoEmptyFields();
+        when((callService.getOne(anyString(), any(HttpHeaders.class), eq(Polygon.class))))
+                .thenReturn(Mono.just(mockedPolygon));
     }
 
     @Test
@@ -147,7 +154,7 @@ class BackendApiServiceTest {
     @Test
     void test_getManyBy_user_token_as_null_and_configured_apiToken_as_null_returns_failed_call_status_when_exception_is_thrown_outside_of_stream() {
 
-        Flux<Journey> result = classUnderTest.getManyBy(null, null, null, Journey.class);
+        Flux<Journey> result = classUnderTest.getManyBy(null, null, null, null);
 
         StepVerifier.create(result)
                 .expectNextCount(0L)
@@ -170,7 +177,7 @@ class BackendApiServiceTest {
 
     @Test
     void test_getManyBy_configured_apiToken_returns_travelPoints() {
-        ApiToken configuredTestToken = getConfiguredStationPersistenceApiToken();
+        ApiToken configuredTestToken = getConfiguredTravelPointPersistenceApiToken();
 
         Flux<TravelPoint> result = classUnderTest.getManyBy(configuredTestToken, TravelPoint.class);
 
@@ -181,7 +188,7 @@ class BackendApiServiceTest {
 
     @Test
     void test_getManyBy_configured_apiToken_returns_no_travelPoints_when_nothing_found() {
-        ApiToken configuredTestToken = getConfiguredStationPersistenceApiToken();
+        ApiToken configuredTestToken = getConfiguredTravelPointPersistenceApiToken();
         when(callService.getMany(anyString(), any(HttpHeaders.class), eq(TravelPoint.class)))
                 .thenReturn(Flux.empty());
 
@@ -194,7 +201,7 @@ class BackendApiServiceTest {
 
     @Test
     void test_getManyBy_configured_apiToken_is_executed_correctly_when_travelPoints_are_returned() {
-        ApiToken configuredTestToken = getConfiguredStationPersistenceApiToken();
+        ApiToken configuredTestToken = getConfiguredTravelPointPersistenceApiToken();
         ArgumentCaptor<String> urlArg = ArgumentCaptor.forClass(String.class);
         ArgumentCaptor<HttpHeaders> httpHeadersArg = ArgumentCaptor.forClass(HttpHeaders.class);
 
@@ -208,7 +215,7 @@ class BackendApiServiceTest {
     @Test
     void test_getManyBy_configured_apiToken_and_host_as_null_returns_failed_call_status() {
         ArgumentCaptor<Throwable> exceptionArg = ArgumentCaptor.forClass(Throwable.class);
-        ApiToken.ApiTokenBuilder configuredTestToken = new ApiToken.ApiTokenBuilder(getConfiguredStationPersistenceApiToken());
+        ApiToken.ApiTokenBuilder configuredTestToken = new ApiToken.ApiTokenBuilder(getConfiguredTravelPointPersistenceApiToken());
         configuredTestToken.setHost(null);
 
         Flux<TravelPoint> result = classUnderTest.getManyBy(configuredTestToken.build(), TravelPoint.class);
@@ -223,7 +230,7 @@ class BackendApiServiceTest {
     @Test
     void test_getManyBy_configured_apiToken_as_null_returns_no_results_when_exception_is_thrown_outside_of_stream() {
 
-        Flux<TravelPoint> result = classUnderTest.getManyBy(null, TravelPoint.class);
+        Flux<TravelPoint> result = classUnderTest.getManyBy(null, null);
 
         StepVerifier.create(result)
                 .expectNextCount(0L)
@@ -232,7 +239,7 @@ class BackendApiServiceTest {
 
     @Test
     void test_getManyBy_configured_apiToken_and_error_by_call_service_returns_no_travelPoint() {
-        ApiToken configuredTestToken = getConfiguredStationPersistenceApiToken();
+        ApiToken configuredTestToken = getConfiguredTravelPointPersistenceApiToken();
         when(callService.getMany(anyString(), any(HttpHeaders.class), eq(TravelPoint.class)))
                 .thenReturn(Flux.error(new Exception()));
 
@@ -242,5 +249,81 @@ class BackendApiServiceTest {
                 .expectNextCount(0L)
                 .verifyComplete();
     }
+
+    @Test
+    void test_getOneBy_configured_apiToken_returns_polygon() {
+        ApiToken configuredTestToken = getConfiguredPolygonPersistenceApiToken();
+
+        Mono<Polygon> result = classUnderTest.getOneBy(configuredTestToken, Polygon.class);
+
+        StepVerifier.create(result)
+                .assertNext(polygon -> assertThat(polygon).isEqualToComparingFieldByFieldRecursively(getPolygonWithNoEmptyFields()))
+                .verifyComplete();
+    }
+
+    @Test
+    void test_getOneBy_configured_apiToken_returns_no_polygon_when_backend_could_not_calculate_one() {
+        ApiToken configuredTestToken = getConfiguredPolygonPersistenceApiToken();
+        when(callService.getOne(anyString(), any(HttpHeaders.class), eq(Polygon.class)))
+                .thenReturn(Mono.empty());
+
+        Mono<Polygon> result = classUnderTest.getOneBy(configuredTestToken, Polygon.class);
+
+        StepVerifier.create(result)
+                .expectNextCount(0L)
+                .verifyComplete();
+    }
+
+    @Test
+    void test_getOneBy_configured_apiToken_is_executed_correctly_with_right_arguments() {
+        ApiToken configuredTestToken = getConfiguredPolygonPersistenceApiToken();
+        ArgumentCaptor<String> urlArg = ArgumentCaptor.forClass(String.class);
+        ArgumentCaptor<HttpHeaders> httpHeadersArg = ArgumentCaptor.forClass(HttpHeaders.class);
+
+        classUnderTest.getOneBy(configuredTestToken, Polygon.class).block();
+
+        verify(callService, times(1)).getOne(urlArg.capture(), httpHeadersArg.capture(), eq(Polygon.class));
+        assertThat(urlArg.getValue()).isEqualTo("http://localhost:8086/geocoding/get/operatingPolygon");
+        assertThat(httpHeadersArg.getValue()).isEqualTo(HttpHeaders.EMPTY);
+    }
+
+    @Test
+    void test_getOneBy_configured_apiToken_and_host_as_null_returns_no_polygon_when_exception_is_thrown() {
+        ArgumentCaptor<Throwable> exceptionArg = ArgumentCaptor.forClass(Throwable.class);
+        ApiToken.ApiTokenBuilder configuredTestToken = new ApiToken.ApiTokenBuilder(getConfiguredPolygonPersistenceApiToken());
+        configuredTestToken.setHost(null);
+
+        Mono<Polygon> result = classUnderTest.getOneBy(configuredTestToken.build(), Polygon.class);
+
+        StepVerifier.create(result)
+                .expectNextCount(0L)
+                .verifyComplete();
+        verify(exceptionHandlerService, times(1)).handleException(exceptionArg.capture());
+        assertThat(exceptionArg.getValue()).isInstanceOf(NullPointerException.class);
+    }
+
+    @Test
+    void test_getOneBy_configured_apiToken_as_null_returns_no_polygon_when_expcetion_thrown_outside_of_stream() {
+
+        Mono<Polygon> result = classUnderTest.getOneBy(null, null);
+
+        StepVerifier.create(result)
+                .expectNextCount(0L)
+                .verifyComplete();
+    }
+
+    @Test
+    void test_getOneBy_configured_apiToken_and_error_by_callService_returns_no_polygon() {
+        ApiToken configuredTestToken = getConfiguredPolygonPersistenceApiToken();
+        when(callService.getOne(anyString(), any(HttpHeaders.class), eq(Polygon.class)))
+                .thenReturn(Mono.error(new Exception()));
+
+        Mono<Polygon> result = classUnderTest.getOneBy(configuredTestToken, Polygon.class);
+
+        StepVerifier.create(result)
+                .expectNextCount(0L)
+                .verifyComplete();
+    }
+
 
 }

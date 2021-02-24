@@ -41,4 +41,16 @@ public class CallServiceImpl implements CallService {
                 .retrieve()
                 .bodyToFlux(returnType);
     }
+
+    @Override
+    public <T> Mono<T> getOne(String url, HttpHeaders httpHeaders, Class<T> returnType) {
+        return webClient
+                .get()
+                .uri(url)
+                .headers(headers -> httpHeaders.forEach(headers::addAll))
+                .accept(MediaType.TEXT_EVENT_STREAM)
+                .retrieve()
+                .bodyToFlux(returnType)
+                .next();
+    }
 }

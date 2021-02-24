@@ -29,7 +29,7 @@ class TravelPointResolverTest {
     private final BackendApiService backendApiService = mock(BackendApiServiceImpl.class);
     private final RequestTokenHandlerService requestTokenHandlerService = mock(RequestTokenHandlerServiceImpl.class);
     private final ApiToken configuredPolygonApiToken = getConfiguredPolygonApiToken();
-    private final ApiToken configuredStationApiToken = getConfiguredStationPersistenceApiToken();
+    private final ApiToken configuredStationApiToken = getConfiguredTravelPointPersistenceApiToken();
 
     private final TravelPointResolver classUnderTest = new TravelPointResolver(backendApiService, requestTokenHandlerService, configuredPolygonApiToken, configuredStationApiToken);
 
@@ -117,7 +117,7 @@ class TravelPointResolverTest {
         InOrder inOrder = inOrder(backendApiService);
         inOrder.verify(backendApiService, times(1)).getManyBy(configuredStationPersistenceApiTokenArg.capture(), eq(TravelPoint.class));
         inOrder.verifyNoMoreInteractions();
-        assertThat(configuredStationPersistenceApiTokenArg.getValue()).isEqualToComparingFieldByField(getConfiguredStationPersistenceApiToken());
+        assertThat(configuredStationPersistenceApiTokenArg.getValue()).isEqualToComparingFieldByField(getConfiguredTravelPointPersistenceApiToken());
     }
 
     @Test

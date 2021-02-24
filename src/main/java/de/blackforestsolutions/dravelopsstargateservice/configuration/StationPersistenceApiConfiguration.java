@@ -14,16 +14,29 @@ public class StationPersistenceApiConfiguration {
     private String stationPersistenceHost;
     @Value("${stationpersistence.port}")
     private int stationPersistencePort;
-    @Value("${stationpersistence.get.journey.path}")
+    @Value("${stationpersistence.get.travelpoint.path}")
     private String stationPersistenceTravelPointPath;
+    @Value("${stationpersistence.get.polygon.path}")
+    private String stationPersistencePolygonPath;
 
-    @Bean(name = "stationPersistenceApiToken")
-    public ApiToken apiToken() {
+    @Bean(name = "stationPersistenceTravelPointApiToken")
+    public ApiToken travelPointControllerApiToken() {
+        return getBasePersistenceApiToken()
+                .setPath(stationPersistenceTravelPointPath)
+                .build();
+    }
+
+    @Bean(name = "stationPersistencePolygonApiToken")
+    public ApiToken polygonControllerApiToken() {
+        return getBasePersistenceApiToken()
+                .setPath(stationPersistencePolygonPath)
+                .build();
+    }
+
+    private ApiToken.ApiTokenBuilder getBasePersistenceApiToken() {
         return new ApiToken.ApiTokenBuilder()
                 .setProtocol(stationPersistenceProtocol)
                 .setHost(stationPersistenceHost)
-                .setPort(stationPersistencePort)
-                .setPath(stationPersistenceTravelPointPath)
-                .build();
+                .setPort(stationPersistencePort);
     }
 }
