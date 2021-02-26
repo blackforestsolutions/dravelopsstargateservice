@@ -1,0 +1,8 @@
+query GetOperatingArea {
+    getOperatingArea {
+        points {
+            x
+            y
+        }
+    }
+}

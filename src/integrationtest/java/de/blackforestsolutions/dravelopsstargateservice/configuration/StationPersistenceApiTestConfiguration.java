@@ -18,27 +18,27 @@ public class StationPersistenceApiTestConfiguration {
     private String host;
     @Value("${stationpersistence.port}")
     private int port;
-    @Value("${stationpersistence.get.journey.path}")
-    private String path;
-    @Value("${test.apitokens[0].departureCoordinateLongitude}")
-    private Double departureCoordinateLongitude;
-    @Value("${test.apitokens[0].departureCoordinateLatitude}")
-    private Double departureCoordinateLatitude;
-    @Value("${test.apitokens[0].arrivalCoordinateLongitude}")
-    private Double arrivalCoordinateLongitude;
-    @Value("${test.apitokens[0].arrivalCoordinateLatitude}")
-    private Double arrivalCoordinateLatitude;
+    @Value("${stationpersistence.get.travelpoint.path}")
+    private String stationPersistenceTravelPointPath;
+    @Value("${stationpersistence.get.polygon.path}")
+    private String stationPersistencePolygonPath;
 
-    @Bean(name = "stationPersistenceApiTokenIT")
-    @ConfigurationProperties(prefix = "test.apitokens[0]")
-    public ApiToken.ApiTokenBuilder apiToken() {
+    @Bean
+    public ApiToken.ApiTokenBuilder stationPersistenceTravelPointApiTokenIT() {
         return new ApiToken.ApiTokenBuilder()
                 .setProtocol(protocol)
                 .setHost(host)
                 .setPort(port)
-                .setPath(path)
-                .setDepartureCoordinate(new Point.PointBuilder(departureCoordinateLongitude, departureCoordinateLatitude).build())
-                .setArrivalCoordinate(new Point.PointBuilder(arrivalCoordinateLongitude, arrivalCoordinateLatitude).build());
+                .setPath(stationPersistenceTravelPointPath);
+    }
+
+    @Bean
+    public ApiToken.ApiTokenBuilder stationPersistencePolygonApiTokenIT() {
+        return new ApiToken.ApiTokenBuilder()
+                .setProtocol(protocol)
+                .setHost(host)
+                .setPort(port)
+                .setPath(stationPersistencePolygonPath);
     }
 
 
