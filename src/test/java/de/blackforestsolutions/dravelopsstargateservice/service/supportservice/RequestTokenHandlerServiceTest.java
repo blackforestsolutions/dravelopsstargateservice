@@ -69,29 +69,29 @@ class RequestTokenHandlerServiceTest {
     @Test
     void test_mergeTravelPointApiTokensWith_userRequestToken_and_configuredPolygonApiToken_returns_merged_token() {
         ApiToken userRequestApiToken = getTravelPointUserRequestToken();
-        ApiToken configuredPeliasApiToken = getConfiguredPolygonApiToken();
+        ApiToken configuredBoxServiceApiToken = getConfiguredBoxServiceApiToken();
 
-        ApiToken result = classUnderTest.mergeTravelPointApiTokensWith(userRequestApiToken, configuredPeliasApiToken);
+        ApiToken result = classUnderTest.mergeTravelPointApiTokensWith(userRequestApiToken, configuredBoxServiceApiToken);
 
-        assertThat(result).isEqualToComparingFieldByField(getPolygonApiToken());
+        assertThat(result).isEqualToComparingFieldByField(getBoxServiceApiToken());
     }
 
     @Test
     void test_mergeTravelPointApiTokensWith_userRequestToken_departure_as_null_and_configuredPolygonApiToken_throws_exception() {
         ApiToken.ApiTokenBuilder userRequestApiToken = new ApiToken.ApiTokenBuilder(getTravelPointUserRequestToken());
         userRequestApiToken.setDeparture(null);
-        ApiToken configuredPeliasApiToken = getConfiguredPolygonApiToken();
+        ApiToken configuredBoxServiceApiToken = getConfiguredBoxServiceApiToken();
 
-        assertThrows(NullPointerException.class, () -> classUnderTest.mergeTravelPointApiTokensWith(userRequestApiToken.build(), configuredPeliasApiToken));
+        assertThrows(NullPointerException.class, () -> classUnderTest.mergeTravelPointApiTokensWith(userRequestApiToken.build(), configuredBoxServiceApiToken));
     }
 
     @Test
     void test_mergeTravelPointApiTokensWith_userRequestToken_language_as_null_and_configuredPolygonApiToken_throws_exception() {
         ApiToken.ApiTokenBuilder userRequestApiToken = new ApiToken.ApiTokenBuilder(getTravelPointUserRequestToken());
         userRequestApiToken.setLanguage(null);
-        ApiToken configuredPeliasApiToken = getConfiguredPolygonApiToken();
+        ApiToken configuredBoxServiceApiToken = getConfiguredBoxServiceApiToken();
 
-        assertThrows(NullPointerException.class, () -> classUnderTest.mergeTravelPointApiTokensWith(userRequestApiToken.build(), configuredPeliasApiToken));
+        assertThrows(NullPointerException.class, () -> classUnderTest.mergeTravelPointApiTokensWith(userRequestApiToken.build(), configuredBoxServiceApiToken));
     }
 
 }

@@ -28,10 +28,10 @@ class TravelPointResolverTest {
 
     private final BackendApiService backendApiService = mock(BackendApiServiceImpl.class);
     private final RequestTokenHandlerService requestTokenHandlerService = mock(RequestTokenHandlerServiceImpl.class);
-    private final ApiToken configuredPolygonApiToken = getConfiguredPolygonApiToken();
+    private final ApiToken configuredBoxServiceApiToken = getConfiguredBoxServiceApiToken();
     private final ApiToken configuredStationApiToken = getConfiguredTravelPointPersistenceApiToken();
 
-    private final TravelPointResolver classUnderTest = new TravelPointResolver(backendApiService, requestTokenHandlerService, configuredPolygonApiToken, configuredStationApiToken);
+    private final TravelPointResolver classUnderTest = new TravelPointResolver(backendApiService, requestTokenHandlerService, configuredBoxServiceApiToken, configuredStationApiToken);
 
     @BeforeEach
     void init() {
@@ -64,16 +64,16 @@ class TravelPointResolverTest {
     void test_getAddressesBy_userRequestToken_is_executed_in_right_order_and_passes_arguments_correctly() {
         ApiToken testData = getTravelPointUserRequestToken();
         ArgumentCaptor<ApiToken> userRequestArg = ArgumentCaptor.forClass(ApiToken.class);
-        ArgumentCaptor<ApiToken> configuredPolygonApiTokenArg = ArgumentCaptor.forClass(ApiToken.class);
+        ArgumentCaptor<ApiToken> configuredBoxServiceApiTokenArg = ArgumentCaptor.forClass(ApiToken.class);
 
         classUnderTest.getAddressesBy(testData.getDeparture(), testData.getLanguage().toString());
 
 
         InOrder inOrder = inOrder(backendApiService);
-        inOrder.verify(backendApiService, times(1)).getManyBy(userRequestArg.capture(), configuredPolygonApiTokenArg.capture(), any(RequestHandlerFunction.class), eq(TravelPoint.class));
+        inOrder.verify(backendApiService, times(1)).getManyBy(userRequestArg.capture(), configuredBoxServiceApiTokenArg.capture(), any(RequestHandlerFunction.class), eq(TravelPoint.class));
         inOrder.verifyNoMoreInteractions();
         assertThat(userRequestArg.getValue()).isEqualToComparingFieldByField(getTravelPointUserRequestToken());
-        assertThat(configuredPolygonApiTokenArg.getValue()).isEqualToComparingFieldByField(getConfiguredPolygonApiToken());
+        assertThat(configuredBoxServiceApiTokenArg.getValue()).isEqualToComparingFieldByField(getConfiguredBoxServiceApiToken());
     }
 
     @Test
