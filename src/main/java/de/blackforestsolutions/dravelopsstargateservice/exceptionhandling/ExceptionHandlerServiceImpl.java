@@ -15,18 +15,30 @@ public class ExceptionHandlerServiceImpl implements ExceptionHandlerService {
 
     @Override
     public <T> Flux<T> handleExceptions(Throwable exception) {
+        if (Optional.ofNullable(exception).isEmpty()) {
+            logMissingException();
+            return Flux.empty();
+        }
         logError(exception);
         return Flux.empty();
     }
 
     @Override
     public <T> Mono<T> handleException(Throwable exception) {
+        if (Optional.ofNullable(exception).isEmpty()) {
+            logMissingException();
+            return Mono.empty();
+        }
         logError(exception);
         return Mono.empty();
     }
 
     @Override
     public <T> Mono<T> handleExceptions(CallStatus<T> callStatus) {
+        if (Optional.ofNullable(callStatus).isEmpty()) {
+            logMissingCallStatus();
+            return Mono.empty();
+        }
         if (Optional.ofNullable(callStatus.getThrowable()).isPresent()) {
             logError(callStatus);
             return Mono.empty();
@@ -36,7 +48,7 @@ public class ExceptionHandlerServiceImpl implements ExceptionHandlerService {
             return Mono.empty();
         }
         if (callStatus.getStatus().equals(Status.FAILED)) {
-            logMissingException();
+            logMissingCallStatusException();
             return Mono.empty();
         }
         if (Optional.ofNullable(callStatus.getCalledObject()).isPresent()) {
@@ -50,23 +62,30 @@ public class ExceptionHandlerServiceImpl implements ExceptionHandlerService {
     }
 
     private static <T> void logError(CallStatus<T> callStatus) {
-        log.error("Error during ApiServiceCall: ", callStatus.getThrowable());
+        log.error("Internal Server Error: ", callStatus.getThrowable());
     }
 
     private static void logError(Throwable e) {
-        log.error("Error outside of ApiServiceCall: ", e);
+        log.error("Internal Server Error: ", e);
     }
 
     private static void logMissingStatus() {
-        log.warn("No Status for CallStatus found, eventually also no calledObject and exception");
+        log.warn("No Status for CallStatus found!");
+    }
+
+    private static void logMissingCallStatusException() {
+        log.warn("No Exception for failed CallStatus found!");
+    }
+
+    private static void logMissingCalledObject() {
+        log.warn("No CalledObject for failed CallStatus found!");
+    }
+
+    private static void logMissingCallStatus() {
+        log.warn("No CallStatus available!");
     }
 
     private static void logMissingException() {
-        log.warn("No Exception for failed CallStatus found");
-    }
-
-
-    private static void logMissingCalledObject() {
-        log.warn("No CalledObject for failed CallStatus found");
+        log.warn("No Exception available!");
     }
 }
