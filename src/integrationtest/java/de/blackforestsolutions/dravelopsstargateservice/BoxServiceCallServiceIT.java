@@ -2,7 +2,7 @@ package de.blackforestsolutions.dravelopsstargateservice;
 
 import de.blackforestsolutions.dravelopsdatamodel.TravelPoint;
 import de.blackforestsolutions.dravelopsdatamodel.ApiToken;
-import de.blackforestsolutions.dravelopsstargateservice.configuration.PolygonTestConfiguration;
+import de.blackforestsolutions.dravelopsstargateservice.configuration.BoxServiceTestConfiguration;
 import de.blackforestsolutions.dravelopsstargateservice.service.communicationservice.restcalls.CallService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,20 +15,20 @@ import reactor.test.StepVerifier;
 import static de.blackforestsolutions.dravelopsdatamodel.util.DravelOpsHttpCallBuilder.buildUrlWith;
 import static org.assertj.core.api.Assertions.assertThat;
 
-@Import(PolygonTestConfiguration.class)
+@Import(BoxServiceTestConfiguration.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class PolygonCallServiceIT {
+public class BoxServiceCallServiceIT {
 
     @Autowired
     private CallService classUnderTest;
 
     @Autowired
-    public ApiToken.ApiTokenBuilder polygonApiTokenIT;
+    public ApiToken.ApiTokenBuilder boxServiceApiTokenIT;
 
     @Test
     void test_travelPoint_returns_travelPoints() {
 
-        Flux<TravelPoint> result = classUnderTest.postMany(buildUrlWith(polygonApiTokenIT.build()).toString(), polygonApiTokenIT.build(), HttpHeaders.EMPTY, TravelPoint.class);
+        Flux<TravelPoint> result = classUnderTest.postMany(buildUrlWith(boxServiceApiTokenIT.build()).toString(), boxServiceApiTokenIT.build(), HttpHeaders.EMPTY, TravelPoint.class);
 
         StepVerifier.create(result)
                 .expectNextCount(1L)

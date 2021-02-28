@@ -19,20 +19,20 @@ public class TravelPointResolver implements GraphQLQueryResolver {
 
     private final BackendApiService backendApiService;
     private final RequestTokenHandlerService requestTokenHandlerService;
-    private final ApiToken polygonApiToken;
+    private final ApiToken boxServiceApiToken;
     private final ApiToken stationPersistenceTravelPointApiToken;
 
     @Autowired
-    public TravelPointResolver(BackendApiService backendApiService, RequestTokenHandlerService requestTokenHandlerService, ApiToken polygonApiToken, ApiToken stationPersistenceTravelPointApiToken) {
+    public TravelPointResolver(BackendApiService backendApiService, RequestTokenHandlerService requestTokenHandlerService, ApiToken boxServiceApiToken, ApiToken stationPersistenceTravelPointApiToken) {
         this.backendApiService = backendApiService;
         this.requestTokenHandlerService = requestTokenHandlerService;
-        this.polygonApiToken = polygonApiToken;
+        this.boxServiceApiToken = boxServiceApiToken;
         this.stationPersistenceTravelPointApiToken = stationPersistenceTravelPointApiToken;
     }
 
     public CompletableFuture<List<TravelPoint>> getAddressesBy(String text, String language) {
         ApiToken apiToken = buildRequestApiTokenWith(text, language);
-        return backendApiService.getManyBy(apiToken, polygonApiToken, requestTokenHandlerService::mergeTravelPointApiTokensWith, TravelPoint.class)
+        return backendApiService.getManyBy(apiToken, boxServiceApiToken, requestTokenHandlerService::mergeTravelPointApiTokensWith, TravelPoint.class)
                 .collectList()
                 .toFuture();
     }

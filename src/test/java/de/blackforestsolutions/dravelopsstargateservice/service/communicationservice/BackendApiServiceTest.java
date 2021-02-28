@@ -60,7 +60,7 @@ class BackendApiServiceTest {
 
     @Test
     void test_getManyBy_user_token_and_configured_apiToken_returns_travelPoints() {
-        ApiToken configuredTestToken = getConfiguredPolygonApiToken();
+        ApiToken configuredTestToken = getConfiguredBoxServiceApiToken();
         ApiToken userRequestToken = getTravelPointUserRequestToken();
         when(callService.postMany(anyString(), any(ApiToken.class), any(HttpHeaders.class), eq(TravelPoint.class)))
                 .thenReturn(Flux.just(getGermanWatchMuseumTravelPoint(), getGermanyTravelPoint()));
@@ -105,7 +105,7 @@ class BackendApiServiceTest {
 
     @Test
     void test_getManyBy_user_token_and_configured_apiToken_is_executed_correctly_when_travelPoints_are_returned() {
-        ApiToken configuredTestToken = getConfiguredPolygonApiToken();
+        ApiToken configuredTestToken = getConfiguredBoxServiceApiToken();
         ApiToken userRequestToken = getTravelPointUserRequestToken();
         ArgumentCaptor<String> urlArg = ArgumentCaptor.forClass(String.class);
         ArgumentCaptor<ApiToken> bodyArg = ArgumentCaptor.forClass(ApiToken.class);

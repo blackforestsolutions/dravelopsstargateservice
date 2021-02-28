@@ -11,17 +11,17 @@ import java.util.Locale;
 
 @Import(ZonedDateTimeConfiguration.class)
 @TestConfiguration
-public class PolygonTestConfiguration {
+public class BoxServiceTestConfiguration {
 
-    @Value("${polygon.get.travelpoint.path}")
+    @Value("${boxservice.get.travelpoint.path}")
     private String path;
     @Value("${test.apitokens[0].text}")
     private String departure;
     @Value("${test.apitokens[0].language}")
     private Locale language;
 
-    @Bean(name = "polygonApiTokenIT")
-    @ConfigurationProperties(prefix = "polygon")
+    @Bean(name = "boxServiceApiTokenIT")
+    @ConfigurationProperties(prefix = "boxservice")
     public ApiToken.ApiTokenBuilder apiToken() {
         return new ApiToken.ApiTokenBuilder()
                 .setPath(path)
