@@ -22,15 +22,6 @@ class RequestTokenHandlerServiceTest {
     }
 
     @Test
-    void test_mergeJourneyApiTokensWith_userRequestToken_optimize_as_null_and_configuredRoutePersistenceApiToken_throws_exception() {
-        ApiToken.ApiTokenBuilder userRequestApiToken = new ApiToken.ApiTokenBuilder(getJourneyUserRequestToken());
-        userRequestApiToken.setOptimize(null);
-        ApiToken configuredRoutePersistenceApiToken = getConfiguredRoutePersistenceApiToken();
-
-        assertThrows(NullPointerException.class, () -> classUnderTest.mergeJourneyApiTokensWith(userRequestApiToken.build(), configuredRoutePersistenceApiToken));
-    }
-
-    @Test
     void test_mergeJourneyApiTokensWith_userRequestToken_dateTime_as_null_and_configuredRoutePersistenceApiToken_throws_exception() {
         ApiToken.ApiTokenBuilder userRequestApiToken = new ApiToken.ApiTokenBuilder(getJourneyUserRequestToken());
         userRequestApiToken.setDateTime(null);
@@ -61,6 +52,15 @@ class RequestTokenHandlerServiceTest {
     void test_mergeJourneyApiTokensWith_userRequestToken_language_as_null_and_configuredRoutePersistenceApiToken_throws_exception() {
         ApiToken.ApiTokenBuilder userRequestApiToken = new ApiToken.ApiTokenBuilder(getJourneyUserRequestToken());
         userRequestApiToken.setLanguage(null);
+        ApiToken configuredRoutePersistenceApiToken = getConfiguredRoutePersistenceApiToken();
+
+        assertThrows(NullPointerException.class, () -> classUnderTest.mergeJourneyApiTokensWith(userRequestApiToken.build(), configuredRoutePersistenceApiToken));
+    }
+
+    @Test
+    void test_mergeJourneyApiTokensWith_userRequestToken_isArrivalDateTime_as_null_and_configuredRoutePersistenceApiToken_throws_exception() {
+        ApiToken.ApiTokenBuilder userRequestApiToken = new ApiToken.ApiTokenBuilder(getJourneyUserRequestToken());
+        userRequestApiToken.setIsArrivalDateTime(null);
         ApiToken configuredRoutePersistenceApiToken = getConfiguredRoutePersistenceApiToken();
 
         assertThrows(NullPointerException.class, () -> classUnderTest.mergeJourneyApiTokensWith(userRequestApiToken.build(), configuredRoutePersistenceApiToken));

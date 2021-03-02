@@ -2,7 +2,6 @@ package de.blackforestsolutions.dravelopsstargateservice.service.communicationse
 
 import de.blackforestsolutions.dravelopsdatamodel.ApiToken;
 import de.blackforestsolutions.dravelopsdatamodel.Journey;
-import de.blackforestsolutions.dravelopsdatamodel.Optimization;
 import de.blackforestsolutions.dravelopsdatamodel.Point;
 import de.blackforestsolutions.dravelopsstargateservice.model.exception.DateTimeParsingException;
 import de.blackforestsolutions.dravelopsstargateservice.model.exception.LanguageParsingException;
@@ -31,7 +30,7 @@ public class JourneyApiServiceImpl implements JourneyApiService {
 
     @Override
     @SuppressWarnings("checkstyle:parameternumber")
-    public Flux<Journey> getJourneysBy(double departureLongitude, double departureLatitude, double arrivalLongitude, double arrivalLatitude, String dateTime, boolean isArrivalDateTime, Optimization optimize, String language) {
+    public Flux<Journey> getJourneysBy(double departureLongitude, double departureLatitude, double arrivalLongitude, double arrivalLatitude, String dateTime, boolean isArrivalDateTime, String language) {
         ApiToken apiToken = buildRequestApiTokenWith(
                 departureLongitude,
                 departureLatitude,
@@ -39,7 +38,6 @@ public class JourneyApiServiceImpl implements JourneyApiService {
                 arrivalLatitude,
                 extractZonedDateTimeFrom(dateTime),
                 isArrivalDateTime,
-                optimize,
                 extractLocaleFrom(language)
         );
 
@@ -47,12 +45,11 @@ public class JourneyApiServiceImpl implements JourneyApiService {
     }
 
     @SuppressWarnings("checkstyle:parameternumber")
-    private ApiToken buildRequestApiTokenWith(double departureLongitude, double departureLatitude, double arrivalLongitude, double arrivalLatitude, ZonedDateTime dateTime, boolean isArrivalDateTime, Optimization optimize, Locale language) {
+    private ApiToken buildRequestApiTokenWith(double departureLongitude, double departureLatitude, double arrivalLongitude, double arrivalLatitude, ZonedDateTime dateTime, boolean isArrivalDateTime, Locale language) {
         return new ApiToken.ApiTokenBuilder()
                 .setDepartureCoordinate(new Point.PointBuilder(departureLongitude, departureLatitude).build())
                 .setArrivalCoordinate(new Point.PointBuilder(arrivalLongitude, arrivalLatitude).build())
                 .setDateTime(dateTime)
-                .setOptimize(optimize)
                 .setIsArrivalDateTime(isArrivalDateTime)
                 .setLanguage(language)
                 .build();

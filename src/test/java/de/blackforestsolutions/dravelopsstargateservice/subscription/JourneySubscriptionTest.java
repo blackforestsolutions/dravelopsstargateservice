@@ -2,7 +2,6 @@ package de.blackforestsolutions.dravelopsstargateservice.subscription;
 
 import de.blackforestsolutions.dravelopsdatamodel.ApiToken;
 import de.blackforestsolutions.dravelopsdatamodel.Journey;
-import de.blackforestsolutions.dravelopsdatamodel.Optimization;
 import de.blackforestsolutions.dravelopsdatamodel.Point;
 import de.blackforestsolutions.dravelopsstargateservice.model.exception.LanguageParsingException;
 import de.blackforestsolutions.dravelopsstargateservice.service.communicationservice.JourneyApiService;
@@ -39,7 +38,6 @@ class JourneySubscriptionTest {
                 anyDouble(),
                 anyString(),
                 anyBoolean(),
-                any(Optimization.class),
                 anyString())
         ).thenReturn(Flux.just(getFurtwangenToWaldkirchJourney(), getFurtwangenToWaldkirchJourney()));
     }
@@ -56,7 +54,6 @@ class JourneySubscriptionTest {
                 testData.getArrivalCoordinate().getY(),
                 testData.getDateTime().toString(),
                 testData.getIsArrivalDateTime(),
-                testData.getOptimize(),
                 testData.getLanguage().toString()
         );
 
@@ -77,7 +74,6 @@ class JourneySubscriptionTest {
         ArgumentCaptor<Double> arrivalLatitudeArg = ArgumentCaptor.forClass(Double.class);
         ArgumentCaptor<String> dateTimeArg = ArgumentCaptor.forClass(String.class);
         ArgumentCaptor<Boolean> isArrivalDateTimeArg = ArgumentCaptor.forClass(Boolean.class);
-        ArgumentCaptor<Optimization> optimizeArg = ArgumentCaptor.forClass(Optimization.class);
         ArgumentCaptor<String> languageArg = ArgumentCaptor.forClass(String.class);
 
         classUnderTest.getJourneysBy(
@@ -87,7 +83,6 @@ class JourneySubscriptionTest {
                 testArrival.getY(),
                 testData.getDateTime().toString(),
                 testData.getIsArrivalDateTime(),
-                testData.getOptimize(),
                 testData.getLanguage().toString()
         );
 
@@ -99,7 +94,6 @@ class JourneySubscriptionTest {
                 arrivalLatitudeArg.capture(),
                 dateTimeArg.capture(),
                 isArrivalDateTimeArg.capture(),
-                optimizeArg.capture(),
                 languageArg.capture()
         );
         inOrder.verifyNoMoreInteractions();
@@ -109,7 +103,6 @@ class JourneySubscriptionTest {
         assertThat(arrivalLatitudeArg.getValue()).isEqualTo(testData.getArrivalCoordinate().getY());
         assertThat(dateTimeArg.getValue()).isEqualTo(testData.getDateTime().toString());
         assertThat(isArrivalDateTimeArg.getValue()).isEqualTo(testData.getIsArrivalDateTime());
-        assertThat(optimizeArg.getValue()).isEqualTo(testData.getOptimize());
         assertThat(languageArg.getValue()).isEqualTo(testData.getLanguage().toString());
     }
 
@@ -125,7 +118,6 @@ class JourneySubscriptionTest {
                 anyDouble(),
                 anyString(),
                 anyBoolean(),
-                any(Optimization.class),
                 anyString())
         ).thenReturn(Flux.empty());
 
@@ -136,7 +128,6 @@ class JourneySubscriptionTest {
                 testArrival.getY(),
                 testData.getDateTime().toString(),
                 testData.getIsArrivalDateTime(),
-                testData.getOptimize(),
                 testData.getLanguage().toString()
         );
 
@@ -157,7 +148,6 @@ class JourneySubscriptionTest {
                 anyDouble(),
                 anyString(),
                 anyBoolean(),
-                any(Optimization.class),
                 anyString())
         ).thenThrow(new LanguageParsingException());
 
@@ -168,7 +158,6 @@ class JourneySubscriptionTest {
                 testArrival.getY(),
                 testData.getDateTime().toString(),
                 testData.getIsArrivalDateTime(),
-                testData.getOptimize(),
                 testData.getLanguage().toString()
         ));
     }

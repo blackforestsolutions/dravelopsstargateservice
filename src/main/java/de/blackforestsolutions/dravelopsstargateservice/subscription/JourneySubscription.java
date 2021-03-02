@@ -1,7 +1,6 @@
 package de.blackforestsolutions.dravelopsstargateservice.subscription;
 
 import de.blackforestsolutions.dravelopsdatamodel.Journey;
-import de.blackforestsolutions.dravelopsdatamodel.Optimization;
 import de.blackforestsolutions.dravelopsstargateservice.service.communicationservice.JourneyApiService;
 import graphql.kickstart.tools.GraphQLSubscriptionResolver;
 import org.reactivestreams.Publisher;
@@ -20,7 +19,7 @@ public class JourneySubscription implements GraphQLSubscriptionResolver {
     }
 
     @SuppressWarnings("checkstyle:parameternumber")
-    public Publisher<Journey> getJourneysBy(double departureLongitude, double departureLatitude, double arrivalLongitude, double arrivalLatitude, String dateTime, boolean isArrivalDateTime, Optimization optimize, String language) {
+    public Publisher<Journey> getJourneysBy(double departureLongitude, double departureLatitude, double arrivalLongitude, double arrivalLatitude, String dateTime, boolean isArrivalDateTime, String language) {
         return journeyApiService.getJourneysBy(
                 departureLongitude,
                 departureLatitude,
@@ -28,7 +27,6 @@ public class JourneySubscription implements GraphQLSubscriptionResolver {
                 arrivalLatitude,
                 dateTime,
                 isArrivalDateTime,
-                optimize,
                 language
         );
     }

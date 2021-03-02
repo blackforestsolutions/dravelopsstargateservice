@@ -51,7 +51,6 @@ class JourneyApiServiceTest {
                 testData.getArrivalCoordinate().getY(),
                 testData.getDateTime().toString(),
                 testData.getIsArrivalDateTime(),
-                testData.getOptimize(),
                 testData.getLanguage().toString()
         );
 
@@ -76,7 +75,6 @@ class JourneyApiServiceTest {
                 testArrival.getY(),
                 testData.getDateTime().toString(),
                 testData.getIsArrivalDateTime(),
-                testData.getOptimize(),
                 testData.getLanguage().toString()
         );
 
@@ -102,7 +100,6 @@ class JourneyApiServiceTest {
                 testArrival.getY(),
                 testData.getDateTime().toString(),
                 testData.getIsArrivalDateTime(),
-                testData.getOptimize(),
                 testData.getLanguage().toString()
         );
 
@@ -125,7 +122,6 @@ class JourneyApiServiceTest {
                 testArrival.getY(),
                 wrongDateTime,
                 testData.getIsArrivalDateTime(),
-                testData.getOptimize(),
                 testData.getLanguage().toString()
         ));
     }
@@ -144,7 +140,6 @@ class JourneyApiServiceTest {
                 testArrival.getY(),
                 testData.getDateTime().toString(),
                 testData.getIsArrivalDateTime(),
-                testData.getOptimize(),
                 wrongLanguage
         ));
     }

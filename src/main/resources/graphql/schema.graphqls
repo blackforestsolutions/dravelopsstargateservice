@@ -6,7 +6,7 @@ scalar URL
 
 type Query {
     """Language param use ISO 639-1"""
-    getJourneysBy(departureLongitude: Float!, departureLatitude: Float!, arrivalLongitude: Float!, arrivalLatitude: Float!, dateTime: String!, isArrivalDateTime: Boolean = true, optimize: Optimization = "QUICK", language: String = "de"): [Journey]
+    getJourneysBy(departureLongitude: Float!, departureLatitude: Float!, arrivalLongitude: Float!, arrivalLatitude: Float!, dateTime: String!, isArrivalDateTime: Boolean = true, language: String = "de"): [Journey]
     """Language param use ISO 639-1"""
     getAddressesBy(text: String, language: String = "de"): [TravelPoint]
     getAllStations: [TravelPoint]
@@ -15,7 +15,7 @@ type Query {
 
 type Subscription {
     """Language param use ISO 639-1"""
-    getJourneysBy(departureLongitude: Float!, departureLatitude: Float!, arrivalLongitude: Float!, arrivalLatitude: Float!, dateTime: String!, isArrivalDateTime: Boolean = true, optimize: Optimization = "QUICK", language: String = "de"): Journey
+    getJourneysBy(departureLongitude: Float!, departureLatitude: Float!, arrivalLongitude: Float!, arrivalLatitude: Float!, dateTime: String!, isArrivalDateTime: Boolean = true, language: String = "de"): Journey
 }
 
 
@@ -64,13 +64,6 @@ type TravelProvider {
 
 type Polygon {
     points: [Point]
-}
-
-enum Optimization {
-    QUICK,
-    GREENWAYS,
-    TRANSFERS,
-    FLAT
 }
 
 enum PriceType {
