@@ -1,7 +1,6 @@
 package de.blackforestsolutions.dravelopsstargateservice.resolver;
 
 import de.blackforestsolutions.dravelopsdatamodel.Journey;
-import de.blackforestsolutions.dravelopsdatamodel.Optimization;
 import de.blackforestsolutions.dravelopsstargateservice.service.communicationservice.JourneyApiService;
 import graphql.kickstart.tools.GraphQLQueryResolver;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +20,7 @@ public class JourneyResolver implements GraphQLQueryResolver {
     }
 
     @SuppressWarnings("checkstyle:parameternumber")
-    public CompletableFuture<List<Journey>> getJourneysBy(double departureLongitude, double departureLatitude, double arrivalLongitude, double arrivalLatitude, String dateTime, boolean isArrivalDateTime, Optimization optimize, String language) {
+    public CompletableFuture<List<Journey>> getJourneysBy(double departureLongitude, double departureLatitude, double arrivalLongitude, double arrivalLatitude, String dateTime, boolean isArrivalDateTime, String language) {
         return journeyApiService.getJourneysBy(
                 departureLongitude,
                 departureLatitude,
@@ -29,7 +28,6 @@ public class JourneyResolver implements GraphQLQueryResolver {
                 arrivalLatitude,
                 dateTime,
                 isArrivalDateTime,
-                optimize,
                 language
         ).collectList().toFuture();
     }
