@@ -8,7 +8,8 @@ type Query {
     """Language param use ISO 639-1"""
     getJourneysBy(departureLongitude: Float!, departureLatitude: Float!, arrivalLongitude: Float!, arrivalLatitude: Float!, dateTime: String!, isArrivalDateTime: Boolean = true, language: String = "de"): [Journey]
     """Language param use ISO 639-1"""
-    getAddressesBy(text: String, language: String = "de"): [TravelPoint]
+    getAutocompleteAddressesBy(text: String, language: String = "de"): [TravelPoint]
+    getNearestAddressesBy(longitude: Float!, latitude: Float!, radiusInKilometers: Float = 1, language: String = "de"): [TravelPoint]
     getAllStations: [TravelPoint]
     getOperatingArea: Polygon
 }
@@ -55,6 +56,7 @@ type TravelPoint {
     arrivalTime: ZonedDateTime,
     departureTime: ZonedDateTime,
     platform: String
+    distanceInKilometers: Distance
 }
 
 type TravelProvider {

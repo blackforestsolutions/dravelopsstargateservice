@@ -12,6 +12,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InOrder;
+import org.springframework.data.geo.Distance;
+import org.springframework.data.geo.Metrics;
 import reactor.core.publisher.Flux;
 
 import java.util.List;
@@ -28,16 +30,14 @@ class TravelPointResolverTest {
 
     private final BackendApiService backendApiService = mock(BackendApiServiceImpl.class);
     private final RequestTokenHandlerService requestTokenHandlerService = mock(RequestTokenHandlerServiceImpl.class);
-    private final ApiToken configuredBoxServiceApiToken = getConfiguredBoxServiceApiToken();
+    private final ApiToken configuredAutocompleteBoxServiceApiToken = getConfiguredAutocompleteBoxServiceApiToken();
+    private final ApiToken configuredNearestBoxServiceApiToken = getConfiguredNearestAddressesBoxServiceApiToken();
     private final ApiToken configuredStationApiToken = getConfiguredTravelPointPersistenceApiToken();
 
-    private final TravelPointResolver classUnderTest = new TravelPointResolver(backendApiService, requestTokenHandlerService, configuredBoxServiceApiToken, configuredStationApiToken);
+    private final TravelPointResolver classUnderTest = new TravelPointResolver(backendApiService, requestTokenHandlerService, configuredAutocompleteBoxServiceApiToken, configuredNearestBoxServiceApiToken, configuredStationApiToken);
 
     @BeforeEach
     void init() {
-        when(backendApiService.getManyBy(any(ApiToken.class), any(ApiToken.class), any(RequestHandlerFunction.class), eq(TravelPoint.class)))
-                .thenReturn(Flux.just(getGermanyTravelPoint(), getGermanyTravelPoint()));
-
         when(backendApiService.getManyBy(any(ApiToken.class), eq(TravelPoint.class)))
                 .thenReturn(Flux.just(
                         getBadDuerkheimTravelPoint(),
@@ -49,11 +49,13 @@ class TravelPointResolverTest {
     }
 
     @Test
-    void test_getAddressesBy_userRequestToken_returns_travelPoints() throws ExecutionException, InterruptedException {
-        ApiToken testData = getTravelPointUserRequestToken();
-        TravelPoint expectedTravelPoint = getGermanyTravelPoint();
+    void test_getAutocompleteAddressesBy_userRequestToken_returns_travelPoints() throws ExecutionException, InterruptedException {
+        ApiToken testData = getAutocompleteUserRequestToken();
+        TravelPoint expectedTravelPoint = getGermanyTravelPoint(null);
+        when(backendApiService.getManyBy(any(ApiToken.class), any(ApiToken.class), any(RequestHandlerFunction.class), eq(TravelPoint.class)))
+                .thenReturn(Flux.just(expectedTravelPoint, expectedTravelPoint));
 
-        CompletableFuture<List<TravelPoint>> result = classUnderTest.getAddressesBy(testData.getDeparture(), testData.getLanguage().toString());
+        CompletableFuture<List<TravelPoint>> result = classUnderTest.getAutocompleteAddressesBy(testData.getDeparture(), testData.getLanguage().toString());
 
         assertThat(result.get().size()).isEqualTo(2);
         assertThat(result.get().get(0)).isEqualToComparingFieldByFieldRecursively(expectedTravelPoint);
@@ -61,38 +63,109 @@ class TravelPointResolverTest {
     }
 
     @Test
-    void test_getAddressesBy_userRequestToken_is_executed_in_right_order_and_passes_arguments_correctly() {
-        ApiToken testData = getTravelPointUserRequestToken();
+    void test_getAutocompleteAddressesBy_userRequestToken_is_executed_in_right_order_and_passes_arguments_correctly() {
+        ApiToken testData = getAutocompleteUserRequestToken();
         ArgumentCaptor<ApiToken> userRequestArg = ArgumentCaptor.forClass(ApiToken.class);
         ArgumentCaptor<ApiToken> configuredBoxServiceApiTokenArg = ArgumentCaptor.forClass(ApiToken.class);
+        when(backendApiService.getManyBy(any(ApiToken.class), any(ApiToken.class), any(RequestHandlerFunction.class), eq(TravelPoint.class)))
+                .thenReturn(Flux.just(getGermanyTravelPoint(null), getGermanyTravelPoint(null)));
 
-        classUnderTest.getAddressesBy(testData.getDeparture(), testData.getLanguage().toString());
-
+        classUnderTest.getAutocompleteAddressesBy(testData.getDeparture(), testData.getLanguage().toString());
 
         InOrder inOrder = inOrder(backendApiService);
         inOrder.verify(backendApiService, times(1)).getManyBy(userRequestArg.capture(), configuredBoxServiceApiTokenArg.capture(), any(RequestHandlerFunction.class), eq(TravelPoint.class));
         inOrder.verifyNoMoreInteractions();
-        assertThat(userRequestArg.getValue()).isEqualToComparingFieldByField(getTravelPointUserRequestToken());
-        assertThat(configuredBoxServiceApiTokenArg.getValue()).isEqualToComparingFieldByField(getConfiguredBoxServiceApiToken());
+        assertThat(userRequestArg.getValue()).isEqualToComparingFieldByField(getAutocompleteUserRequestToken());
+        assertThat(configuredBoxServiceApiTokenArg.getValue()).isEqualToComparingFieldByField(getConfiguredAutocompleteBoxServiceApiToken());
     }
 
     @Test
-    void test_getAddressesBy_userRequestToken_returns_an_empty_list_when_no_results_are_available() throws ExecutionException, InterruptedException {
-        ApiToken testData = getTravelPointUserRequestToken();
+    void test_getAutocompleteAddressesBy_userRequestToken_returns_an_empty_list_when_no_results_are_available() throws ExecutionException, InterruptedException {
+        ApiToken testData = getAutocompleteUserRequestToken();
         when(backendApiService.getManyBy(any(ApiToken.class), any(ApiToken.class), any(RequestHandlerFunction.class), eq(TravelPoint.class)))
                 .thenReturn(Flux.empty());
 
-        CompletableFuture<List<TravelPoint>> result = classUnderTest.getAddressesBy(testData.getDeparture(), testData.getLanguage().toString());
+        CompletableFuture<List<TravelPoint>> result = classUnderTest.getAutocompleteAddressesBy(testData.getDeparture(), testData.getLanguage().toString());
 
         assertThat(result.get().size()).isEqualTo(0);
     }
 
     @Test
-    void test_getAddressesBy_userRequestToken_and_wrong_language_format_throws_dateTimeParsingException() {
+    void test_getAutocompleteAddressesBy_userRequestToken_and_wrong_language_format_throws_dateTimeParsingException() {
         String wrongLanguage = "";
-        ApiToken testData = getTravelPointUserRequestToken();
+        ApiToken testData = getAutocompleteUserRequestToken();
 
-        assertThrows(LanguageParsingException.class, () -> classUnderTest.getAddressesBy(testData.getDeparture(), wrongLanguage));
+        assertThrows(LanguageParsingException.class, () -> classUnderTest.getAutocompleteAddressesBy(testData.getDeparture(), wrongLanguage));
+    }
+
+    @Test
+    void test_getNearestAddressesBy_userRequestToken_returns_travelPoints() throws ExecutionException, InterruptedException {
+        ApiToken testData = getNearestAddressesUserRequestToken();
+        TravelPoint expectedTravelPoint = getGermanyTravelPoint(new Distance(0.0d, Metrics.KILOMETERS));
+        when(backendApiService.getManyBy(any(ApiToken.class), any(ApiToken.class), any(RequestHandlerFunction.class), eq(TravelPoint.class)))
+                .thenReturn(Flux.just(expectedTravelPoint, expectedTravelPoint));
+
+        CompletableFuture<List<TravelPoint>> result = classUnderTest.getNearestAddressesBy(
+                testData.getArrivalCoordinate().getX(),
+                testData.getArrivalCoordinate().getY(),
+                testData.getRadiusInKilometers().getValue(),
+                testData.getLanguage().toString()
+        );
+
+        assertThat(result.get().size()).isEqualTo(2);
+        assertThat(result.get().get(0)).isEqualToComparingFieldByFieldRecursively(expectedTravelPoint);
+        assertThat(result.get().get(1)).isEqualToComparingFieldByFieldRecursively(expectedTravelPoint);
+    }
+
+    @Test
+    void test_getNearestAddressesBy_userRequestToken_is_executed_in_right_order_and_passes_arguments_correctly() {
+        ApiToken testData = getNearestAddressesUserRequestToken();
+        ArgumentCaptor<ApiToken> userRequestArg = ArgumentCaptor.forClass(ApiToken.class);
+        ArgumentCaptor<ApiToken> configuredBoxServiceApiTokenArg = ArgumentCaptor.forClass(ApiToken.class);
+        when(backendApiService.getManyBy(any(ApiToken.class), any(ApiToken.class), any(RequestHandlerFunction.class), eq(TravelPoint.class)))
+                .thenReturn(Flux.just(getGermanyTravelPoint(new Distance(0.0d, Metrics.KILOMETERS)), getGermanyTravelPoint(new Distance(0.0d, Metrics.KILOMETERS))));
+
+        classUnderTest.getNearestAddressesBy(
+                testData.getArrivalCoordinate().getX(),
+                testData.getArrivalCoordinate().getY(),
+                testData.getRadiusInKilometers().getValue(),
+                testData.getLanguage().toString()
+        );
+
+        InOrder inOrder = inOrder(backendApiService);
+        inOrder.verify(backendApiService, times(1)).getManyBy(userRequestArg.capture(), configuredBoxServiceApiTokenArg.capture(), any(RequestHandlerFunction.class), eq(TravelPoint.class));
+        inOrder.verifyNoMoreInteractions();
+        assertThat(userRequestArg.getValue()).isEqualToComparingFieldByField(getNearestAddressesUserRequestToken());
+        assertThat(configuredBoxServiceApiTokenArg.getValue()).isEqualToComparingFieldByField(getConfiguredNearestAddressesBoxServiceApiToken());
+    }
+
+    @Test
+    void test_getNearestAddressesBy_userRequestToken_returns_an_empty_list_when_no_results_are_available() throws ExecutionException, InterruptedException {
+        ApiToken testData = getNearestAddressesUserRequestToken();
+        when(backendApiService.getManyBy(any(ApiToken.class), any(ApiToken.class), any(RequestHandlerFunction.class), eq(TravelPoint.class)))
+                .thenReturn(Flux.empty());
+
+        CompletableFuture<List<TravelPoint>> result = classUnderTest.getNearestAddressesBy(
+                testData.getArrivalCoordinate().getX(),
+                testData.getArrivalCoordinate().getY(),
+                testData.getRadiusInKilometers().getValue(),
+                testData.getLanguage().toString()
+        );
+
+        assertThat(result.get().size()).isEqualTo(0);
+    }
+
+    @Test
+    void test_getNearestAddressesBy_userRequestToken_and_wrong_language_format_throws_dateTimeParsingException() {
+        String wrongLanguage = "";
+        ApiToken testData = getNearestAddressesUserRequestToken();
+
+        assertThrows(LanguageParsingException.class, () -> classUnderTest.getNearestAddressesBy(
+                testData.getArrivalCoordinate().getX(),
+                testData.getArrivalCoordinate().getY(),
+                testData.getRadiusInKilometers().getValue(),
+                wrongLanguage
+        ));
     }
 
     @Test

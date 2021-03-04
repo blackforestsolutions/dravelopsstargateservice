@@ -1,0 +1,17 @@
+{
+  "errors" : [ {
+    "message" : "Exception while fetching data (/getAutocompleteAddressesBy) : Language is represented as a two letter country code (ISO 639-1). For example 'de', 'en', 'es'...",
+    "locations" : [ {
+      "line" : 2,
+      "column" : 5
+    } ],
+    "path" : [ "getAutocompleteAddressesBy" ],
+    "extensions" : {
+      "invalidField" : "language",
+      "classification" : "DataFetchingException"
+    }
+  } ],
+  "data" : {
+    "getAutocompleteAddressesBy" : null
+  }
+}

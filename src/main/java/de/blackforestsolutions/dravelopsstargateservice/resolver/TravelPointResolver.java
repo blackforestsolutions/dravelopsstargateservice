@@ -1,12 +1,15 @@
 package de.blackforestsolutions.dravelopsstargateservice.resolver;
 
 import de.blackforestsolutions.dravelopsdatamodel.ApiToken;
+import de.blackforestsolutions.dravelopsdatamodel.Point;
 import de.blackforestsolutions.dravelopsdatamodel.TravelPoint;
 import de.blackforestsolutions.dravelopsstargateservice.model.exception.LanguageParsingException;
 import de.blackforestsolutions.dravelopsstargateservice.service.communicationservice.BackendApiService;
 import de.blackforestsolutions.dravelopsstargateservice.service.supportservice.RequestTokenHandlerService;
 import graphql.kickstart.tools.GraphQLQueryResolver;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.geo.Distance;
+import org.springframework.data.geo.Metrics;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
@@ -19,20 +22,29 @@ public class TravelPointResolver implements GraphQLQueryResolver {
 
     private final BackendApiService backendApiService;
     private final RequestTokenHandlerService requestTokenHandlerService;
-    private final ApiToken boxServiceApiToken;
+    private final ApiToken autocompleteAddressesBoxServiceApiToken;
+    private final ApiToken nearestAddressesBoxServiceApiToken;
     private final ApiToken stationPersistenceTravelPointApiToken;
 
     @Autowired
-    public TravelPointResolver(BackendApiService backendApiService, RequestTokenHandlerService requestTokenHandlerService, ApiToken boxServiceApiToken, ApiToken stationPersistenceTravelPointApiToken) {
+    public TravelPointResolver(BackendApiService backendApiService, RequestTokenHandlerService requestTokenHandlerService, ApiToken autocompleteAddressesBoxServiceApiToken, ApiToken nearestAddressesBoxServiceApiToken, ApiToken stationPersistenceTravelPointApiToken) {
         this.backendApiService = backendApiService;
         this.requestTokenHandlerService = requestTokenHandlerService;
-        this.boxServiceApiToken = boxServiceApiToken;
+        this.autocompleteAddressesBoxServiceApiToken = autocompleteAddressesBoxServiceApiToken;
+        this.nearestAddressesBoxServiceApiToken = nearestAddressesBoxServiceApiToken;
         this.stationPersistenceTravelPointApiToken = stationPersistenceTravelPointApiToken;
     }
 
-    public CompletableFuture<List<TravelPoint>> getAddressesBy(String text, String language) {
-        ApiToken apiToken = buildRequestApiTokenWith(text, language);
-        return backendApiService.getManyBy(apiToken, boxServiceApiToken, requestTokenHandlerService::mergeTravelPointApiTokensWith, TravelPoint.class)
+    public CompletableFuture<List<TravelPoint>> getAutocompleteAddressesBy(String text, String language) {
+        ApiToken apiToken = buildAutocompleteRequestApiTokenWith(text, language);
+        return backendApiService.getManyBy(apiToken, autocompleteAddressesBoxServiceApiToken, requestTokenHandlerService::mergeAutocompleteAddressesApiTokensWith, TravelPoint.class)
+                .collectList()
+                .toFuture();
+    }
+
+    public CompletableFuture<List<TravelPoint>> getNearestAddressesBy(double longitude, double latitude, double radiusInKilometers, String language) {
+        ApiToken apiToken = buildNearestAddressesRequestApiTokenWith(longitude, latitude, radiusInKilometers, language);
+        return backendApiService.getManyBy(apiToken, nearestAddressesBoxServiceApiToken, requestTokenHandlerService::mergeNearestAddressesApiTokensWith, TravelPoint.class)
                 .collectList()
                 .toFuture();
     }
@@ -43,9 +55,17 @@ public class TravelPointResolver implements GraphQLQueryResolver {
                 .toFuture();
     }
 
-    private ApiToken buildRequestApiTokenWith(String text, String language) {
+    private ApiToken buildAutocompleteRequestApiTokenWith(String text, String language) {
         return new ApiToken.ApiTokenBuilder()
                 .setDeparture(text)
+                .setLanguage(extractLocaleFrom(language))
+                .build();
+    }
+
+    private ApiToken buildNearestAddressesRequestApiTokenWith(double longitude, double latitude, double radiusInKilometers, String language) {
+        return new ApiToken.ApiTokenBuilder()
+                .setArrivalCoordinate(new Point.PointBuilder(longitude, latitude).build())
+                .setRadiusInKilometers(new Distance(radiusInKilometers, Metrics.KILOMETERS))
                 .setLanguage(extractLocaleFrom(language))
                 .build();
     }

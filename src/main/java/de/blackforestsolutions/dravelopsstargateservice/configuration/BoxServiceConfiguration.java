@@ -14,16 +14,28 @@ public class BoxServiceConfiguration {
     private String boxServiceHost;
     @Value("${boxservice.port}")
     private int boxServicePort;
-    @Value("${boxservice.get.travelpoint.path}")
-    private String boxServiceTravelPointPath;
+    @Value("${boxservice.autocomplete.addresses.controller.path}")
+    private String boxServiceAutocompleteAddressesControllerPath;
+    @Value("${boxservice.nearest.addresses.controller.path}")
+    private String boxServiceNearestAddressesControllerPath;
 
-    @Bean(name = "boxServiceApiToken")
-    public ApiToken apiToken() {
+    @Bean
+    public ApiToken autocompleteAddressesBoxServiceApiToken() {
         return new ApiToken.ApiTokenBuilder()
                 .setProtocol(boxServiceProtocol)
                 .setHost(boxServiceHost)
                 .setPort(boxServicePort)
-                .setPath(boxServiceTravelPointPath)
+                .setPath(boxServiceAutocompleteAddressesControllerPath)
+                .build();
+    }
+
+    @Bean
+    public ApiToken nearestAddressesBoxServiceApiToken() {
+        return new ApiToken.ApiTokenBuilder()
+                .setProtocol(boxServiceProtocol)
+                .setHost(boxServiceHost)
+                .setPort(boxServicePort)
+                .setPath(boxServiceNearestAddressesControllerPath)
                 .build();
     }
 }

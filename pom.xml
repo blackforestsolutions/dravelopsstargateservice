@@ -20,8 +20,8 @@
         <lombok.version>1.18.8</lombok.version>
         <graphql.spring.boot.starter.version>7.0.1</graphql.spring.boot.starter.version>
         <graphql.java.tools.version>6.0.2</graphql.java.tools.version>
-        <blackforestsolutions.dravelopsdatamodel.version>8.0.0</blackforestsolutions.dravelopsdatamodel.version>
-        <blackforestsolutions.dravelopsgeneratedcontent.version>1.0.3</blackforestsolutions.dravelopsgeneratedcontent.version>
+        <blackforestsolutions.dravelopsdatamodel.version>11.0.0</blackforestsolutions.dravelopsdatamodel.version>
+        <blackforestsolutions.dravelopsgeneratedcontent.version>2.0.1</blackforestsolutions.dravelopsgeneratedcontent.version>
         <!-- Maven test Dependencies -->
         <assertj.version>3.9.0</assertj.version>
         <junit.version>5.0.0</junit.version>

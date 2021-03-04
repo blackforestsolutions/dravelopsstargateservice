@@ -10,6 +10,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.geo.Distance;
+import org.springframework.data.geo.Metrics;
 import reactor.core.publisher.Flux;
 
 import java.io.IOException;
@@ -18,8 +20,7 @@ import static de.blackforestsolutions.dravelopsdatamodel.objectmothers.TravelPoi
 import static de.blackforestsolutions.dravelopsdatamodel.objectmothers.TravelPointObjectMother.getTribergStationStreetTravelPoint;
 import static de.blackforestsolutions.dravelopsdatamodel.testutil.TestUtils.getResourceFileAsString;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.doReturn;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -32,46 +33,92 @@ class TravelPointResolverMockIT {
     private BackendApiService backendApiService;
 
     @Test
-    void test_getAddressesBy_min_parameters_graphql_file_returns_a_correct_journey() throws IOException {
-        String expectedTravelPointJson = getResourceFileAsString("json/travelPointResponse.json");
-        doReturn(Flux.just(getStuttgarterStreetOneTravelPoint()))
+    void test_getAutocompleteAddressesBy_min_parameters_graphql_file_returns_a_correct_journey() throws IOException {
+        String expectedTravelPointJson = getResourceFileAsString("json/autocompleteAddressesResponse.json");
+        doReturn(Flux.just(getStuttgarterStreetOneTravelPoint(null)))
                 .when(backendApiService).getManyBy(any(ApiToken.class), any(ApiToken.class), any(RequestHandlerFunction.class), eq(TravelPoint.class));
 
-        GraphQLResponse response = graphQLTestTemplate.postForResource("graphql/get-addresses-query-min-parameters.graphql");
+        GraphQLResponse response = graphQLTestTemplate.postForResource("graphql/get-autocomplete-addresses-query-min-parameters.graphql");
 
         assertThat(response.isOk()).isTrue();
-        assertThat(response.readTree().findValues("getAddressesBy").size()).isGreaterThan(0);
-        assertThat(response.readTree().get("data").get("getAddressesBy").get(0).toPrettyString()).isEqualTo(expectedTravelPointJson);
+        assertThat(response.readTree().findValues("getAutocompleteAddressesBy").size()).isGreaterThan(0);
+        assertThat(response.readTree().get("data").get("getAutocompleteAddressesBy").get(0).toPrettyString()).isEqualTo(expectedTravelPointJson);
     }
 
     @Test
-    void test_getAddressesBy_no_result_graphql_file_returns_zero_travelPoints() throws IOException {
+    void test_getAutocompleteAddressesBy_no_result_graphql_file_returns_zero_travelPoints() throws IOException {
         doReturn(Flux.empty()).when(backendApiService).getManyBy(any(ApiToken.class), any(ApiToken.class), any(RequestHandlerFunction.class), eq(TravelPoint.class));
 
-        GraphQLResponse response = graphQLTestTemplate.postForResource("graphql/get-addresses-query-min-parameters.graphql");
+        GraphQLResponse response = graphQLTestTemplate.postForResource("graphql/get-autocomplete-addresses-query-min-parameters.graphql");
 
         assertThat(response.isOk()).isTrue();
-        assertThat(response.readTree().get("data").get("getAddressesBy").size()).isEqualTo(0);
+        assertThat(response.readTree().get("data").get("getAutocompleteAddressesBy").size()).isEqualTo(0);
     }
 
     @Test
-    void test_getAddressesBy_max_parameters_graphql_file_returns_a_correct_journey() throws IOException {
-        String expectedTravelPointJson = getResourceFileAsString("json/travelPointResponse.json");
-        doReturn(Flux.just(getStuttgarterStreetOneTravelPoint()))
+    void test_getAutocompleteAddressesBy_max_parameters_graphql_file_returns_a_correct_journey() throws IOException {
+        String expectedTravelPointJson = getResourceFileAsString("json/autocompleteAddressesResponse.json");
+        doReturn(Flux.just(getStuttgarterStreetOneTravelPoint(null)))
                 .when(backendApiService).getManyBy(any(ApiToken.class), any(ApiToken.class), any(RequestHandlerFunction.class), eq(TravelPoint.class));
 
-        GraphQLResponse response = graphQLTestTemplate.postForResource("customer/bw-get-travelpoints-query-max-parameters.graphql");
+        GraphQLResponse response = graphQLTestTemplate.postForResource("customer/bw-get-autocomplete-addresses-query-max-parameters.graphql");
 
         assertThat(response.isOk()).isTrue();
-        assertThat(response.readTree().findValues("getAddressesBy").size()).isGreaterThan(0);
-        assertThat(response.readTree().get("data").get("getAddressesBy").get(0).toPrettyString()).isEqualTo(expectedTravelPointJson);
+        assertThat(response.readTree().findValues("getAutocompleteAddressesBy").size()).isGreaterThan(0);
+        assertThat(response.readTree().get("data").get("getAutocompleteAddressesBy").get(0).toPrettyString()).isEqualTo(expectedTravelPointJson);
     }
 
     @Test
-    void test_getAddressesBy_graphql_file_with_language_error_returns_error_json_with_languageParsingException() throws IOException {
-        String expectedErrorJson = getResourceFileAsString("json/travelPointLanguageErrorResponse.json");
+    void test_getAutocompleteAddressesBy_graphql_file_with_language_error_returns_error_json_with_languageParsingException() throws IOException {
+        String expectedErrorJson = getResourceFileAsString("json/autocompleteAddressesLanguageErrorResponse.json");
 
-        GraphQLResponse response = graphQLTestTemplate.postForResource("graphql/get-addresses-query-language-error.graphql");
+        GraphQLResponse response = graphQLTestTemplate.postForResource("graphql/get-autocomplete-addresses-query-language-error.graphql");
+
+        assertThat(response.isOk()).isTrue();
+        assertThat(response.readTree().toPrettyString()).isEqualTo(expectedErrorJson);
+    }
+
+    @Test
+    void test_getNearestAddressesBy_min_parameters_graphql_file_returns_a_correct_journey() throws IOException {
+        String expectedTravelPointJson = getResourceFileAsString("json/nearestAddressesResponse.json");
+        doReturn(Flux.just(getStuttgarterStreetOneTravelPoint(new Distance(0.0d, Metrics.KILOMETERS))))
+                .when(backendApiService).getManyBy(any(ApiToken.class), any(ApiToken.class), any(RequestHandlerFunction.class), eq(TravelPoint.class));
+
+        GraphQLResponse response = graphQLTestTemplate.postForResource("graphql/get-nearest-addresses-query-min-parameters.graphql");
+
+        assertThat(response.isOk()).isTrue();
+        assertThat(response.readTree().findValues("getNearestAddressesBy").size()).isGreaterThan(0);
+        assertThat(response.readTree().get("data").get("getNearestAddressesBy").get(0).toPrettyString()).isEqualTo(expectedTravelPointJson);
+    }
+
+    @Test
+    void test_getNearestAddressesBy_no_result_graphql_file_returns_zero_travelPoints() throws IOException {
+        doReturn(Flux.empty()).when(backendApiService).getManyBy(any(ApiToken.class), any(ApiToken.class), any(RequestHandlerFunction.class), eq(TravelPoint.class));
+
+        GraphQLResponse response = graphQLTestTemplate.postForResource("graphql/get-nearest-addresses-query-no-result.graphql");
+
+        assertThat(response.isOk()).isTrue();
+        assertThat(response.readTree().get("data").get("getNearestAddressesBy").size()).isEqualTo(0);
+    }
+
+    @Test
+    void test_getNearestAddressesBy_max_parameters_graphql_file_returns_a_correct_journey() throws IOException {
+        String expectedTravelPointJson = getResourceFileAsString("json/nearestAddressesResponse.json");
+        doReturn(Flux.just(getStuttgarterStreetOneTravelPoint(new Distance(0.0d, Metrics.KILOMETERS))))
+                .when(backendApiService).getManyBy(any(ApiToken.class), any(ApiToken.class), any(RequestHandlerFunction.class), eq(TravelPoint.class));
+
+        GraphQLResponse response = graphQLTestTemplate.postForResource("customer/bw-get-nearest-addresses-query-max-parameters.graphql");
+
+        assertThat(response.isOk()).isTrue();
+        assertThat(response.readTree().findValues("getNearestAddressesBy").size()).isGreaterThan(0);
+        assertThat(response.readTree().get("data").get("getNearestAddressesBy").get(0).toPrettyString()).isEqualTo(expectedTravelPointJson);
+    }
+
+    @Test
+    void test_getNearestAddressesBy_graphql_file_with_language_error_returns_error_json_with_languageParsingException() throws IOException {
+        String expectedErrorJson = getResourceFileAsString("json/nearestAddressesLanguageErrorResponse.json");
+
+        GraphQLResponse response = graphQLTestTemplate.postForResource("graphql/get-nearest-addresses-query-language-error.graphql");
 
         assertThat(response.isOk()).isTrue();
         assertThat(response.readTree().toPrettyString()).isEqualTo(expectedErrorJson);
