@@ -1,14 +1,12 @@
 package de.blackforestsolutions.dravelopsstargateservice.configuration;
 
 import de.blackforestsolutions.dravelopsdatamodel.ApiToken;
-import de.blackforestsolutions.dravelopsdatamodel.Point;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 
-@Import(ZonedDateTimeConfiguration.class)
+@Import(ConverterConfiguration.class)
 @TestConfiguration
 public class StationPersistenceApiTestConfiguration {
 

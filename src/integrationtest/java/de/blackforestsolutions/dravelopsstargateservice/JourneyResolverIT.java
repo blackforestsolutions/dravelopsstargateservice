@@ -29,13 +29,4 @@ public class JourneyResolverIT {
         assertThat(response.readTree().findValues("getJourneysBy").size()).isEqualTo(1);
         assertThat(response.readTree().get("data").get("getJourneysBy").get(0).size()).isGreaterThan(0);
     }
-
-    @Test
-    void test_getJourneysBy_no_result_graphql_file_returns_zero_journey() throws IOException {
-
-        GraphQLResponse response = graphQLTestTemplate.postForResource("graphql/get-journeys-subscription-no-result.graphql");
-
-        assertThat(response.isOk()).isTrue();
-        assertThat(response.readTree().get("data").get("getJourneysBy").size()).isEqualTo(0);
-    }
 }

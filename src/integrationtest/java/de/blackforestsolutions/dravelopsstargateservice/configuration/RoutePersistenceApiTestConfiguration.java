@@ -8,7 +8,7 @@ import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 
-@Import(ZonedDateTimeConfiguration.class)
+@Import(ConverterConfiguration.class)
 @TestConfiguration
 public class RoutePersistenceApiTestConfiguration {
 

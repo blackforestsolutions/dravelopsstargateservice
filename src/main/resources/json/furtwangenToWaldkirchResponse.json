@@ -1,5 +1,5 @@
 {
-  "id" : "5aa6b2a1a0659e46ed1a43ee1fd946f9d063804c",
+  "id" : "bd1bddc44b693f7399812161731b8e281ce44f8f",
   "legs" : [ {
     "departure" : {
       "name" : "Am Großhausberg 8",
@@ -56,10 +56,7 @@
     "delayInMinutes" : 0,
     "distanceInKilometers" : 26.394,
     "vehicleType" : "BUS",
-    "waypoints" : [ {
-      "x" : 7.95293,
-      "y" : 48.09047
-    } ],
+    "waypoints" : [ ],
     "travelProvider" : {
       "name" : "Sonstige",
       "url" : "https://www.suedbadenbus.de/suedbadenbus/view/index.shtml"
@@ -109,10 +106,7 @@
     "delayInMinutes" : 0,
     "distanceInKilometers" : 6.784,
     "vehicleType" : "BUS",
-    "waypoints" : [ {
-      "x" : 7.95293,
-      "y" : 48.09047
-    } ],
+    "waypoints" : [ ],
     "travelProvider" : {
       "name" : "Sonstige",
       "url" : "https://www.suedbadenbus.de/suedbadenbus/view/index.shtml"

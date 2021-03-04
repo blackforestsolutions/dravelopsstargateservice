@@ -60,16 +60,16 @@ class BackendApiServiceTest {
 
     @Test
     void test_getManyBy_user_token_and_configured_apiToken_returns_travelPoints() {
-        ApiToken configuredTestToken = getConfiguredBoxServiceApiToken();
-        ApiToken userRequestToken = getTravelPointUserRequestToken();
+        ApiToken configuredTestToken = getConfiguredAutocompleteBoxServiceApiToken();
+        ApiToken userRequestToken = getAutocompleteUserRequestToken();
         when(callService.postMany(anyString(), any(ApiToken.class), any(HttpHeaders.class), eq(TravelPoint.class)))
-                .thenReturn(Flux.just(getGermanWatchMuseumTravelPoint(), getGermanyTravelPoint()));
+                .thenReturn(Flux.just(getGermanWatchMuseumTravelPoint(null), getGermanyTravelPoint(null)));
 
-        Flux<TravelPoint> result = classUnderTest.getManyBy(userRequestToken, configuredTestToken, requestTokenHandlerService::mergeTravelPointApiTokensWith, TravelPoint.class);
+        Flux<TravelPoint> result = classUnderTest.getManyBy(userRequestToken, configuredTestToken, requestTokenHandlerService::mergeAutocompleteAddressesApiTokensWith, TravelPoint.class);
 
         StepVerifier.create(result)
-                .assertNext(travelPoint -> assertThat(travelPoint).isEqualToComparingFieldByFieldRecursively(getGermanWatchMuseumTravelPoint()))
-                .assertNext(travelPoint -> assertThat(travelPoint).isEqualToComparingFieldByFieldRecursively(getGermanyTravelPoint()))
+                .assertNext(travelPoint -> assertThat(travelPoint).isEqualToComparingFieldByFieldRecursively(getGermanWatchMuseumTravelPoint(null)))
+                .assertNext(travelPoint -> assertThat(travelPoint).isEqualToComparingFieldByFieldRecursively(getGermanyTravelPoint(null)))
                 .verifyComplete();
     }
 
@@ -105,17 +105,17 @@ class BackendApiServiceTest {
 
     @Test
     void test_getManyBy_user_token_and_configured_apiToken_is_executed_correctly_when_travelPoints_are_returned() {
-        ApiToken configuredTestToken = getConfiguredBoxServiceApiToken();
-        ApiToken userRequestToken = getTravelPointUserRequestToken();
+        ApiToken configuredTestToken = getConfiguredAutocompleteBoxServiceApiToken();
+        ApiToken userRequestToken = getAutocompleteUserRequestToken();
         ArgumentCaptor<String> urlArg = ArgumentCaptor.forClass(String.class);
         ArgumentCaptor<ApiToken> bodyArg = ArgumentCaptor.forClass(ApiToken.class);
         ArgumentCaptor<HttpHeaders> httpHeadersArg = ArgumentCaptor.forClass(HttpHeaders.class);
 
-        classUnderTest.getManyBy(userRequestToken, configuredTestToken, requestTokenHandlerService::mergeTravelPointApiTokensWith, TravelPoint.class).collectList().block();
+        classUnderTest.getManyBy(userRequestToken, configuredTestToken, requestTokenHandlerService::mergeAutocompleteAddressesApiTokensWith, TravelPoint.class).collectList().block();
 
         verify(callService, times(1)).postMany(urlArg.capture(), bodyArg.capture(), httpHeadersArg.capture(), eq(TravelPoint.class));
-        assertThat(urlArg.getValue()).isEqualTo("http://localhost:8083/pelias/travelpoints/get");
-        assertThat(bodyArg.getValue()).isEqualToComparingFieldByField(getTravelPointUserRequestToken());
+        assertThat(urlArg.getValue()).isEqualTo("http://localhost:8083/travelpoints/autocomplete");
+        assertThat(bodyArg.getValue()).isEqualToComparingFieldByField(getAutocompleteUserRequestToken());
         assertThat(httpHeadersArg.getValue()).isEqualTo(HttpHeaders.EMPTY);
     }
 

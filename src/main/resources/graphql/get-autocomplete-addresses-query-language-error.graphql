@@ -1,5 +1,5 @@
 query GetTravelPoints {
-    getAddressesBy(
+    getAutocompleteAddressesBy(
         text: "Stuttgarter Strasse 1, Rottweil, Deu"
         language: "wrong"
     ) {

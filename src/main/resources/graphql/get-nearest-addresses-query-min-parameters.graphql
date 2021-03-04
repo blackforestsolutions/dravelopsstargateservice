@@ -1,0 +1,10 @@
+query GetTravelPoints {
+    getNearestAddressesBy(longitude: 7.891595, latitude: 48.087517) {
+        name
+        point {
+            x
+            y
+        }
+        distanceInKilometers
+    }
+}
