@@ -18,6 +18,8 @@ public class TravelPointResolverIT {
     private String autocompleteAddressesPath;
     @Value("${test.graphql.query.addresses.nearest[0].path}")
     private String nearestAddressesPath;
+    @Value("${test.graphql.query.stations.nearest[0].path}")
+    private String nearestStationsPath;
 
     @Autowired
     private GraphQLTestTemplate graphQLTestTemplate;
@@ -58,6 +60,25 @@ public class TravelPointResolverIT {
 
         assertThat(response.isOk()).isTrue();
         assertThat(response.readTree().get("data").get("getNearestAddressesBy").size()).isEqualTo(0);
+    }
+
+    @Test
+    void test_getNearestStationsBy_min_parameters_graphql_file_returns_travelPoints() throws IOException {
+
+        GraphQLResponse response = graphQLTestTemplate.postForResource(nearestStationsPath);
+
+        assertThat(response.isOk()).isTrue();
+        assertThat(response.readTree().findValues("getNearestStationsBy").size()).isEqualTo(1);
+        assertThat(response.readTree().get("data").get("getNearestStationsBy").get(0).size()).isGreaterThan(0);
+    }
+
+    @Test
+    void test_getNearestStationsBy_no_result_graphql_file_returns_zero_travelPoints() throws IOException {
+
+        GraphQLResponse response = graphQLTestTemplate.postForResource("graphql/get-nearest-stations-query-no-result.graphql");
+
+        assertThat(response.isOk()).isTrue();
+        assertThat(response.readTree().get("data").get("getNearestStationsBy").size()).isEqualTo(0);
     }
 
     @Test

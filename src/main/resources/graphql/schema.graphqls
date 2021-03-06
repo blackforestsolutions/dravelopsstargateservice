@@ -10,6 +10,7 @@ type Query {
     """Language param use ISO 639-1"""
     getAutocompleteAddressesBy(text: String, language: String = "de"): [TravelPoint]
     getNearestAddressesBy(longitude: Float!, latitude: Float!, radiusInKilometers: Float = 1, language: String = "de"): [TravelPoint]
+    getNearestStationsBy(longitude: Float!, latitude: Float!, radiusInKilometers: Float = 1, language: String = "de"): [TravelPoint]
     getAllStations: [TravelPoint]
     getOperatingArea: Polygon
 }

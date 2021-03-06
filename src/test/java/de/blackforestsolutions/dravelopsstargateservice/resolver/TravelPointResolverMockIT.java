@@ -80,7 +80,7 @@ class TravelPointResolverMockIT {
 
     @Test
     void test_getNearestAddressesBy_min_parameters_graphql_file_returns_a_correct_journey() throws IOException {
-        String expectedTravelPointJson = getResourceFileAsString("json/nearestAddressesResponse.json");
+        String expectedTravelPointJson = getResourceFileAsString("json/nearestResponse.json");
         doReturn(Flux.just(getStuttgarterStreetOneTravelPoint(new Distance(0.0d, Metrics.KILOMETERS))))
                 .when(backendApiService).getManyBy(any(ApiToken.class), any(ApiToken.class), any(RequestHandlerFunction.class), eq(TravelPoint.class));
 
@@ -103,7 +103,7 @@ class TravelPointResolverMockIT {
 
     @Test
     void test_getNearestAddressesBy_max_parameters_graphql_file_returns_a_correct_journey() throws IOException {
-        String expectedTravelPointJson = getResourceFileAsString("json/nearestAddressesResponse.json");
+        String expectedTravelPointJson = getResourceFileAsString("json/nearestResponse.json");
         doReturn(Flux.just(getStuttgarterStreetOneTravelPoint(new Distance(0.0d, Metrics.KILOMETERS))))
                 .when(backendApiService).getManyBy(any(ApiToken.class), any(ApiToken.class), any(RequestHandlerFunction.class), eq(TravelPoint.class));
 
@@ -119,6 +119,52 @@ class TravelPointResolverMockIT {
         String expectedErrorJson = getResourceFileAsString("json/nearestAddressesLanguageErrorResponse.json");
 
         GraphQLResponse response = graphQLTestTemplate.postForResource("graphql/get-nearest-addresses-query-language-error.graphql");
+
+        assertThat(response.isOk()).isTrue();
+        assertThat(response.readTree().toPrettyString()).isEqualTo(expectedErrorJson);
+    }
+
+    @Test
+    void test_getNearestStationsBy_min_parameters_graphql_file_returns_a_correct_journey() throws IOException {
+        String expectedTravelPointJson = getResourceFileAsString("json/nearestResponse.json");
+        doReturn(Flux.just(getStuttgarterStreetOneTravelPoint(new Distance(0.0d, Metrics.KILOMETERS))))
+                .when(backendApiService).getManyBy(any(ApiToken.class), any(ApiToken.class), any(RequestHandlerFunction.class), eq(TravelPoint.class));
+
+        GraphQLResponse response = graphQLTestTemplate.postForResource("graphql/get-nearest-stations-query-min-parameters.graphql");
+
+        assertThat(response.isOk()).isTrue();
+        assertThat(response.readTree().findValues("getNearestStationsBy").size()).isGreaterThan(0);
+        assertThat(response.readTree().get("data").get("getNearestStationsBy").get(0).toPrettyString()).isEqualTo(expectedTravelPointJson);
+    }
+
+    @Test
+    void test_getNearestStationsBy_no_result_graphql_file_returns_zero_travelPoints() throws IOException {
+        doReturn(Flux.empty()).when(backendApiService).getManyBy(any(ApiToken.class), any(ApiToken.class), any(RequestHandlerFunction.class), eq(TravelPoint.class));
+
+        GraphQLResponse response = graphQLTestTemplate.postForResource("graphql/get-nearest-stations-query-no-result.graphql");
+
+        assertThat(response.isOk()).isTrue();
+        assertThat(response.readTree().get("data").get("getNearestStationsBy").size()).isEqualTo(0);
+    }
+
+    @Test
+    void test_getNearestStationsBy_max_parameters_graphql_file_returns_a_correct_journey() throws IOException {
+        String expectedTravelPointJson = getResourceFileAsString("json/nearestResponse.json");
+        doReturn(Flux.just(getStuttgarterStreetOneTravelPoint(new Distance(0.0d, Metrics.KILOMETERS))))
+                .when(backendApiService).getManyBy(any(ApiToken.class), any(ApiToken.class), any(RequestHandlerFunction.class), eq(TravelPoint.class));
+
+        GraphQLResponse response = graphQLTestTemplate.postForResource("customer/bw-get-nearest-stations-query-max-parameters.graphql");
+
+        assertThat(response.isOk()).isTrue();
+        assertThat(response.readTree().findValues("getNearestStationsBy").size()).isGreaterThan(0);
+        assertThat(response.readTree().get("data").get("getNearestStationsBy").get(0).toPrettyString()).isEqualTo(expectedTravelPointJson);
+    }
+
+    @Test
+    void test_getNearestStationsBy_graphql_file_with_language_error_returns_error_json_with_languageParsingException() throws IOException {
+        String expectedErrorJson = getResourceFileAsString("json/nearestStationsLanguageErrorResponse.json");
+
+        GraphQLResponse response = graphQLTestTemplate.postForResource("graphql/get-nearest-stations-query-language-error.graphql");
 
         assertThat(response.isOk()).isTrue();
         assertThat(response.readTree().toPrettyString()).isEqualTo(expectedErrorJson);

@@ -33,8 +33,9 @@ class TravelPointResolverTest {
     private final ApiToken configuredAutocompleteBoxServiceApiToken = getConfiguredAutocompleteBoxServiceApiToken();
     private final ApiToken configuredNearestBoxServiceApiToken = getConfiguredNearestAddressesBoxServiceApiToken();
     private final ApiToken configuredStationApiToken = getConfiguredTravelPointPersistenceApiToken();
+    private final ApiToken configuredNearestStationsOtpMapperServiceApiToken = getConfiguredNearestStationsOtpMapperApiToken();
 
-    private final TravelPointResolver classUnderTest = new TravelPointResolver(backendApiService, requestTokenHandlerService, configuredAutocompleteBoxServiceApiToken, configuredNearestBoxServiceApiToken, configuredStationApiToken);
+    private final TravelPointResolver classUnderTest = new TravelPointResolver(backendApiService, requestTokenHandlerService, configuredAutocompleteBoxServiceApiToken, configuredNearestBoxServiceApiToken, configuredStationApiToken, configuredNearestStationsOtpMapperServiceApiToken);
 
     @BeforeEach
     void init() {
@@ -161,6 +162,76 @@ class TravelPointResolverTest {
         ApiToken testData = getNearestAddressesUserRequestToken();
 
         assertThrows(LanguageParsingException.class, () -> classUnderTest.getNearestAddressesBy(
+                testData.getArrivalCoordinate().getX(),
+                testData.getArrivalCoordinate().getY(),
+                testData.getRadiusInKilometers().getValue(),
+                wrongLanguage
+        ));
+    }
+
+    @Test
+    void test_getNearestStationsBy_userRequestToken_returns_travelPoints() throws ExecutionException, InterruptedException {
+        ApiToken testData = getNearestStationsUserRequestToken();
+        TravelPoint expectedTravelPoint = getFurtwangenTownChurchTravelPoint();
+        when(backendApiService.getManyBy(any(ApiToken.class), any(ApiToken.class), any(RequestHandlerFunction.class), eq(TravelPoint.class)))
+                .thenReturn(Flux.just(expectedTravelPoint, expectedTravelPoint));
+
+        CompletableFuture<List<TravelPoint>> result = classUnderTest.getNearestStationsBy(
+                testData.getArrivalCoordinate().getX(),
+                testData.getArrivalCoordinate().getY(),
+                testData.getRadiusInKilometers().getValue(),
+                testData.getLanguage().toString()
+        );
+
+        assertThat(result.get().size()).isEqualTo(2);
+        assertThat(result.get().get(0)).isEqualToComparingFieldByFieldRecursively(expectedTravelPoint);
+        assertThat(result.get().get(1)).isEqualToComparingFieldByFieldRecursively(expectedTravelPoint);
+    }
+
+    @Test
+    void test_getNearestStationsBy_userRequestToken_is_executed_in_right_order_and_passes_arguments_correctly() {
+        ApiToken testData = getNearestStationsUserRequestToken();
+        ArgumentCaptor<ApiToken> userRequestArg = ArgumentCaptor.forClass(ApiToken.class);
+        ArgumentCaptor<ApiToken> configuredOtpMapperServiceApiTokenArg = ArgumentCaptor.forClass(ApiToken.class);
+        when(backendApiService.getManyBy(any(ApiToken.class), any(ApiToken.class), any(RequestHandlerFunction.class), eq(TravelPoint.class)))
+                .thenReturn(Flux.just(getFurtwangenTownChurchTravelPoint(), getFurtwangenTownChurchTravelPoint()));
+
+        classUnderTest.getNearestStationsBy(
+                testData.getArrivalCoordinate().getX(),
+                testData.getArrivalCoordinate().getY(),
+                testData.getRadiusInKilometers().getValue(),
+                testData.getLanguage().toString()
+        );
+
+        InOrder inOrder = inOrder(backendApiService);
+        inOrder.verify(backendApiService, times(1)).getManyBy(userRequestArg.capture(), configuredOtpMapperServiceApiTokenArg.capture(), any(RequestHandlerFunction.class), eq(TravelPoint.class));
+        inOrder.verifyNoMoreInteractions();
+        assertThat(userRequestArg.getValue()).isEqualToComparingFieldByField(getNearestStationsUserRequestToken());
+        assertThat(configuredOtpMapperServiceApiTokenArg.getValue()).isEqualToComparingFieldByField(getConfiguredNearestStationsOtpMapperApiToken());
+    }
+
+    @Test
+    void test_getNearestStationsBy_userRequestToken_returns_an_empty_list_when_no_results_are_available() throws ExecutionException, InterruptedException {
+        ApiToken testData = getNearestStationsUserRequestToken();
+        when(backendApiService.getManyBy(any(ApiToken.class), any(ApiToken.class), any(RequestHandlerFunction.class), eq(TravelPoint.class)))
+                .thenReturn(Flux.empty());
+
+        CompletableFuture<List<TravelPoint>> result = classUnderTest.getNearestStationsBy(
+                testData.getArrivalCoordinate().getX(),
+                testData.getArrivalCoordinate().getY(),
+                testData.getRadiusInKilometers().getValue(),
+                testData.getLanguage().toString()
+        );
+
+        assertThat(result.get().size()).isEqualTo(0);
+    }
+
+    @Test
+    void test_getNearestStationsBy_userRequestToken_and_wrong_language_format_throws_dateTimeParsingException() {
+        String wrongLanguage = "";
+        ApiToken testData = getNearestStationsUserRequestToken();
+
+        assertThrows(LanguageParsingException.class, () -> classUnderTest.getNearestStationsBy(
                 testData.getArrivalCoordinate().getX(),
                 testData.getArrivalCoordinate().getY(),
                 testData.getRadiusInKilometers().getValue(),
