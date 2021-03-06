@@ -98,7 +98,7 @@ class BackendApiServiceTest {
         classUnderTest.getManyBy(userRequestToken, configuredTestToken, requestTokenHandlerService::mergeJourneyApiTokensWith, Journey.class).collectList().block();
 
         verify(callService, times(1)).postMany(urlArg.capture(), bodyArg.capture(), httpHeadersArg.capture(), eq(Journey.class));
-        assertThat(urlArg.getValue()).isEqualTo("http://localhost:8088/otp/journeys/get");
+        assertThat(urlArg.getValue()).isEqualTo("http://localhost:8088/journeys/otp");
         assertThat(bodyArg.getValue()).isEqualToComparingFieldByFieldRecursively(getJourneyUserRequestToken());
         assertThat(httpHeadersArg.getValue()).isEqualTo(HttpHeaders.EMPTY);
     }

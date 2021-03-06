@@ -1,0 +1,15 @@
+query GetTravelPoints {
+    getNearestStationsBy(
+        longitude: 8.209198,
+        latitude: 48.048381,
+        radiusInKilometers: 1.0,
+        language: "wrong"
+    ) {
+        name
+        point {
+            x
+            y
+        }
+        distanceInKilometers
+    }
+}

@@ -25,14 +25,16 @@ public class TravelPointResolver implements GraphQLQueryResolver {
     private final ApiToken autocompleteAddressesBoxServiceApiToken;
     private final ApiToken nearestAddressesBoxServiceApiToken;
     private final ApiToken stationPersistenceTravelPointApiToken;
+    private final ApiToken nearestStationsOtpMapperServiceApiToken;
 
     @Autowired
-    public TravelPointResolver(BackendApiService backendApiService, RequestTokenHandlerService requestTokenHandlerService, ApiToken autocompleteAddressesBoxServiceApiToken, ApiToken nearestAddressesBoxServiceApiToken, ApiToken stationPersistenceTravelPointApiToken) {
+    public TravelPointResolver(BackendApiService backendApiService, RequestTokenHandlerService requestTokenHandlerService, ApiToken autocompleteAddressesBoxServiceApiToken, ApiToken nearestAddressesBoxServiceApiToken, ApiToken stationPersistenceTravelPointApiToken, ApiToken nearestStationsOtpMapperServiceApiToken) {
         this.backendApiService = backendApiService;
         this.requestTokenHandlerService = requestTokenHandlerService;
         this.autocompleteAddressesBoxServiceApiToken = autocompleteAddressesBoxServiceApiToken;
         this.nearestAddressesBoxServiceApiToken = nearestAddressesBoxServiceApiToken;
         this.stationPersistenceTravelPointApiToken = stationPersistenceTravelPointApiToken;
+        this.nearestStationsOtpMapperServiceApiToken = nearestStationsOtpMapperServiceApiToken;
     }
 
     public CompletableFuture<List<TravelPoint>> getAutocompleteAddressesBy(String text, String language) {
@@ -45,6 +47,13 @@ public class TravelPointResolver implements GraphQLQueryResolver {
     public CompletableFuture<List<TravelPoint>> getNearestAddressesBy(double longitude, double latitude, double radiusInKilometers, String language) {
         ApiToken apiToken = buildNearestAddressesRequestApiTokenWith(longitude, latitude, radiusInKilometers, language);
         return backendApiService.getManyBy(apiToken, nearestAddressesBoxServiceApiToken, requestTokenHandlerService::mergeNearestAddressesApiTokensWith, TravelPoint.class)
+                .collectList()
+                .toFuture();
+    }
+
+    public CompletableFuture<List<TravelPoint>> getNearestStationsBy(double longitude, double latitude, double radiusInKilometers, String language) {
+        ApiToken apiToken = buildNearestAddressesRequestApiTokenWith(longitude, latitude, radiusInKilometers, language);
+        return backendApiService.getManyBy(apiToken, nearestStationsOtpMapperServiceApiToken, requestTokenHandlerService::mergeNearestAddressesApiTokensWith, TravelPoint.class)
                 .collectList()
                 .toFuture();
     }
