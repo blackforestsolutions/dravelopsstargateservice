@@ -1,0 +1,27 @@
+spring:
+  profiles:
+    active: dev,bw
+  application:
+    name: stargate
+server:
+  port: 8085
+
+# Through this tabs the user gets example queries for our backend
+# Every tab has a query name and a graphql file which we also use for testing purpose
+graphql:
+  playground:
+    tabs:
+      - name: Journey query
+        query: classpath:customer/bw-get-journeys-query-max-parameters.graphql
+      - name: Journey subscription
+        query: classpath:customer/bw-get-journeys-subscription-max-parameters.graphql
+      - name: Autocomplete addresses Query
+        query: classpath:customer/bw-get-autocomplete-addresses-query-max-parameters.graphql
+      - name: Nearest addresses query
+        query: classpath:customer/bw-get-nearest-addresses-query-max-parameters.graphql
+      - name: Nearest stations query
+        query: classpath:customer/bw-get-nearest-stations-query-max-parameters.graphql
+      - name: Get all stations query
+        query: classpath:graphql/get-all-stations-query.graphql
+      - name: Get operating area query
+        query: classpath:graphql/get-polygon-query.graphql
