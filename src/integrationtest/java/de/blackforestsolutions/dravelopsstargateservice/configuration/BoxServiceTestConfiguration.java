@@ -16,9 +16,9 @@ import java.util.Locale;
 @TestConfiguration
 public class BoxServiceTestConfiguration {
 
-    @Value("${boxservice.autocomplete.addresses.controller.path}")
+    @Value("${boxservice.get.autocomplete.addresses.controller.path}")
     private String autocompleteAddressesPath;
-    @Value("${boxservice.nearest.addresses.controller.path}")
+    @Value("${boxservice.get.nearest.addresses.controller.path}")
     private String nearestAddressesPath;
     @Value("${test.apitokens[0].text}")
     private String departure;

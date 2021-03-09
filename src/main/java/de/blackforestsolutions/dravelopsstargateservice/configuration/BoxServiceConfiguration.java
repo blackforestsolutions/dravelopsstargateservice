@@ -14,9 +14,9 @@ public class BoxServiceConfiguration {
     private String boxServiceHost;
     @Value("${boxservice.port}")
     private int boxServicePort;
-    @Value("${boxservice.autocomplete.addresses.controller.path}")
+    @Value("${boxservice.get.autocomplete.addresses.controller.path}")
     private String boxServiceAutocompleteAddressesControllerPath;
-    @Value("${boxservice.nearest.addresses.controller.path}")
+    @Value("${boxservice.get.nearest.addresses.controller.path}")
     private String boxServiceNearestAddressesControllerPath;
 
     @Bean
