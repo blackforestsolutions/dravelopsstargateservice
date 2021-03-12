@@ -5,16 +5,11 @@ import de.blackforestsolutions.dravelopsgeneratedcontent.graphql.AddressAutocomp
 import de.blackforestsolutions.dravelopsgeneratedcontent.graphql.JourneyVariables;
 import de.blackforestsolutions.dravelopsgeneratedcontent.graphql.NearestTravelPointsVariables;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.io.IOUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.context.annotation.Bean;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.ResourceLoader;
 import org.springframework.util.ResourceUtils;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
@@ -84,7 +79,7 @@ public class GraphQlConfiguration {
     public void setGraphQlPlaygroundNearestTravelPointVariables() {
         try {
             DravelOpsJsonMapper mapper = new DravelOpsJsonMapper();
-            File json = ResourceUtils.getFile(NEAREST_TRAVEL_POINTS_VARIABLES_JSON_FILE);
+            File json = ResourceUtils.getFile(buildJsonVariablesPath(NEAREST_TRAVEL_POINTS_VARIABLES_JSON_FILE));
             mapper.writeValue(json, buildGraphQlPlaygroundNearestTravelPointVariables());
             log.info(NEAREST_TRAVEL_POINTS_VARIABLES_JSON_FILE.concat(" was successfully updated with configurations"));
         } catch (IOException e) {
