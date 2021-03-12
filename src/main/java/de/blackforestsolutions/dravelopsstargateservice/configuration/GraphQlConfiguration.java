@@ -12,8 +12,10 @@ import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
+import org.springframework.util.ResourceUtils;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -25,12 +27,13 @@ import java.time.format.DateTimeFormatter;
 @SpringBootConfiguration
 public class GraphQlConfiguration {
 
-    private static final String JOURNEY_VARIABLES_JSON_PATH = "classpath:playground/variables/journey-variables.json";
-    private static final String AUTOCOMPLETE_VARIABLES_JSON_PATH = "classpath:playground/variables/autocomplete-addresses-variables.json";
-    private static final String NEAREST_TRAVEL_POINTS_VARIABLES_JSON_PATH = "classpath:playground/variables/nearest-travelpoints-variables.json";
+    private static final String CLASS_PATH = "classpath";
+    private static final String PLAYGROUND_PATH = "playground";
+    private static final String VARIABLES_PATH = "variables";
 
-    @Autowired
-    private ResourceLoader resourceLoader;
+    private static final String JOURNEY_VARIABLES_FILE = "journey-variables.json";
+    private static final String AUTOCOMPLETE_VARIABLES_JSON_FILE = "autocomplete-addresses-variables.json";
+    private static final String NEAREST_TRAVEL_POINTS_VARIABLES_JSON_FILE = "nearest-travelpoints-variables.json";
 
     @Value("${otp.timeZone}")
     private String timeZone;
@@ -55,13 +58,11 @@ public class GraphQlConfiguration {
 
     @Bean
     public void setGraphQlPlaygroundJourneyVariables() {
-        Resource resource = resourceLoader.getResource(JOURNEY_VARIABLES_JSON_PATH);
-        DravelOpsJsonMapper mapper = new DravelOpsJsonMapper();
         try {
-            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-            IOUtils.copy(resource.getInputStream(), outputStream);
-            mapper.writeValue(outputStream, buildGraphQlPlaygroundJourneyVariables());
-            log.info(JOURNEY_VARIABLES_JSON_PATH.concat(" was successfully updated with configurations"));
+            DravelOpsJsonMapper mapper = new DravelOpsJsonMapper();
+            File json = ResourceUtils.getFile(buildJsonVariablesPath(JOURNEY_VARIABLES_FILE));
+            mapper.writeValue(json, buildGraphQlPlaygroundJourneyVariables());
+            log.info(JOURNEY_VARIABLES_FILE.concat(" was successfully updated with configurations"));
         } catch (IOException e) {
             log.error("Error while writing JourneyVariables: ", e);
         }
@@ -69,13 +70,11 @@ public class GraphQlConfiguration {
 
     @Bean
     public void setGraphQlPlaygroundAutocompleteAddressesVariables() {
-        Resource resource = resourceLoader.getResource(AUTOCOMPLETE_VARIABLES_JSON_PATH);
-        DravelOpsJsonMapper mapper = new DravelOpsJsonMapper();
         try {
-            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-            IOUtils.copy(resource.getInputStream(), outputStream);
-            mapper.writeValue(outputStream, buildGraphQlPlaygroundAddressAutocompleteVariables());
-            log.info(AUTOCOMPLETE_VARIABLES_JSON_PATH.concat(" was successfully updated with configurations"));
+            DravelOpsJsonMapper mapper = new DravelOpsJsonMapper();
+            File json = ResourceUtils.getFile(buildJsonVariablesPath(AUTOCOMPLETE_VARIABLES_JSON_FILE));
+            mapper.writeValue(json, buildGraphQlPlaygroundAddressAutocompleteVariables());
+            log.info(AUTOCOMPLETE_VARIABLES_JSON_FILE.concat(" was successfully updated with configurations"));
         } catch (IOException e) {
             log.error("Error while writing AutocompleteAddressesVariables: ", e);
         }
@@ -83,13 +82,11 @@ public class GraphQlConfiguration {
 
     @Bean
     public void setGraphQlPlaygroundNearestTravelPointVariables() {
-        Resource resource = resourceLoader.getResource(NEAREST_TRAVEL_POINTS_VARIABLES_JSON_PATH);
-        DravelOpsJsonMapper mapper = new DravelOpsJsonMapper();
         try {
-            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-            IOUtils.copy(resource.getInputStream(), outputStream);
-            mapper.writeValue(outputStream, buildGraphQlPlaygroundNearestTravelPointVariables());
-            log.info(NEAREST_TRAVEL_POINTS_VARIABLES_JSON_PATH.concat(" was successfully updated with configurations"));
+            DravelOpsJsonMapper mapper = new DravelOpsJsonMapper();
+            File json = ResourceUtils.getFile(NEAREST_TRAVEL_POINTS_VARIABLES_JSON_FILE);
+            mapper.writeValue(json, buildGraphQlPlaygroundNearestTravelPointVariables());
+            log.info(NEAREST_TRAVEL_POINTS_VARIABLES_JSON_FILE.concat(" was successfully updated with configurations"));
         } catch (IOException e) {
             log.error("Error while writing NearestTravelPointVariables: ", e);
         }
@@ -134,5 +131,15 @@ public class GraphQlConfiguration {
                 .atTime(LocalTime.parse(time, DateTimeFormatter.ISO_LOCAL_TIME))
                 .atZone(ZoneId.of(timeZone))
                 .plusDays(1L);
+    }
+
+    private String buildJsonVariablesPath(String file) {
+        return CLASS_PATH
+                .concat(":")
+                .concat(PLAYGROUND_PATH)
+                .concat(File.separator)
+                .concat(VARIABLES_PATH)
+                .concat(File.separator)
+                .concat(file);
     }
 }
