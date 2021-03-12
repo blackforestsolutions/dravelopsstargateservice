@@ -2,14 +2,15 @@ package de.blackforestsolutions.dravelopsstargateservice.resolver;
 
 import com.graphql.spring.boot.test.GraphQLResponse;
 import com.graphql.spring.boot.test.GraphQLTestTemplate;
-import de.blackforestsolutions.dravelopsdatamodel.Journey;
 import de.blackforestsolutions.dravelopsdatamodel.ApiToken;
+import de.blackforestsolutions.dravelopsdatamodel.Journey;
 import de.blackforestsolutions.dravelopsstargateservice.service.communicationservice.BackendApiService;
 import de.blackforestsolutions.dravelopsstargateservice.service.communicationservice.RequestHandlerFunction;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.annotation.DirtiesContext;
 import reactor.core.publisher.Flux;
 
 import java.io.IOException;
@@ -22,6 +23,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doReturn;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 class JourneyResolverMockIT {
 
     @Autowired
@@ -59,7 +61,7 @@ class JourneyResolverMockIT {
         doReturn(Flux.just(getFurtwangenToWaldkirchJourney()))
                 .when(backendApiService).getManyBy(any(ApiToken.class), any(ApiToken.class), any(RequestHandlerFunction.class), eq(Journey.class));
 
-        GraphQLResponse response = graphQLTestTemplate.postForResource("customer/bw-get-journeys-query-max-parameters.graphql");
+        GraphQLResponse response = graphQLTestTemplate.postForResource("graphql/get-journeys-query-max-parameters.graphql");
 
         assertThat(response.isOk()).isTrue();
         assertThat(response.readTree().findValues("getJourneysBy").size()).isEqualTo(1);

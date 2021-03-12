@@ -12,6 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.geo.Distance;
 import org.springframework.data.geo.Metrics;
+import org.springframework.test.annotation.DirtiesContext;
 import reactor.core.publisher.Flux;
 
 import java.io.IOException;
@@ -24,6 +25,7 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.doReturn;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 class TravelPointResolverMockIT {
 
     @Autowired
@@ -61,7 +63,7 @@ class TravelPointResolverMockIT {
         doReturn(Flux.just(getStuttgarterStreetOneTravelPoint(null)))
                 .when(backendApiService).getManyBy(any(ApiToken.class), any(ApiToken.class), any(RequestHandlerFunction.class), eq(TravelPoint.class));
 
-        GraphQLResponse response = graphQLTestTemplate.postForResource("customer/bw-get-autocomplete-addresses-query-max-parameters.graphql");
+        GraphQLResponse response = graphQLTestTemplate.postForResource("graphql/get-autocomplete-addresses-query-max-parameters.graphql");
 
         assertThat(response.isOk()).isTrue();
         assertThat(response.readTree().findValues("getAutocompleteAddressesBy").size()).isGreaterThan(0);
@@ -107,7 +109,7 @@ class TravelPointResolverMockIT {
         doReturn(Flux.just(getStuttgarterStreetOneTravelPoint(new Distance(0.0d, Metrics.KILOMETERS))))
                 .when(backendApiService).getManyBy(any(ApiToken.class), any(ApiToken.class), any(RequestHandlerFunction.class), eq(TravelPoint.class));
 
-        GraphQLResponse response = graphQLTestTemplate.postForResource("customer/bw-get-nearest-addresses-query-max-parameters.graphql");
+        GraphQLResponse response = graphQLTestTemplate.postForResource("graphql/get-nearest-addresses-query-max-parameters.graphql");
 
         assertThat(response.isOk()).isTrue();
         assertThat(response.readTree().findValues("getNearestAddressesBy").size()).isGreaterThan(0);
@@ -153,7 +155,7 @@ class TravelPointResolverMockIT {
         doReturn(Flux.just(getStuttgarterStreetOneTravelPoint(new Distance(0.0d, Metrics.KILOMETERS))))
                 .when(backendApiService).getManyBy(any(ApiToken.class), any(ApiToken.class), any(RequestHandlerFunction.class), eq(TravelPoint.class));
 
-        GraphQLResponse response = graphQLTestTemplate.postForResource("customer/bw-get-nearest-stations-query-max-parameters.graphql");
+        GraphQLResponse response = graphQLTestTemplate.postForResource("graphql/get-nearest-stations-query-max-parameters.graphql");
 
         assertThat(response.isOk()).isTrue();
         assertThat(response.readTree().findValues("getNearestStationsBy").size()).isGreaterThan(0);

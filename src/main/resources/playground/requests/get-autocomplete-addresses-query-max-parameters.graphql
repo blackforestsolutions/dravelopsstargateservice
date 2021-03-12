@@ -1,0 +1,10 @@
+# variables are in variables tab below
+query GetTravelPoints($text: String!, $language: String) {
+    getAutocompleteAddressesBy(text: $text, language: $language) {
+        name
+        point {
+            x
+            y
+        }
+    }
+}
