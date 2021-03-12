@@ -1,0 +1,72 @@
+# variables are in variables tab below
+subscription GetJourneys(
+    $departureLatitude: Float!,
+    $departureLongitude: Float!,
+    $arrivalLatitude: Float!,
+    $arrivalLongitude: Float!,
+    $dateTime: String!,
+    $isArrivalDateTime: Boolean,
+    $language: String
+) {
+    getJourneysBy(
+        departureLatitude: $departureLatitude
+        departureLongitude: $departureLongitude
+        arrivalLatitude: $arrivalLatitude
+        arrivalLongitude: $arrivalLongitude
+        dateTime: $dateTime
+        isArrivalDateTime: $isArrivalDateTime
+        language: $language
+    ) {
+        id
+        legs {
+            departure {
+                name
+                point {
+                    x
+                    y
+                }
+                arrivalTime
+                departureTime
+                platform
+            }
+            arrival {
+                name
+                point {
+                    x
+                    y
+                }
+                arrivalTime
+                departureTime
+                platform
+            }
+            delayInMinutes
+            distanceInKilometers
+            vehicleType
+            waypoints {
+                x
+                y
+            }
+            travelProvider {
+                name
+                url
+            }
+            vehicleNumber
+            vehicleName
+            intermediateStops {
+                name
+                point {
+                    x
+                    y
+                }
+                arrivalTime
+                departureTime
+                platform
+            }
+        }
+        prices {
+            priceType
+            currencyCode
+            smallestCurrencyValue
+        }
+    }
+}

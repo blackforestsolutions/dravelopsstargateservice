@@ -49,7 +49,7 @@ class JourneySubscriptionMockIT {
         doReturn(Flux.just(getFurtwangenToWaldkirchJourney()))
                 .when(backendApiService).getManyBy(any(ApiToken.class), any(ApiToken.class), any(RequestHandlerFunction.class), eq(Journey.class));
 
-        GraphQLResponse response = graphQLTestTemplate.postForResource("customer/bw-get-journeys-subscription-max-parameters.graphql");
+        GraphQLResponse response = graphQLTestTemplate.postForResource("graphql/get-journeys-subscription-max-parameters.graphql");
 
         assertThat(response.isOk()).isTrue();
         assertThat(deleteWhitespace(response.getRawResponse().getBody())).containsOnlyOnce(deleteWhitespace(expectedJourneyJson));

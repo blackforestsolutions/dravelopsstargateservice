@@ -1,0 +1,21 @@
+# variables are in variables tab below
+query GetTravelPoints(
+    $longitude: Float!,
+    $latitude: Float!,
+    $radiusInKilometers: Float,
+    $language: String
+) {
+    getNearestAddressesBy(
+        longitude: $longitude,
+        latitude: $latitude,
+        radiusInKilometers: $radiusInKilometers,
+        language: $language
+    ) {
+        name
+        point {
+            x
+            y
+        }
+        distanceInKilometers
+    }
+}
