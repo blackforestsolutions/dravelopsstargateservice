@@ -1,8 +1,8 @@
 {
-  "departureLatitude": 0,
-  "departureLongitude": 0,
-  "arrivalLatitude": 0,
-  "arrivalLongitude": 0,
+  "departureLatitude": 48.085657075749324,
+  "departureLongitude": 7.947360122171152,
+  "arrivalLatitude": 48.051316,
+  "arrivalLongitude": 8.206951,
   "dateTime": "2021-01-31T13:00:00+02:00",
   "isArrivalDateTime": false,
   "language": "de"
