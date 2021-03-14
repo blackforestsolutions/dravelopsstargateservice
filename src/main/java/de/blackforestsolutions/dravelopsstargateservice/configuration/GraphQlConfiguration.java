@@ -26,7 +26,7 @@ public class GraphQlConfiguration {
     private static final String PLAYGROUND_PATH = "playground";
     private static final String VARIABLES_PATH = "variables";
 
-    private static final String JOURNEY_VARIABLES_FILE = "journey-variables.json";
+    private static final String JOURNEY_VARIABLES_JSON_FILE = "journey-variables.json";
     private static final String AUTOCOMPLETE_VARIABLES_JSON_FILE = "autocomplete-addresses-variables.json";
     private static final String NEAREST_TRAVEL_POINTS_VARIABLES_JSON_FILE = "nearest-travelpoints-variables.json";
 
@@ -48,16 +48,16 @@ public class GraphQlConfiguration {
     private Boolean isArrivalDateTime;
     @Value("${test.apitokens[0].radiusInKilometers}")
     private Double radiusInKilometers;
-    @Value("${test.apitokens[0].text}")
+    @Value("${test.apitokens[0].departure}")
     private String text;
 
     @Bean
     public void setGraphQlPlaygroundJourneyVariables() {
         try {
             DravelOpsJsonMapper mapper = new DravelOpsJsonMapper();
-            File json = ResourceUtils.getFile(buildJsonVariablesPath(JOURNEY_VARIABLES_FILE));
+            File json = ResourceUtils.getFile(buildJsonVariablesPath(JOURNEY_VARIABLES_JSON_FILE));
             mapper.writeValue(json, buildGraphQlPlaygroundJourneyVariables());
-            log.info(JOURNEY_VARIABLES_FILE.concat(" was successfully updated with configurations"));
+            log.info(JOURNEY_VARIABLES_JSON_FILE.concat(" was successfully updated with configurations"));
         } catch (IOException e) {
             log.error("Error while writing JourneyVariables: ", e);
         }
