@@ -12,11 +12,9 @@ import org.springframework.util.ResourceUtils;
 
 import java.io.File;
 import java.io.IOException;
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 
 @Slf4j
 @SpringBootConfiguration
@@ -26,7 +24,7 @@ public class GraphQlConfiguration {
     private static final String PLAYGROUND_PATH = "playground";
     private static final String VARIABLES_PATH = "variables";
 
-    private static final String JOURNEY_VARIABLES_FILE = "journey-variables.json";
+    private static final String JOURNEY_VARIABLES_JSON_FILE = "journey-variables.json";
     private static final String AUTOCOMPLETE_VARIABLES_JSON_FILE = "autocomplete-addresses-variables.json";
     private static final String NEAREST_TRAVEL_POINTS_VARIABLES_JSON_FILE = "nearest-travelpoints-variables.json";
 
@@ -41,23 +39,23 @@ public class GraphQlConfiguration {
     @Value("${test.apitokens[0].arrivalCoordinateLatitude}")
     private Double arrivalCoordinateLatitude;
     @Value("${test.apitokens[0].dateTime}")
-    private String dateTime;
+    private String time;
     @Value("${test.apitokens[0].language}")
-    private String language;
+    private Locale language;
     @Value("${test.apitokens[0].isArrivalDateTime}")
     private Boolean isArrivalDateTime;
     @Value("${test.apitokens[0].radiusInKilometers}")
     private Double radiusInKilometers;
-    @Value("${test.apitokens[0].text}")
+    @Value("${test.apitokens[0].departure}")
     private String text;
 
     @Bean
     public void setGraphQlPlaygroundJourneyVariables() {
         try {
             DravelOpsJsonMapper mapper = new DravelOpsJsonMapper();
-            File json = ResourceUtils.getFile(buildJsonVariablesPath(JOURNEY_VARIABLES_FILE));
+            File json = ResourceUtils.getFile(buildJsonVariablesPath(JOURNEY_VARIABLES_JSON_FILE));
             mapper.writeValue(json, buildGraphQlPlaygroundJourneyVariables());
-            log.info(JOURNEY_VARIABLES_FILE.concat(" was successfully updated with configurations"));
+            log.info(JOURNEY_VARIABLES_JSON_FILE.concat(" was successfully updated with configurations."));
         } catch (IOException e) {
             log.error("Error while writing JourneyVariables: ", e);
         }
@@ -69,7 +67,7 @@ public class GraphQlConfiguration {
             DravelOpsJsonMapper mapper = new DravelOpsJsonMapper();
             File json = ResourceUtils.getFile(buildJsonVariablesPath(AUTOCOMPLETE_VARIABLES_JSON_FILE));
             mapper.writeValue(json, buildGraphQlPlaygroundAddressAutocompleteVariables());
-            log.info(AUTOCOMPLETE_VARIABLES_JSON_FILE.concat(" was successfully updated with configurations"));
+            log.info(AUTOCOMPLETE_VARIABLES_JSON_FILE.concat(" was successfully updated with configurations."));
         } catch (IOException e) {
             log.error("Error while writing AutocompleteAddressesVariables: ", e);
         }
@@ -81,7 +79,7 @@ public class GraphQlConfiguration {
             DravelOpsJsonMapper mapper = new DravelOpsJsonMapper();
             File json = ResourceUtils.getFile(buildJsonVariablesPath(NEAREST_TRAVEL_POINTS_VARIABLES_JSON_FILE));
             mapper.writeValue(json, buildGraphQlPlaygroundNearestTravelPointVariables());
-            log.info(NEAREST_TRAVEL_POINTS_VARIABLES_JSON_FILE.concat(" was successfully updated with configurations"));
+            log.info(NEAREST_TRAVEL_POINTS_VARIABLES_JSON_FILE.concat(" was successfully updated with configurations."));
         } catch (IOException e) {
             log.error("Error while writing NearestTravelPointVariables: ", e);
         }
@@ -94,9 +92,9 @@ public class GraphQlConfiguration {
         journeyVariables.setDepartureLongitude(departureCoordinateLongitude);
         journeyVariables.setArrivalLatitude(arrivalCoordinateLatitude);
         journeyVariables.setArrivalLongitude(arrivalCoordinateLongitude);
-        journeyVariables.setDateTime(convert(dateTime));
+        journeyVariables.setDateTime(convertTimeToOffsetDateTimeString(time));
         journeyVariables.setIsArrivalDateTime(isArrivalDateTime);
-        journeyVariables.setLanguage(language);
+        journeyVariables.setLanguage(language.toString());
 
         return journeyVariables;
     }
@@ -105,7 +103,7 @@ public class GraphQlConfiguration {
         AddressAutocompleteVariables addressAutocompleteVariables = new AddressAutocompleteVariables();
 
         addressAutocompleteVariables.setText(text);
-        addressAutocompleteVariables.setLanguage(language);
+        addressAutocompleteVariables.setLanguage(language.toString());
 
         return addressAutocompleteVariables;
     }
@@ -115,17 +113,18 @@ public class GraphQlConfiguration {
 
         nearestTravelPointsVariables.setLongitude(departureCoordinateLongitude);
         nearestTravelPointsVariables.setLatitude(departureCoordinateLatitude);
-        nearestTravelPointsVariables.setLanguage(language);
+        nearestTravelPointsVariables.setLanguage(language.toString());
         nearestTravelPointsVariables.setRadiusInKilometers(radiusInKilometers);
 
         return nearestTravelPointsVariables;
     }
 
-    private ZonedDateTime convert(String time) {
+    private String convertTimeToOffsetDateTimeString(String time) {
         return LocalDate.now()
                 .atTime(LocalTime.parse(time, DateTimeFormatter.ISO_LOCAL_TIME))
                 .atZone(ZoneId.of(timeZone))
-                .plusDays(1L);
+                .plusDays(1L)
+                .format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
     }
 
     private String buildJsonVariablesPath(String file) {

@@ -20,7 +20,7 @@ public class BoxServiceTestConfiguration {
     private String autocompleteAddressesPath;
     @Value("${boxservice.get.nearest.addresses.controller.path}")
     private String nearestAddressesPath;
-    @Value("${test.apitokens[0].text}")
+    @Value("${test.apitokens[0].departure}")
     private String departure;
     @Value("${test.apitokens[0].language}")
     private Locale language;
