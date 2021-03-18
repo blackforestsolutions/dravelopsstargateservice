@@ -6,37 +6,43 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Import;
 import org.springframework.data.geo.Distance;
 import org.springframework.data.geo.Metrics;
 
 import java.util.Locale;
 
-@Import(ConverterConfiguration.class)
 @TestConfiguration
 public class BoxServiceTestConfiguration {
 
+    /**
+     * boxServiceAutocompleteAddressesApiToken
+     */
     @Value("${boxservice.get.autocomplete.addresses.controller.path}")
     private String autocompleteAddressesPath;
+    @Value("${graphql.playground.tabs[2].variables.text}")
+    private String text;
+    @Value("${graphql.playground.tabs[2].variables.language}")
+    private Locale language;
+
+    /**
+     * boxServiceNearestAddressesApiToken
+     */
     @Value("${boxservice.get.nearest.addresses.controller.path}")
     private String nearestAddressesPath;
-    @Value("${test.apitokens[0].departure}")
-    private String departure;
-    @Value("${test.apitokens[0].language}")
-    private Locale language;
-    @Value("${test.apitokens[0].arrivalCoordinateLongitude}")
-    private Double arrivalCoordinateLongitude;
-    @Value("${test.apitokens[0].arrivalCoordinateLatitude}")
-    private Double arrivalCoordinateLatitude;
-    @Value("${test.apitokens[0].radiusInKilometers}")
+    @Value("${graphql.playground.tabs[3].variables.longitude}")
+    private Double longitude;
+    @Value("${graphql.playground.tabs[3].variables.latitude}")
+    private Double latitude;
+    @Value("${graphql.playground.tabs[3].variables.radiusInKilometers}")
     private Double radiusInKilometers;
+
 
     @Bean
     @ConfigurationProperties(prefix = "boxservice")
     public ApiToken.ApiTokenBuilder boxServiceAutocompleteAddressesApiToken() {
         return new ApiToken.ApiTokenBuilder()
                 .setPath(autocompleteAddressesPath)
-                .setDeparture(departure)
+                .setDeparture(text)
                 .setLanguage(language);
     }
 
@@ -45,8 +51,8 @@ public class BoxServiceTestConfiguration {
     public ApiToken.ApiTokenBuilder boxServiceNearestAddressesApiToken() {
         return new ApiToken.ApiTokenBuilder()
                 .setPath(nearestAddressesPath)
-                .setArrivalCoordinate(new Point.PointBuilder(arrivalCoordinateLongitude, arrivalCoordinateLatitude).build())
-                .setRadiusInKilometers(new Distance(radiusInKilometers, Metrics.KILOMETERS))
-                .setLanguage(language);
+                .setLanguage(language)
+                .setArrivalCoordinate(new Point.PointBuilder(longitude, latitude).build())
+                .setRadiusInKilometers(new Distance(radiusInKilometers, Metrics.KILOMETERS));
     }
 }
