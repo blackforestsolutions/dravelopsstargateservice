@@ -6,38 +6,40 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Import;
 
-@Import(ConverterConfiguration.class)
+import java.time.ZonedDateTime;
+import java.util.Locale;
+
 @TestConfiguration
 public class RoutePersistenceApiTestConfiguration {
 
-    @Value("${routepersistence.protocol}")
-    private String protocol;
-    @Value("${routepersistence.host}")
-    private String host;
-    @Value("${routepersistence.port}")
-    private int port;
     @Value("${routepersistence.get.journey.path}")
     private String path;
-    @Value("${test.apitokens[0].departureCoordinateLongitude}")
-    private Double departureCoordinateLongitude;
-    @Value("${test.apitokens[0].departureCoordinateLatitude}")
-    private Double departureCoordinateLatitude;
-    @Value("${test.apitokens[0].arrivalCoordinateLongitude}")
-    private Double arrivalCoordinateLongitude;
-    @Value("${test.apitokens[0].arrivalCoordinateLatitude}")
-    private Double arrivalCoordinateLatitude;
+    @Value("${graphql.playground.tabs[0].variables.departureLatitude}")
+    private Double departureLatitude;
+    @Value("${graphql.playground.tabs[0].variables.departureLongitude}")
+    private Double departureLongitude;
+    @Value("${graphql.playground.tabs[0].variables.arrivalLatitude}")
+    private Double arrivalLatitude;
+    @Value("${graphql.playground.tabs[0].variables.arrivalLongitude}")
+    private Double arrivalLongitude;
+    @Value("${graphql.playground.tabs[0].variables.dateTime}")
+    private String dateTime;
+    @Value("${graphql.playground.tabs[0].variables.isArrivalDateTime}")
+    private Boolean isArrivalDateTime;
+    @Value("${graphql.playground.tabs[0].variables.language}")
+    private Locale language;
 
-    @Bean(name = "routePersistenceApiTokenIT")
-    @ConfigurationProperties(prefix = "test.apitokens[0]")
-    public ApiToken.ApiTokenBuilder apiToken() {
+
+    @Bean
+    @ConfigurationProperties(prefix = "routepersistence")
+    public ApiToken.ApiTokenBuilder routePersistenceApiTokenIT() {
         return new ApiToken.ApiTokenBuilder()
-                .setProtocol(protocol)
-                .setHost(host)
-                .setPort(port)
                 .setPath(path)
-                .setDepartureCoordinate(new Point.PointBuilder(departureCoordinateLongitude, departureCoordinateLatitude).build())
-                .setArrivalCoordinate(new Point.PointBuilder(arrivalCoordinateLongitude, arrivalCoordinateLatitude).build());
+                .setDepartureCoordinate(new Point.PointBuilder(departureLongitude, departureLatitude).build())
+                .setArrivalCoordinate(new Point.PointBuilder(arrivalLongitude, arrivalLatitude).build())
+                .setDateTime(ZonedDateTime.parse(dateTime))
+                .setIsArrivalDateTime(isArrivalDateTime)
+                .setLanguage(language);
     }
 }
