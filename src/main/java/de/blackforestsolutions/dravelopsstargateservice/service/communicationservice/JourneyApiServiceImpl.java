@@ -2,9 +2,9 @@ package de.blackforestsolutions.dravelopsstargateservice.service.communicationse
 
 import de.blackforestsolutions.dravelopsdatamodel.ApiToken;
 import de.blackforestsolutions.dravelopsdatamodel.Journey;
-import de.blackforestsolutions.dravelopsdatamodel.Point;
 import de.blackforestsolutions.dravelopsstargateservice.model.exception.DateTimeParsingException;
 import de.blackforestsolutions.dravelopsstargateservice.model.exception.LanguageParsingException;
+import de.blackforestsolutions.dravelopsstargateservice.service.supportservice.GeocodingService;
 import de.blackforestsolutions.dravelopsstargateservice.service.supportservice.RequestTokenHandlerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,14 +17,21 @@ import java.util.Locale;
 @Service
 public class JourneyApiServiceImpl implements JourneyApiService {
 
+    private static final String DEPARTURE_LONGITUDE_FIELD = "departureLongitude";
+    private static final String DEPARTURE_LATITUDE_FIELD = "departureLatitude";
+    private static final String ARRIVAL_LONGITUDE_FIELD = "arrivalLongitude";
+    private static final String ARRIVAL_LATITUDE_FIELD = "arrivalLatitude";
+
     private final BackendApiService backendApiService;
     private final RequestTokenHandlerService requestTokenHandlerService;
+    private final GeocodingService geocodingService;
     private final ApiToken routePersistenceApiToken;
 
     @Autowired
-    public JourneyApiServiceImpl(BackendApiService backendApiService, RequestTokenHandlerService requestTokenHandlerService, ApiToken routePersistenceApiToken) {
+    public JourneyApiServiceImpl(BackendApiService backendApiService, RequestTokenHandlerService requestTokenHandlerService, GeocodingService geocodingService, ApiToken routePersistenceApiToken) {
         this.backendApiService = backendApiService;
         this.requestTokenHandlerService = requestTokenHandlerService;
+        this.geocodingService = geocodingService;
         this.routePersistenceApiToken = routePersistenceApiToken;
     }
 
@@ -47,8 +54,8 @@ public class JourneyApiServiceImpl implements JourneyApiService {
     @SuppressWarnings("checkstyle:parameternumber")
     private ApiToken buildRequestApiTokenWith(double departureLongitude, double departureLatitude, double arrivalLongitude, double arrivalLatitude, ZonedDateTime dateTime, boolean isArrivalDateTime, Locale language) {
         return new ApiToken.ApiTokenBuilder()
-                .setDepartureCoordinate(new Point.PointBuilder(departureLongitude, departureLatitude).build())
-                .setArrivalCoordinate(new Point.PointBuilder(arrivalLongitude, arrivalLatitude).build())
+                .setDepartureCoordinate(geocodingService.extractCoordinateFrom(departureLongitude, departureLatitude, DEPARTURE_LONGITUDE_FIELD, DEPARTURE_LATITUDE_FIELD))
+                .setArrivalCoordinate(geocodingService.extractCoordinateFrom(arrivalLongitude, arrivalLatitude, ARRIVAL_LONGITUDE_FIELD, ARRIVAL_LATITUDE_FIELD))
                 .setDateTime(dateTime)
                 .setIsArrivalDateTime(isArrivalDateTime)
                 .setLanguage(language)

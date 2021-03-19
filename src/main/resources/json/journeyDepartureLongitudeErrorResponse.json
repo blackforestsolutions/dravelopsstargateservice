@@ -1,0 +1,17 @@
+{
+  "errors" : [ {
+    "message" : "Exception while fetching data (/getJourneysBy) : Coordinates use WGS-84 coordinate system. Permissible longitudes are between -180.0 to 180.0 degrees and permissible latitudes are between -90.0 to 90 degrees",
+    "locations" : [ {
+      "line" : 2,
+      "column" : 5
+    } ],
+    "path" : [ "getJourneysBy" ],
+    "extensions" : {
+      "invalidField" : "departureLongitude",
+      "classification" : "DataFetchingException"
+    }
+  } ],
+  "data" : {
+    "getJourneysBy" : null
+  }
+}

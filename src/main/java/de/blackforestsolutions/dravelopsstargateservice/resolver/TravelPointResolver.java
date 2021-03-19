@@ -1,10 +1,10 @@
 package de.blackforestsolutions.dravelopsstargateservice.resolver;
 
 import de.blackforestsolutions.dravelopsdatamodel.ApiToken;
-import de.blackforestsolutions.dravelopsdatamodel.Point;
 import de.blackforestsolutions.dravelopsdatamodel.TravelPoint;
 import de.blackforestsolutions.dravelopsstargateservice.model.exception.LanguageParsingException;
 import de.blackforestsolutions.dravelopsstargateservice.service.communicationservice.BackendApiService;
+import de.blackforestsolutions.dravelopsstargateservice.service.supportservice.GeocodingService;
 import de.blackforestsolutions.dravelopsstargateservice.service.supportservice.RequestTokenHandlerService;
 import graphql.kickstart.tools.GraphQLQueryResolver;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,17 +20,22 @@ import java.util.concurrent.CompletableFuture;
 @Component
 public class TravelPointResolver implements GraphQLQueryResolver {
 
+    private static final String LONGITUDE_FIELD = "longitude";
+    private static final String LATITUDE_FIELD = "latitude";
+
     private final BackendApiService backendApiService;
     private final RequestTokenHandlerService requestTokenHandlerService;
+    private final GeocodingService geocodingService;
     private final ApiToken autocompleteAddressesBoxServiceApiToken;
     private final ApiToken nearestAddressesBoxServiceApiToken;
     private final ApiToken stationPersistenceTravelPointApiToken;
     private final ApiToken nearestStationsOtpMapperServiceApiToken;
 
     @Autowired
-    public TravelPointResolver(BackendApiService backendApiService, RequestTokenHandlerService requestTokenHandlerService, ApiToken autocompleteAddressesBoxServiceApiToken, ApiToken nearestAddressesBoxServiceApiToken, ApiToken stationPersistenceTravelPointApiToken, ApiToken nearestStationsOtpMapperServiceApiToken) {
+    public TravelPointResolver(BackendApiService backendApiService, RequestTokenHandlerService requestTokenHandlerService, GeocodingService geocodingService, ApiToken autocompleteAddressesBoxServiceApiToken, ApiToken nearestAddressesBoxServiceApiToken, ApiToken stationPersistenceTravelPointApiToken, ApiToken nearestStationsOtpMapperServiceApiToken) {
         this.backendApiService = backendApiService;
         this.requestTokenHandlerService = requestTokenHandlerService;
+        this.geocodingService = geocodingService;
         this.autocompleteAddressesBoxServiceApiToken = autocompleteAddressesBoxServiceApiToken;
         this.nearestAddressesBoxServiceApiToken = nearestAddressesBoxServiceApiToken;
         this.stationPersistenceTravelPointApiToken = stationPersistenceTravelPointApiToken;
@@ -73,7 +78,7 @@ public class TravelPointResolver implements GraphQLQueryResolver {
 
     private ApiToken buildNearestAddressesRequestApiTokenWith(double longitude, double latitude, double radiusInKilometers, String language) {
         return new ApiToken.ApiTokenBuilder()
-                .setArrivalCoordinate(new Point.PointBuilder(longitude, latitude).build())
+                .setArrivalCoordinate(geocodingService.extractCoordinateFrom(longitude, latitude, LONGITUDE_FIELD, LATITUDE_FIELD))
                 .setRadiusInKilometers(new Distance(radiusInKilometers, Metrics.KILOMETERS))
                 .setLanguage(extractLocaleFrom(language))
                 .build();

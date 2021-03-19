@@ -6,6 +6,8 @@ import de.blackforestsolutions.dravelopsstargateservice.model.exception.Language
 import de.blackforestsolutions.dravelopsstargateservice.service.communicationservice.BackendApiService;
 import de.blackforestsolutions.dravelopsstargateservice.service.communicationservice.BackendApiServiceImpl;
 import de.blackforestsolutions.dravelopsstargateservice.service.communicationservice.RequestHandlerFunction;
+import de.blackforestsolutions.dravelopsstargateservice.service.supportservice.GeocodingService;
+import de.blackforestsolutions.dravelopsstargateservice.service.supportservice.GeocodingServiceImpl;
 import de.blackforestsolutions.dravelopsstargateservice.service.supportservice.RequestTokenHandlerService;
 import de.blackforestsolutions.dravelopsstargateservice.service.supportservice.RequestTokenHandlerServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
@@ -30,12 +32,13 @@ class TravelPointResolverTest {
 
     private final BackendApiService backendApiService = mock(BackendApiServiceImpl.class);
     private final RequestTokenHandlerService requestTokenHandlerService = mock(RequestTokenHandlerServiceImpl.class);
+    private final GeocodingService geocodingService = mock(GeocodingServiceImpl.class);
     private final ApiToken configuredAutocompleteBoxServiceApiToken = getConfiguredAutocompleteBoxServiceApiToken();
     private final ApiToken configuredNearestBoxServiceApiToken = getConfiguredNearestAddressesBoxServiceApiToken();
     private final ApiToken configuredStationApiToken = getConfiguredTravelPointPersistenceApiToken();
     private final ApiToken configuredNearestStationsOtpMapperServiceApiToken = getConfiguredNearestStationsOtpMapperApiToken();
 
-    private final TravelPointResolver classUnderTest = new TravelPointResolver(backendApiService, requestTokenHandlerService, configuredAutocompleteBoxServiceApiToken, configuredNearestBoxServiceApiToken, configuredStationApiToken, configuredNearestStationsOtpMapperServiceApiToken);
+    private final TravelPointResolver classUnderTest = new TravelPointResolver(backendApiService, requestTokenHandlerService, geocodingService, configuredAutocompleteBoxServiceApiToken, configuredNearestBoxServiceApiToken, configuredStationApiToken, configuredNearestStationsOtpMapperServiceApiToken);
 
     @BeforeEach
     void init() {
@@ -103,6 +106,8 @@ class TravelPointResolverTest {
     void test_getNearestAddressesBy_userRequestToken_returns_travelPoints() throws ExecutionException, InterruptedException {
         ApiToken testData = getNearestAddressesUserRequestToken();
         TravelPoint expectedTravelPoint = getGermanyTravelPoint(new Distance(0.0d, Metrics.KILOMETERS));
+        when(geocodingService.extractCoordinateFrom(anyDouble(), anyDouble(), anyString(), anyString()))
+                .thenReturn(getNearestAddressesUserRequestToken().getArrivalCoordinate());
         when(backendApiService.getManyBy(any(ApiToken.class), any(ApiToken.class), any(RequestHandlerFunction.class), eq(TravelPoint.class)))
                 .thenReturn(Flux.just(expectedTravelPoint, expectedTravelPoint));
 
@@ -123,6 +128,10 @@ class TravelPointResolverTest {
         ApiToken testData = getNearestAddressesUserRequestToken();
         ArgumentCaptor<ApiToken> userRequestArg = ArgumentCaptor.forClass(ApiToken.class);
         ArgumentCaptor<ApiToken> configuredBoxServiceApiTokenArg = ArgumentCaptor.forClass(ApiToken.class);
+        ArgumentCaptor<Double> longitudeArg = ArgumentCaptor.forClass(Double.class);
+        ArgumentCaptor<Double> latitudeArg = ArgumentCaptor.forClass(Double.class);
+        when(geocodingService.extractCoordinateFrom(anyDouble(), anyDouble(), anyString(), anyString()))
+                .thenReturn(getNearestAddressesUserRequestToken().getArrivalCoordinate());
         when(backendApiService.getManyBy(any(ApiToken.class), any(ApiToken.class), any(RequestHandlerFunction.class), eq(TravelPoint.class)))
                 .thenReturn(Flux.just(getGermanyTravelPoint(new Distance(0.0d, Metrics.KILOMETERS)), getGermanyTravelPoint(new Distance(0.0d, Metrics.KILOMETERS))));
 
@@ -133,9 +142,12 @@ class TravelPointResolverTest {
                 testData.getLanguage().toString()
         );
 
-        InOrder inOrder = inOrder(backendApiService);
+        InOrder inOrder = inOrder(geocodingService, backendApiService);
+        inOrder.verify(geocodingService,times(1)).extractCoordinateFrom(longitudeArg.capture(), latitudeArg.capture(), anyString(), anyString());
         inOrder.verify(backendApiService, times(1)).getManyBy(userRequestArg.capture(), configuredBoxServiceApiTokenArg.capture(), any(RequestHandlerFunction.class), eq(TravelPoint.class));
         inOrder.verifyNoMoreInteractions();
+        assertThat(longitudeArg.getValue()).isEqualTo(getNearestAddressesUserRequestToken().getArrivalCoordinate().getX());
+        assertThat(latitudeArg.getValue()).isEqualTo(getNearestAddressesUserRequestToken().getArrivalCoordinate().getY());
         assertThat(userRequestArg.getValue()).isEqualToComparingFieldByField(getNearestAddressesUserRequestToken());
         assertThat(configuredBoxServiceApiTokenArg.getValue()).isEqualToComparingFieldByField(getConfiguredNearestAddressesBoxServiceApiToken());
     }
@@ -143,6 +155,8 @@ class TravelPointResolverTest {
     @Test
     void test_getNearestAddressesBy_userRequestToken_returns_an_empty_list_when_no_results_are_available() throws ExecutionException, InterruptedException {
         ApiToken testData = getNearestAddressesUserRequestToken();
+        when(geocodingService.extractCoordinateFrom(anyDouble(), anyDouble(), anyString(), anyString()))
+                .thenReturn(getNearestAddressesUserRequestToken().getArrivalCoordinate());
         when(backendApiService.getManyBy(any(ApiToken.class), any(ApiToken.class), any(RequestHandlerFunction.class), eq(TravelPoint.class)))
                 .thenReturn(Flux.empty());
 
@@ -160,6 +174,8 @@ class TravelPointResolverTest {
     void test_getNearestAddressesBy_userRequestToken_and_wrong_language_format_throws_dateTimeParsingException() {
         String wrongLanguage = "";
         ApiToken testData = getNearestAddressesUserRequestToken();
+        when(geocodingService.extractCoordinateFrom(anyDouble(), anyDouble(), anyString(), anyString()))
+                .thenReturn(getNearestAddressesUserRequestToken().getArrivalCoordinate());
 
         assertThrows(LanguageParsingException.class, () -> classUnderTest.getNearestAddressesBy(
                 testData.getArrivalCoordinate().getX(),
@@ -173,6 +189,8 @@ class TravelPointResolverTest {
     void test_getNearestStationsBy_userRequestToken_returns_travelPoints() throws ExecutionException, InterruptedException {
         ApiToken testData = getNearestStationsUserRequestToken();
         TravelPoint expectedTravelPoint = getFurtwangenTownChurchTravelPoint();
+        when(geocodingService.extractCoordinateFrom(anyDouble(), anyDouble(), anyString(), anyString()))
+                .thenReturn(getNearestStationsUserRequestToken().getArrivalCoordinate());
         when(backendApiService.getManyBy(any(ApiToken.class), any(ApiToken.class), any(RequestHandlerFunction.class), eq(TravelPoint.class)))
                 .thenReturn(Flux.just(expectedTravelPoint, expectedTravelPoint));
 
@@ -193,6 +211,10 @@ class TravelPointResolverTest {
         ApiToken testData = getNearestStationsUserRequestToken();
         ArgumentCaptor<ApiToken> userRequestArg = ArgumentCaptor.forClass(ApiToken.class);
         ArgumentCaptor<ApiToken> configuredOtpMapperServiceApiTokenArg = ArgumentCaptor.forClass(ApiToken.class);
+        ArgumentCaptor<Double> longitudeArg = ArgumentCaptor.forClass(Double.class);
+        ArgumentCaptor<Double> latitudeArg = ArgumentCaptor.forClass(Double.class);
+        when(geocodingService.extractCoordinateFrom(anyDouble(), anyDouble(), anyString(), anyString()))
+                .thenReturn(getNearestStationsUserRequestToken().getArrivalCoordinate());
         when(backendApiService.getManyBy(any(ApiToken.class), any(ApiToken.class), any(RequestHandlerFunction.class), eq(TravelPoint.class)))
                 .thenReturn(Flux.just(getFurtwangenTownChurchTravelPoint(), getFurtwangenTownChurchTravelPoint()));
 
@@ -203,9 +225,12 @@ class TravelPointResolverTest {
                 testData.getLanguage().toString()
         );
 
-        InOrder inOrder = inOrder(backendApiService);
+        InOrder inOrder = inOrder(geocodingService, backendApiService);
+        inOrder.verify(geocodingService,times(1)).extractCoordinateFrom(longitudeArg.capture(), latitudeArg.capture(), anyString(), anyString());
         inOrder.verify(backendApiService, times(1)).getManyBy(userRequestArg.capture(), configuredOtpMapperServiceApiTokenArg.capture(), any(RequestHandlerFunction.class), eq(TravelPoint.class));
         inOrder.verifyNoMoreInteractions();
+        assertThat(longitudeArg.getValue()).isEqualTo(getNearestStationsUserRequestToken().getArrivalCoordinate().getX());
+        assertThat(latitudeArg.getValue()).isEqualTo(getNearestStationsUserRequestToken().getArrivalCoordinate().getY());
         assertThat(userRequestArg.getValue()).isEqualToComparingFieldByField(getNearestStationsUserRequestToken());
         assertThat(configuredOtpMapperServiceApiTokenArg.getValue()).isEqualToComparingFieldByField(getConfiguredNearestStationsOtpMapperApiToken());
     }
@@ -213,6 +238,8 @@ class TravelPointResolverTest {
     @Test
     void test_getNearestStationsBy_userRequestToken_returns_an_empty_list_when_no_results_are_available() throws ExecutionException, InterruptedException {
         ApiToken testData = getNearestStationsUserRequestToken();
+        when(geocodingService.extractCoordinateFrom(anyDouble(), anyDouble(), anyString(), anyString()))
+                .thenReturn(getNearestStationsUserRequestToken().getArrivalCoordinate());
         when(backendApiService.getManyBy(any(ApiToken.class), any(ApiToken.class), any(RequestHandlerFunction.class), eq(TravelPoint.class)))
                 .thenReturn(Flux.empty());
 
@@ -230,6 +257,8 @@ class TravelPointResolverTest {
     void test_getNearestStationsBy_userRequestToken_and_wrong_language_format_throws_dateTimeParsingException() {
         String wrongLanguage = "";
         ApiToken testData = getNearestStationsUserRequestToken();
+        when(geocodingService.extractCoordinateFrom(anyDouble(), anyDouble(), anyString(), anyString()))
+                .thenReturn(getNearestStationsUserRequestToken().getArrivalCoordinate());
 
         assertThrows(LanguageParsingException.class, () -> classUnderTest.getNearestStationsBy(
                 testData.getArrivalCoordinate().getX(),

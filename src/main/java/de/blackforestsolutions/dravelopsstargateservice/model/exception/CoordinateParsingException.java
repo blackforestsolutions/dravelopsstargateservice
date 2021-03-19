@@ -9,12 +9,13 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-public class DateTimeParsingException extends RuntimeException implements GraphQLError {
+public class CoordinateParsingException extends RuntimeException implements GraphQLError {
 
-    private static final String INVALID_FIELD = "dateTime";
+    private final String invalidField;
 
-    public DateTimeParsingException() {
-        super("Times are represented as ISO 8601 strings. For example '2011-12-03T10:15:30+01:00'");
+    public CoordinateParsingException(String invalidField) {
+        super("Coordinates use WGS-84 coordinate system. Permissible longitudes are between -180.0 to 180.0 degrees and permissible latitudes are between -90.0 to 90 degrees");
+        this.invalidField = invalidField;
     }
 
     @Override
@@ -29,6 +30,6 @@ public class DateTimeParsingException extends RuntimeException implements GraphQ
 
     @Override
     public Map<String, Object> getExtensions() {
-        return Collections.singletonMap(GraphQlConfiguration.INVALID_FIELD_NAME, INVALID_FIELD);
+        return Collections.singletonMap(GraphQlConfiguration.INVALID_FIELD_NAME, invalidField);
     }
 }
