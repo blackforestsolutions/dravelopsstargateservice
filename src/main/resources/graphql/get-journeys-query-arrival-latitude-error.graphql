@@ -1,0 +1,18 @@
+query GetJourneys {
+    getJourneysBy(
+        departureLatitude: 48.048381
+        departureLongitude: 8.209198
+        arrivalLatitude: 90.1
+        arrivalLongitude: 7.891595
+        dateTime: "2021-01-31T13:00:00+02:00"
+    ) {
+        legs {
+            departure {
+                name
+            }
+            arrival {
+                name
+            }
+        }
+    }
+}

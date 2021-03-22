@@ -88,4 +88,44 @@ class JourneyResolverMockIT {
         assertThat(response.readTree().toPrettyString()).isEqualTo(expectedErrorJson);
     }
 
+    @Test
+    void test_getJourneysBy_graphql_file_with_departureLatitude_error_returns_error_json_with_coordinateParsingException() throws IOException {
+        String expectedErrorJson = getResourceFileAsString("json/journeyDepartureLatitudeErrorResponse.json");
+
+        GraphQLResponse response = graphQLTestTemplate.postForResource("graphql/get-journeys-query-departure-latitude-error.graphql");
+
+        assertThat(response.isOk()).isTrue();
+        assertThat(response.readTree().toPrettyString()).isEqualTo(expectedErrorJson);
+    }
+
+    @Test
+    void test_getJourneysBy_graphql_file_with_departureLongitude_error_returns_error_json_with_coordinateParsingException() throws IOException {
+        String expectedErrorJson = getResourceFileAsString("json/journeyDepartureLongitudeErrorResponse.json");
+
+        GraphQLResponse response = graphQLTestTemplate.postForResource("graphql/get-journeys-query-departure-longitude-error.graphql");
+
+        assertThat(response.isOk()).isTrue();
+        assertThat(response.readTree().toPrettyString()).isEqualTo(expectedErrorJson);
+    }
+
+    @Test
+    void test_getJourneysBy_graphql_file_with_arrivalLatitude_error_returns_error_json_with_coordinateParsingException() throws IOException {
+        String expectedErrorJson = getResourceFileAsString("json/journeyArrivalLatitudeErrorResponse.json");
+
+        GraphQLResponse response = graphQLTestTemplate.postForResource("graphql/get-journeys-query-arrival-latitude-error.graphql");
+
+        assertThat(response.isOk()).isTrue();
+        assertThat(response.readTree().toPrettyString()).isEqualTo(expectedErrorJson);
+    }
+
+    @Test
+    void test_getJourneysBy_graphql_file_with_arrivalLongitude_error_returns_error_json_with_coordinateParsingException() throws IOException {
+        String expectedErrorJson = getResourceFileAsString("json/journeyArrivalLongitudeErrorResponse.json");
+
+        GraphQLResponse response = graphQLTestTemplate.postForResource("graphql/get-journeys-query-arrival-longitude-error.graphql");
+
+        assertThat(response.isOk()).isTrue();
+        assertThat(response.readTree().toPrettyString()).isEqualTo(expectedErrorJson);
+    }
+
 }

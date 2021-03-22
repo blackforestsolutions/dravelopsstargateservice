@@ -2,8 +2,8 @@ package de.blackforestsolutions.dravelopsstargateservice.resolver;
 
 import com.graphql.spring.boot.test.GraphQLResponse;
 import com.graphql.spring.boot.test.GraphQLTestTemplate;
-import de.blackforestsolutions.dravelopsdatamodel.TravelPoint;
 import de.blackforestsolutions.dravelopsdatamodel.ApiToken;
+import de.blackforestsolutions.dravelopsdatamodel.TravelPoint;
 import de.blackforestsolutions.dravelopsstargateservice.service.communicationservice.BackendApiService;
 import de.blackforestsolutions.dravelopsstargateservice.service.communicationservice.RequestHandlerFunction;
 import org.junit.jupiter.api.Test;
@@ -18,10 +18,10 @@ import reactor.core.publisher.Flux;
 import java.io.IOException;
 
 import static de.blackforestsolutions.dravelopsdatamodel.objectmothers.TravelPointObjectMother.*;
-import static de.blackforestsolutions.dravelopsdatamodel.objectmothers.TravelPointObjectMother.getTribergStationStreetTravelPoint;
 import static de.blackforestsolutions.dravelopsdatamodel.testutil.TestUtils.getResourceFileAsString;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doReturn;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -127,6 +127,26 @@ class TravelPointResolverMockIT {
     }
 
     @Test
+    void test_getNearestAddressesBy_graphql_file_with_longitude_error_returns_error_json_with_coordinateParsingException() throws IOException {
+        String expectedErrorJson = getResourceFileAsString("json/nearestAddressesLongitudeErrorResponse.json");
+
+        GraphQLResponse response = graphQLTestTemplate.postForResource("graphql/get-nearest-addresses-query-longitude-error.graphql");
+
+        assertThat(response.isOk()).isTrue();
+        assertThat(response.readTree().toPrettyString()).isEqualTo(expectedErrorJson);
+    }
+
+    @Test
+    void test_getNearestAddressesBy_graphql_file_with_latitude_error_returns_error_json_with_coordinateParsingException() throws IOException {
+        String expectedErrorJson = getResourceFileAsString("json/nearestAddressesLatitudeErrorResponse.json");
+
+        GraphQLResponse response = graphQLTestTemplate.postForResource("graphql/get-nearest-addresses-query-latitude-error.graphql");
+
+        assertThat(response.isOk()).isTrue();
+        assertThat(response.readTree().toPrettyString()).isEqualTo(expectedErrorJson);
+    }
+
+    @Test
     void test_getNearestStationsBy_min_parameters_graphql_file_returns_a_correct_journey() throws IOException {
         String expectedTravelPointJson = getResourceFileAsString("json/nearestResponse.json");
         doReturn(Flux.just(getStuttgarterStreetOneTravelPoint(new Distance(0.0d, Metrics.KILOMETERS))))
@@ -167,6 +187,26 @@ class TravelPointResolverMockIT {
         String expectedErrorJson = getResourceFileAsString("json/nearestStationsLanguageErrorResponse.json");
 
         GraphQLResponse response = graphQLTestTemplate.postForResource("graphql/get-nearest-stations-query-language-error.graphql");
+
+        assertThat(response.isOk()).isTrue();
+        assertThat(response.readTree().toPrettyString()).isEqualTo(expectedErrorJson);
+    }
+
+    @Test
+    void test_getNearestStationsBy_graphql_file_with_longitude_error_returns_error_json_with_coordinateParsingException() throws IOException {
+        String expectedErrorJson = getResourceFileAsString("json/nearestStationsLongitudeErrorResponse.json");
+
+        GraphQLResponse response = graphQLTestTemplate.postForResource("graphql/get-nearest-stations-query-longitude-error.graphql");
+
+        assertThat(response.isOk()).isTrue();
+        assertThat(response.readTree().toPrettyString()).isEqualTo(expectedErrorJson);
+    }
+
+    @Test
+    void test_getNearestStationsBy_graphql_file_with_latitude_error_returns_error_json_with_coordinateParsingException() throws IOException {
+        String expectedErrorJson = getResourceFileAsString("json/nearestStationsLatitudeErrorResponse.json");
+
+        GraphQLResponse response = graphQLTestTemplate.postForResource("graphql/get-nearest-stations-query-latitude-error.graphql");
 
         assertThat(response.isOk()).isTrue();
         assertThat(response.readTree().toPrettyString()).isEqualTo(expectedErrorJson);

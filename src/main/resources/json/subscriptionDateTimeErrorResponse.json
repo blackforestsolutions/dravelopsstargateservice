@@ -1,6 +1,6 @@
 {
   "errors" : [ {
-    "message" : "Exception while fetching data (/getJourneysBy) : Times are reprensented as ISO 8601 strings. For example '2011-12-03T10:15:30+01:00'",
+    "message" : "Exception while fetching data (/getJourneysBy) : Times are represented as ISO 8601 strings. For example '2011-12-03T10:15:30+01:00'",
     "locations" : [ {
       "line" : 2,
       "column" : 5
