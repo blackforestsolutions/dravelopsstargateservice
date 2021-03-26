@@ -23,47 +23,47 @@ class RequestTokenHandlerServiceTest {
 
     @Test
     void test_mergeJourneyApiTokensWith_userRequestToken_dateTime_as_null_and_configuredRoutePersistenceApiToken_throws_exception() {
-        ApiToken.ApiTokenBuilder userRequestApiToken = new ApiToken.ApiTokenBuilder(getJourneyUserRequestToken());
+        ApiToken userRequestApiToken = new ApiToken(getJourneyUserRequestToken());
         userRequestApiToken.setDateTime(null);
         ApiToken configuredRoutePersistenceApiToken = getConfiguredRoutePersistenceApiToken();
 
-        assertThrows(NullPointerException.class, () -> classUnderTest.mergeJourneyApiTokensWith(userRequestApiToken.build(), configuredRoutePersistenceApiToken));
+        assertThrows(NullPointerException.class, () -> classUnderTest.mergeJourneyApiTokensWith(userRequestApiToken, configuredRoutePersistenceApiToken));
     }
 
     @Test
     void test_mergeJourneyApiTokensWith_userRequestToken_departureCoordinate_as_null_and_configuredRoutePersistenceApiToken_throws_exception() {
-        ApiToken.ApiTokenBuilder userRequestApiToken = new ApiToken.ApiTokenBuilder(getJourneyUserRequestToken());
+        ApiToken userRequestApiToken = new ApiToken(getJourneyUserRequestToken());
         userRequestApiToken.setDepartureCoordinate(null);
         ApiToken configuredRoutePersistenceApiToken = getConfiguredRoutePersistenceApiToken();
 
-        assertThrows(NullPointerException.class, () -> classUnderTest.mergeJourneyApiTokensWith(userRequestApiToken.build(), configuredRoutePersistenceApiToken));
+        assertThrows(NullPointerException.class, () -> classUnderTest.mergeJourneyApiTokensWith(userRequestApiToken, configuredRoutePersistenceApiToken));
     }
 
     @Test
     void test_mergeJourneyApiTokensWith_userRequestToken_arrivalCoordinate_as_null_and_configuredRoutePersistenceApiToken_throws_exception() {
-        ApiToken.ApiTokenBuilder userRequestApiToken = new ApiToken.ApiTokenBuilder(getJourneyUserRequestToken());
+        ApiToken userRequestApiToken = new ApiToken(getJourneyUserRequestToken());
         userRequestApiToken.setArrivalCoordinate(null);
         ApiToken configuredRoutePersistenceApiToken = getConfiguredRoutePersistenceApiToken();
 
-        assertThrows(NullPointerException.class, () -> classUnderTest.mergeJourneyApiTokensWith(userRequestApiToken.build(), configuredRoutePersistenceApiToken));
+        assertThrows(NullPointerException.class, () -> classUnderTest.mergeJourneyApiTokensWith(userRequestApiToken, configuredRoutePersistenceApiToken));
     }
 
     @Test
     void test_mergeJourneyApiTokensWith_userRequestToken_language_as_null_and_configuredRoutePersistenceApiToken_throws_exception() {
-        ApiToken.ApiTokenBuilder userRequestApiToken = new ApiToken.ApiTokenBuilder(getJourneyUserRequestToken());
+        ApiToken userRequestApiToken = new ApiToken(getJourneyUserRequestToken());
         userRequestApiToken.setLanguage(null);
         ApiToken configuredRoutePersistenceApiToken = getConfiguredRoutePersistenceApiToken();
 
-        assertThrows(NullPointerException.class, () -> classUnderTest.mergeJourneyApiTokensWith(userRequestApiToken.build(), configuredRoutePersistenceApiToken));
+        assertThrows(NullPointerException.class, () -> classUnderTest.mergeJourneyApiTokensWith(userRequestApiToken, configuredRoutePersistenceApiToken));
     }
 
     @Test
     void test_mergeJourneyApiTokensWith_userRequestToken_isArrivalDateTime_as_null_and_configuredRoutePersistenceApiToken_throws_exception() {
-        ApiToken.ApiTokenBuilder userRequestApiToken = new ApiToken.ApiTokenBuilder(getJourneyUserRequestToken());
+        ApiToken userRequestApiToken = new ApiToken(getJourneyUserRequestToken());
         userRequestApiToken.setIsArrivalDateTime(null);
         ApiToken configuredRoutePersistenceApiToken = getConfiguredRoutePersistenceApiToken();
 
-        assertThrows(NullPointerException.class, () -> classUnderTest.mergeJourneyApiTokensWith(userRequestApiToken.build(), configuredRoutePersistenceApiToken));
+        assertThrows(NullPointerException.class, () -> classUnderTest.mergeJourneyApiTokensWith(userRequestApiToken, configuredRoutePersistenceApiToken));
     }
 
     @Test
@@ -78,20 +78,20 @@ class RequestTokenHandlerServiceTest {
 
     @Test
     void test_mergeAutocompleteAddressesApiTokensWith_userRequestToken_departure_as_null_and_configuredBoxApiToken_throws_exception() {
-        ApiToken.ApiTokenBuilder userRequestApiToken = new ApiToken.ApiTokenBuilder(getAutocompleteUserRequestToken());
+        ApiToken userRequestApiToken = new ApiToken(getAutocompleteUserRequestToken());
         userRequestApiToken.setDeparture(null);
         ApiToken configuredBoxServiceApiToken = getConfiguredAutocompleteBoxServiceApiToken();
 
-        assertThrows(NullPointerException.class, () -> classUnderTest.mergeAutocompleteAddressesApiTokensWith(userRequestApiToken.build(), configuredBoxServiceApiToken));
+        assertThrows(NullPointerException.class, () -> classUnderTest.mergeAutocompleteAddressesApiTokensWith(userRequestApiToken, configuredBoxServiceApiToken));
     }
 
     @Test
     void test_mergeAutocompleteAddressesApiTokensWith_userRequestToken_language_as_null_and_configuredBoxApiToken_throws_exception() {
-        ApiToken.ApiTokenBuilder userRequestApiToken = new ApiToken.ApiTokenBuilder(getAutocompleteUserRequestToken());
+        ApiToken userRequestApiToken = new ApiToken(getAutocompleteUserRequestToken());
         userRequestApiToken.setLanguage(null);
         ApiToken configuredBoxServiceApiToken = getConfiguredAutocompleteBoxServiceApiToken();
 
-        assertThrows(NullPointerException.class, () -> classUnderTest.mergeAutocompleteAddressesApiTokensWith(userRequestApiToken.build(), configuredBoxServiceApiToken));
+        assertThrows(NullPointerException.class, () -> classUnderTest.mergeAutocompleteAddressesApiTokensWith(userRequestApiToken, configuredBoxServiceApiToken));
     }
 
     @Test
@@ -106,29 +106,29 @@ class RequestTokenHandlerServiceTest {
 
     @Test
     void test_mergeNearestAddressesApiTokensWith_userRequestToken_arrivalCoordinate_as_null_and_configuredBoxApiToken_throws_exception() {
-        ApiToken.ApiTokenBuilder userRequestApiToken = new ApiToken.ApiTokenBuilder(getNearestAddressesUserRequestToken());
+        ApiToken userRequestApiToken = new ApiToken(getNearestAddressesUserRequestToken());
         userRequestApiToken.setArrivalCoordinate(null);
         ApiToken configuredBoxServiceApiToken = getConfiguredNearestAddressesBoxServiceApiToken();
 
-        assertThrows(NullPointerException.class, () -> classUnderTest.mergeNearestAddressesApiTokensWith(userRequestApiToken.build(), configuredBoxServiceApiToken));
+        assertThrows(NullPointerException.class, () -> classUnderTest.mergeNearestAddressesApiTokensWith(userRequestApiToken, configuredBoxServiceApiToken));
     }
 
     @Test
     void test_mergeNearestAddressesApiTokensWith_userRequestToken_radiusInKilometers_as_null_and_configuredBoxApiToken_throws_exception() {
-        ApiToken.ApiTokenBuilder userRequestApiToken = new ApiToken.ApiTokenBuilder(getNearestAddressesUserRequestToken());
+        ApiToken userRequestApiToken = new ApiToken(getNearestAddressesUserRequestToken());
         userRequestApiToken.setRadiusInKilometers(null);
         ApiToken configuredBoxServiceApiToken = getConfiguredNearestAddressesBoxServiceApiToken();
 
-        assertThrows(NullPointerException.class, () -> classUnderTest.mergeNearestAddressesApiTokensWith(userRequestApiToken.build(), configuredBoxServiceApiToken));
+        assertThrows(NullPointerException.class, () -> classUnderTest.mergeNearestAddressesApiTokensWith(userRequestApiToken, configuredBoxServiceApiToken));
     }
 
     @Test
     void test_mergeNearestAddressesApiTokensWith_userRequestToken_language_as_null_and_configuredBoxApiToken_throws_exception() {
-        ApiToken.ApiTokenBuilder userRequestApiToken = new ApiToken.ApiTokenBuilder(getNearestAddressesUserRequestToken());
+        ApiToken userRequestApiToken = new ApiToken(getNearestAddressesUserRequestToken());
         userRequestApiToken.setLanguage(null);
         ApiToken configuredBoxServiceApiToken = getConfiguredNearestAddressesBoxServiceApiToken();
 
-        assertThrows(NullPointerException.class, () -> classUnderTest.mergeNearestAddressesApiTokensWith(userRequestApiToken.build(), configuredBoxServiceApiToken));
+        assertThrows(NullPointerException.class, () -> classUnderTest.mergeNearestAddressesApiTokensWith(userRequestApiToken, configuredBoxServiceApiToken));
     }
 
 }

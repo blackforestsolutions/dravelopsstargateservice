@@ -4,6 +4,7 @@ import de.blackforestsolutions.dravelopsdatamodel.util.DravelOpsJsonMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringBootConfiguration;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.codec.json.Jackson2JsonDecoder;
 import org.springframework.http.codec.json.Jackson2JsonEncoder;
@@ -11,6 +12,7 @@ import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
 
 @Slf4j
+@RefreshScope
 @SpringBootConfiguration
 public class WebClientConfiguration {
 
@@ -19,6 +21,7 @@ public class WebClientConfiguration {
     @Value("${webclient.maxBufferSizeMb}")
     private int maxBufferSizeMb;
 
+    @RefreshScope
     @Bean
     public WebClient webClient() {
         return WebClient.builder()

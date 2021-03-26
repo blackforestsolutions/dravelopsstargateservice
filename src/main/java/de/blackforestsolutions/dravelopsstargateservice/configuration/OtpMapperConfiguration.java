@@ -3,8 +3,10 @@ package de.blackforestsolutions.dravelopsstargateservice.configuration;
 import de.blackforestsolutions.dravelopsdatamodel.ApiToken;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringBootConfiguration;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.context.annotation.Bean;
 
+@RefreshScope
 @SpringBootConfiguration
 public class OtpMapperConfiguration {
 
@@ -17,14 +19,17 @@ public class OtpMapperConfiguration {
     @Value("${otpmapper.get.nearest.stations.path}")
     private String otpMapperNearestStationsPath;
 
+    @RefreshScope
     @Bean
     public ApiToken nearestStationsOtpMapperServiceApiToken() {
-        return new ApiToken.ApiTokenBuilder()
-                .setProtocol(otpMapperProtocol)
-                .setHost(otpMapperHost)
-                .setPort(otpMapperPort)
-                .setPath(otpMapperNearestStationsPath)
-                .build();
+        ApiToken apiToken = new ApiToken();
+
+        apiToken.setProtocol(otpMapperProtocol);
+        apiToken.setHost(otpMapperHost);
+        apiToken.setPort(otpMapperPort);
+        apiToken.setPath(otpMapperNearestStationsPath);
+
+        return apiToken;
     }
 
 }

@@ -3,8 +3,10 @@ package de.blackforestsolutions.dravelopsstargateservice.configuration;
 import de.blackforestsolutions.dravelopsdatamodel.ApiToken;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringBootConfiguration;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.context.annotation.Bean;
 
+@RefreshScope
 @SpringBootConfiguration
 public class RoutePersistenceApiConfiguration {
 
@@ -17,14 +19,17 @@ public class RoutePersistenceApiConfiguration {
     @Value("${routepersistence.get.journey.path}")
     private String routePersistenceJourneyPath;
 
-    @Bean(name = "routePersistenceApiToken")
-    public ApiToken apiToken() {
-        return new ApiToken.ApiTokenBuilder()
-                .setProtocol(routePersistenceProtocol)
-                .setHost(routePersistenceHost)
-                .setPort(routePersistencePort)
-                .setPath(routePersistenceJourneyPath)
-                .build();
+    @RefreshScope
+    @Bean
+    public ApiToken routePersistenceApiToken() {
+        ApiToken apiToken = new ApiToken();
+
+        apiToken.setProtocol(routePersistenceProtocol);
+        apiToken.setHost(routePersistenceHost);
+        apiToken.setPort(routePersistencePort);
+        apiToken.setPath(routePersistenceJourneyPath);
+
+        return apiToken;
     }
 
 

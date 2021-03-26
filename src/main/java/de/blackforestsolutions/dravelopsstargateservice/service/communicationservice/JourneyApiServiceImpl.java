@@ -53,13 +53,15 @@ public class JourneyApiServiceImpl implements JourneyApiService {
 
     @SuppressWarnings("checkstyle:parameternumber")
     private ApiToken buildRequestApiTokenWith(double departureLongitude, double departureLatitude, double arrivalLongitude, double arrivalLatitude, ZonedDateTime dateTime, boolean isArrivalDateTime, Locale language) {
-        return new ApiToken.ApiTokenBuilder()
-                .setDepartureCoordinate(geocodingService.extractCoordinateFrom(departureLongitude, departureLatitude, DEPARTURE_LONGITUDE_FIELD, DEPARTURE_LATITUDE_FIELD))
-                .setArrivalCoordinate(geocodingService.extractCoordinateFrom(arrivalLongitude, arrivalLatitude, ARRIVAL_LONGITUDE_FIELD, ARRIVAL_LATITUDE_FIELD))
-                .setDateTime(dateTime)
-                .setIsArrivalDateTime(isArrivalDateTime)
-                .setLanguage(language)
-                .build();
+        ApiToken apiToken = new ApiToken();
+
+        apiToken.setDepartureCoordinate(geocodingService.extractCoordinateFrom(departureLongitude, departureLatitude, DEPARTURE_LONGITUDE_FIELD, DEPARTURE_LATITUDE_FIELD));
+        apiToken.setArrivalCoordinate(geocodingService.extractCoordinateFrom(arrivalLongitude, arrivalLatitude, ARRIVAL_LONGITUDE_FIELD, ARRIVAL_LATITUDE_FIELD));
+        apiToken.setDateTime(dateTime);
+        apiToken.setIsArrivalDateTime(isArrivalDateTime);
+        apiToken.setLanguage(language);
+
+        return apiToken;
     }
 
     private ZonedDateTime extractZonedDateTimeFrom(String dateTime) {
