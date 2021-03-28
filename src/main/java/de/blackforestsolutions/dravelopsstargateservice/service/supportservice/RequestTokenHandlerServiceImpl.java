@@ -13,10 +13,12 @@ public class RequestTokenHandlerServiceImpl implements RequestTokenHandlerServic
         Objects.requireNonNull(userRequest.getDeparture(), "departure (text) is not allowed to be null");
         Objects.requireNonNull(userRequest.getLanguage(), "language is not allowed to be null");
 
-        return new ApiToken.ApiTokenBuilder(configuredRequestData)
-                .setDeparture(userRequest.getDeparture())
-                .setLanguage(userRequest.getLanguage())
-                .build();
+        ApiToken autocompleteAddressToken = new ApiToken(configuredRequestData);
+
+        autocompleteAddressToken.setDeparture(userRequest.getDeparture());
+        autocompleteAddressToken.setLanguage(userRequest.getLanguage());
+
+        return autocompleteAddressToken;
     }
 
     @Override
@@ -25,11 +27,13 @@ public class RequestTokenHandlerServiceImpl implements RequestTokenHandlerServic
         Objects.requireNonNull(userRequest.getRadiusInKilometers(), "radiusInKilometers is not allowed to be null");
         Objects.requireNonNull(userRequest.getLanguage(), "language is not allowed to be null");
 
-        return new ApiToken.ApiTokenBuilder(configuredRequestData)
-                .setArrivalCoordinate(userRequest.getArrivalCoordinate())
-                .setRadiusInKilometers(userRequest.getRadiusInKilometers())
-                .setLanguage(userRequest.getLanguage())
-                .build();
+        ApiToken nearestAddressesToken = new ApiToken(configuredRequestData);
+
+        nearestAddressesToken.setArrivalCoordinate(userRequest.getArrivalCoordinate());
+        nearestAddressesToken.setRadiusInKilometers(userRequest.getRadiusInKilometers());
+        nearestAddressesToken.setLanguage(userRequest.getLanguage());
+
+        return nearestAddressesToken;
     }
 
     @Override
@@ -40,12 +44,14 @@ public class RequestTokenHandlerServiceImpl implements RequestTokenHandlerServic
         Objects.requireNonNull(userRequest.getIsArrivalDateTime(), "isArrivalDateTime is not allowed to be null");
         Objects.requireNonNull(userRequest.getLanguage(), "departureCoordinate is not allowed to be null");
 
-        return new ApiToken.ApiTokenBuilder(configuredRequestData)
-                .setArrivalCoordinate(userRequest.getArrivalCoordinate())
-                .setDepartureCoordinate(userRequest.getDepartureCoordinate())
-                .setDateTime(userRequest.getDateTime())
-                .setIsArrivalDateTime(userRequest.getIsArrivalDateTime())
-                .setLanguage(userRequest.getLanguage())
-                .build();
+        ApiToken journeyApiToken = new ApiToken(configuredRequestData);
+
+        journeyApiToken.setArrivalCoordinate(userRequest.getArrivalCoordinate());
+        journeyApiToken.setDepartureCoordinate(userRequest.getDepartureCoordinate());
+        journeyApiToken.setDateTime(userRequest.getDateTime());
+        journeyApiToken.setIsArrivalDateTime(userRequest.getIsArrivalDateTime());
+        journeyApiToken.setLanguage(userRequest.getLanguage());
+
+        return journeyApiToken;
     }
 }

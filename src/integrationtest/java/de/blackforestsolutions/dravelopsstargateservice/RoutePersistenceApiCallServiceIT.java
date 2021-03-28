@@ -26,13 +26,13 @@ class RoutePersistenceApiCallServiceIT {
     private CallService classUnderTest;
 
     @Autowired
-    private ApiToken.ApiTokenBuilder routePersistenceApiTokenIT;
+    private ApiToken routePersistenceApiTokenIT;
 
     @Test
     void test_journey_returns_journeys() {
-        ApiToken testData = routePersistenceApiTokenIT.build();
+        String testUrl = buildUrlWith(routePersistenceApiTokenIT).toString();
 
-        Flux<Journey> result = classUnderTest.postMany(buildUrlWith(testData).toString(), routePersistenceApiTokenIT.build(), HttpHeaders.EMPTY, Journey.class);
+        Flux<Journey> result = classUnderTest.postMany(testUrl, routePersistenceApiTokenIT, HttpHeaders.EMPTY, Journey.class);
 
         StepVerifier.create(result)
                 .expectNextCount(1L)
@@ -43,13 +43,14 @@ class RoutePersistenceApiCallServiceIT {
 
     @Test
     void test_journey_without_being_inside_area_returns_no_journeys() {
-        ApiToken.ApiTokenBuilder testData = new ApiToken.ApiTokenBuilder(routePersistenceApiTokenIT.build());
+        ApiToken testData = new ApiToken(routePersistenceApiTokenIT);
         testData.setDepartureCoordinate(new Point.PointBuilder(0.0d, 0.0d).build());
         testData.setDeparture("middlepoint of earth");
         testData.setArrivalCoordinate(new Point.PointBuilder(0.1d, 0.1d).build());
         testData.setArrival("middlepoint of earth");
+        String testUrl = buildUrlWith(testData).toString();
 
-        Flux<Journey> result = classUnderTest.postMany(buildUrlWith(testData.build()).toString(), testData.build(), HttpHeaders.EMPTY, Journey.class);
+        Flux<Journey> result = classUnderTest.postMany(testUrl, testData, HttpHeaders.EMPTY, Journey.class);
 
         StepVerifier.create(result)
                 .expectNextCount(0L)

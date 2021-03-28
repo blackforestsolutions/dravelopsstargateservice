@@ -39,20 +39,26 @@ public class BoxServiceTestConfiguration {
 
     @Bean
     @ConfigurationProperties(prefix = "boxservice")
-    public ApiToken.ApiTokenBuilder boxServiceAutocompleteAddressesApiToken() {
-        return new ApiToken.ApiTokenBuilder()
-                .setPath(autocompleteAddressesPath)
-                .setDeparture(text)
-                .setLanguage(language);
+    public ApiToken boxServiceAutocompleteAddressesApiToken() {
+        ApiToken apiToken = new ApiToken();
+
+        apiToken.setPath(autocompleteAddressesPath);
+        apiToken.setDeparture(text);
+        apiToken.setLanguage(language);
+
+        return apiToken;
     }
 
     @Bean
     @ConfigurationProperties(prefix = "boxservice")
-    public ApiToken.ApiTokenBuilder boxServiceNearestAddressesApiToken() {
-        return new ApiToken.ApiTokenBuilder()
-                .setPath(nearestAddressesPath)
-                .setLanguage(language)
-                .setArrivalCoordinate(new Point.PointBuilder(longitude, latitude).build())
-                .setRadiusInKilometers(new Distance(radiusInKilometers, Metrics.KILOMETERS));
+    public ApiToken boxServiceNearestAddressesApiToken() {
+        ApiToken apiToken = new ApiToken();
+
+        apiToken.setPath(nearestAddressesPath);
+        apiToken.setLanguage(language);
+        apiToken.setArrivalCoordinate(new Point.PointBuilder(longitude, latitude).build());
+        apiToken.setRadiusInKilometers(new Distance(radiusInKilometers, Metrics.KILOMETERS));
+
+        return apiToken;
     }
 }

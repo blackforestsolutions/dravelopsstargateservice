@@ -26,19 +26,19 @@ class StationPersistenceApiCallServiceIT {
     private static final int MIN_POLYGON_POINTS = 3;
 
     @Autowired
-    private ApiToken.ApiTokenBuilder stationPersistenceTravelPointApiTokenIT;
+    private ApiToken stationPersistenceTravelPointApiTokenIT;
 
     @Autowired
-    private ApiToken.ApiTokenBuilder stationPersistencePolygonApiTokenIT;
+    private ApiToken stationPersistencePolygonApiTokenIT;
 
     @Autowired
     private CallService classUnderTest;
 
     @Test
     void test_station_persistence_api_returns_all_travelPoints() {
-        ApiToken testData = stationPersistenceTravelPointApiTokenIT.build();
+        String testUrl = buildUrlWith(stationPersistencePolygonApiTokenIT).toString();
 
-        Flux<TravelPoint> result = classUnderTest.getMany(buildUrlWith(testData).toString(), HttpHeaders.EMPTY, TravelPoint.class);
+        Flux<TravelPoint> result = classUnderTest.getMany(testUrl, HttpHeaders.EMPTY, TravelPoint.class);
 
         StepVerifier.create(result)
                 .expectNextCount(1L)
@@ -54,9 +54,9 @@ class StationPersistenceApiCallServiceIT {
 
     @Test
     void test_station_persistence_api_returns_polygon() {
-        ApiToken testData = stationPersistencePolygonApiTokenIT.build();
+        String testUrl = buildUrlWith(stationPersistencePolygonApiTokenIT).toString();
 
-        Mono<Polygon> result = classUnderTest.getOne(buildUrlWith(testData).toString(), HttpHeaders.EMPTY, Polygon.class);
+        Mono<Polygon> result = classUnderTest.getOne(testUrl, HttpHeaders.EMPTY, Polygon.class);
 
         StepVerifier.create(result)
                 .assertNext(polygon -> {

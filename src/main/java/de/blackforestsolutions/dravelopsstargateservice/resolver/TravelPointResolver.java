@@ -70,18 +70,22 @@ public class TravelPointResolver implements GraphQLQueryResolver {
     }
 
     private ApiToken buildAutocompleteRequestApiTokenWith(String text, String language) {
-        return new ApiToken.ApiTokenBuilder()
-                .setDeparture(text)
-                .setLanguage(extractLocaleFrom(language))
-                .build();
+        ApiToken autocompleteRequestApiToken = new ApiToken();
+
+        autocompleteRequestApiToken.setDeparture(text);
+        autocompleteRequestApiToken.setLanguage(extractLocaleFrom(language));
+
+        return autocompleteRequestApiToken;
     }
 
     private ApiToken buildNearestAddressesRequestApiTokenWith(double longitude, double latitude, double radiusInKilometers, String language) {
-        return new ApiToken.ApiTokenBuilder()
-                .setArrivalCoordinate(geocodingService.extractCoordinateFrom(longitude, latitude, LONGITUDE_FIELD, LATITUDE_FIELD))
-                .setRadiusInKilometers(new Distance(radiusInKilometers, Metrics.KILOMETERS))
-                .setLanguage(extractLocaleFrom(language))
-                .build();
+        ApiToken apiToken = new ApiToken();
+
+        apiToken.setArrivalCoordinate(geocodingService.extractCoordinateFrom(longitude, latitude, LONGITUDE_FIELD, LATITUDE_FIELD));
+        apiToken.setRadiusInKilometers(new Distance(radiusInKilometers, Metrics.KILOMETERS));
+        apiToken.setLanguage(extractLocaleFrom(language));
+
+        return apiToken;
     }
 
     private Locale extractLocaleFrom(String language) {

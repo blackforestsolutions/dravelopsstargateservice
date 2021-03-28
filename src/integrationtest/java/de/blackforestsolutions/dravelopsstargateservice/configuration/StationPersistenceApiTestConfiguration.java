@@ -18,16 +18,18 @@ public class StationPersistenceApiTestConfiguration {
 
     @Bean
     @ConfigurationProperties(prefix = "stationpersistence")
-    public ApiToken.ApiTokenBuilder stationPersistenceTravelPointApiTokenIT() {
-        return new ApiToken.ApiTokenBuilder()
-                .setPath(stationPersistenceTravelPointPath);
+    public ApiToken stationPersistenceTravelPointApiTokenIT() {
+        ApiToken apiToken = new ApiToken();
+        apiToken.setPath(stationPersistenceTravelPointPath);
+        return apiToken;
     }
 
     @Bean
     @ConfigurationProperties(prefix = "stationpersistence")
-    public ApiToken.ApiTokenBuilder stationPersistencePolygonApiTokenIT() {
-        return new ApiToken.ApiTokenBuilder()
-                .setPath(stationPersistencePolygonPath);
+    public ApiToken stationPersistencePolygonApiTokenIT() {
+        ApiToken apiToken = new ApiToken();
+        apiToken.setPath(stationPersistencePolygonPath);
+        return apiToken;
     }
 
 

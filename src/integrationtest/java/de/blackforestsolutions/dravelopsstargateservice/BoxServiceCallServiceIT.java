@@ -27,15 +27,16 @@ public class BoxServiceCallServiceIT {
     private CallService classUnderTest;
 
     @Autowired
-    private ApiToken.ApiTokenBuilder boxServiceAutocompleteAddressesApiToken;
+    private ApiToken boxServiceAutocompleteAddressesApiToken;
 
     @Autowired
-    private ApiToken.ApiTokenBuilder boxServiceNearestAddressesApiToken;
+    private ApiToken boxServiceNearestAddressesApiToken;
 
     @Test
     void test_getAutocompleteAddressesBy_apiToken_returns_travelPoints() {
+        String testUrl = buildUrlWith(boxServiceAutocompleteAddressesApiToken).toString();
 
-        Flux<TravelPoint> result = classUnderTest.postMany(buildUrlWith(boxServiceAutocompleteAddressesApiToken.build()).toString(), boxServiceAutocompleteAddressesApiToken.build(), HttpHeaders.EMPTY, TravelPoint.class);
+        Flux<TravelPoint> result = classUnderTest.postMany(testUrl, boxServiceAutocompleteAddressesApiToken, HttpHeaders.EMPTY, TravelPoint.class);
 
         StepVerifier.create(result)
                 .expectNextCount(1L)
@@ -57,8 +58,9 @@ public class BoxServiceCallServiceIT {
 
     @Test
     void test_getNearestAddressesBy_apiToken_returns_travelPoints() {
+        String testUrl = buildUrlWith(boxServiceNearestAddressesApiToken).toString();
 
-        Flux<TravelPoint> result = classUnderTest.postMany(buildUrlWith(boxServiceNearestAddressesApiToken.build()).toString(), boxServiceNearestAddressesApiToken.build(), HttpHeaders.EMPTY, TravelPoint.class);
+        Flux<TravelPoint> result = classUnderTest.postMany(testUrl, boxServiceNearestAddressesApiToken, HttpHeaders.EMPTY, TravelPoint.class);
 
         StepVerifier.create(result)
                 .expectNextCount(1L)

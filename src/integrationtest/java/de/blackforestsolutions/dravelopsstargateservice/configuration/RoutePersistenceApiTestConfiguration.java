@@ -33,13 +33,16 @@ public class RoutePersistenceApiTestConfiguration {
 
     @Bean
     @ConfigurationProperties(prefix = "routepersistence")
-    public ApiToken.ApiTokenBuilder routePersistenceApiTokenIT() {
-        return new ApiToken.ApiTokenBuilder()
-                .setPath(path)
-                .setDepartureCoordinate(new Point.PointBuilder(departureLongitude, departureLatitude).build())
-                .setArrivalCoordinate(new Point.PointBuilder(arrivalLongitude, arrivalLatitude).build())
-                .setDateTime(ZonedDateTime.parse(dateTime))
-                .setIsArrivalDateTime(isArrivalDateTime)
-                .setLanguage(language);
+    public ApiToken routePersistenceApiTokenIT() {
+        ApiToken apiToken = new ApiToken();
+
+        apiToken.setPath(path);
+        apiToken.setDepartureCoordinate(new Point.PointBuilder(departureLongitude, departureLatitude).build());
+        apiToken.setArrivalCoordinate(new Point.PointBuilder(arrivalLongitude, arrivalLatitude).build());
+        apiToken.setDateTime(ZonedDateTime.parse(dateTime));
+        apiToken.setIsArrivalDateTime(isArrivalDateTime);
+        apiToken.setLanguage(language);
+
+        return apiToken;
     }
 }

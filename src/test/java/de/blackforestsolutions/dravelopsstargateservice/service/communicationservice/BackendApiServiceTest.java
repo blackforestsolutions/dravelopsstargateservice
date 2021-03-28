@@ -122,11 +122,11 @@ class BackendApiServiceTest {
     @Test
     void test_getManyBy_user_token_with_language_as_null_and_configured_apiToken_returns_failed_call_status() {
         ArgumentCaptor<Throwable> exceptionArg = ArgumentCaptor.forClass(Throwable.class);
-        ApiToken.ApiTokenBuilder userRequestToken = new ApiToken.ApiTokenBuilder(getJourneyUserRequestToken());
+        ApiToken userRequestToken = new ApiToken(getJourneyUserRequestToken());
         userRequestToken.setLanguage(null);
         ApiToken configuredTestToken = getConfiguredRoutePersistenceApiToken();
 
-        Flux<Journey> result = classUnderTest.getManyBy(userRequestToken.build(), configuredTestToken, requestTokenHandlerService::mergeJourneyApiTokensWith, Journey.class);
+        Flux<Journey> result = classUnderTest.getManyBy(userRequestToken, configuredTestToken, requestTokenHandlerService::mergeJourneyApiTokensWith, Journey.class);
 
         StepVerifier.create(result)
                 .expectNextCount(0L)
@@ -138,11 +138,11 @@ class BackendApiServiceTest {
     @Test
     void test_getManyBy_user_token_and_configured_apiToken_and_host_as_null_returns_failed_call_status() {
         ArgumentCaptor<Throwable> exceptionArg = ArgumentCaptor.forClass(Throwable.class);
-        ApiToken.ApiTokenBuilder configuredTestToken = new ApiToken.ApiTokenBuilder(getConfiguredRoutePersistenceApiToken());
+        ApiToken configuredTestToken = new ApiToken(getConfiguredRoutePersistenceApiToken());
         ApiToken userRequestToken = getJourneyUserRequestToken();
         configuredTestToken.setHost(null);
 
-        Flux<Journey> result = classUnderTest.getManyBy(userRequestToken, configuredTestToken.build(), requestTokenHandlerService::mergeJourneyApiTokensWith, Journey.class);
+        Flux<Journey> result = classUnderTest.getManyBy(userRequestToken, configuredTestToken, requestTokenHandlerService::mergeJourneyApiTokensWith, Journey.class);
 
         StepVerifier.create(result)
                 .expectNextCount(0L)
@@ -215,10 +215,10 @@ class BackendApiServiceTest {
     @Test
     void test_getManyBy_configured_apiToken_and_host_as_null_returns_failed_call_status() {
         ArgumentCaptor<Throwable> exceptionArg = ArgumentCaptor.forClass(Throwable.class);
-        ApiToken.ApiTokenBuilder configuredTestToken = new ApiToken.ApiTokenBuilder(getConfiguredTravelPointPersistenceApiToken());
+        ApiToken configuredTestToken = new ApiToken(getConfiguredTravelPointPersistenceApiToken());
         configuredTestToken.setHost(null);
 
-        Flux<TravelPoint> result = classUnderTest.getManyBy(configuredTestToken.build(), TravelPoint.class);
+        Flux<TravelPoint> result = classUnderTest.getManyBy(configuredTestToken, TravelPoint.class);
 
         StepVerifier.create(result)
                 .expectNextCount(0L)
@@ -290,10 +290,10 @@ class BackendApiServiceTest {
     @Test
     void test_getOneBy_configured_apiToken_and_host_as_null_returns_no_polygon_when_exception_is_thrown() {
         ArgumentCaptor<Throwable> exceptionArg = ArgumentCaptor.forClass(Throwable.class);
-        ApiToken.ApiTokenBuilder configuredTestToken = new ApiToken.ApiTokenBuilder(getConfiguredPolygonPersistenceApiToken());
+        ApiToken configuredTestToken = new ApiToken(getConfiguredPolygonPersistenceApiToken());
         configuredTestToken.setHost(null);
 
-        Mono<Polygon> result = classUnderTest.getOneBy(configuredTestToken.build(), Polygon.class);
+        Mono<Polygon> result = classUnderTest.getOneBy(configuredTestToken, Polygon.class);
 
         StepVerifier.create(result)
                 .expectNextCount(0L)
