@@ -22,6 +22,7 @@
         <graphql.spring.boot.starter.version>11.0.0</graphql.spring.boot.starter.version>
         <blackforestsolutions.dravelopsdatamodel.version>14.0.0</blackforestsolutions.dravelopsdatamodel.version>
         <blackforestsolutions.dravelopsgeneratedcontent.version>3.2.3</blackforestsolutions.dravelopsgeneratedcontent.version>
+        <blackforestsolutions.graphql.playground.version>12.0.1</blackforestsolutions.graphql.playground.version>
         <!-- Maven test Dependencies -->
         <assertj.version>3.9.0</assertj.version>
         <junit.version>5.0.0</junit.version>
@@ -80,7 +81,7 @@
         <dependency>
             <groupId>de.blackforestsolutions</groupId>
             <artifactId>playground-spring-boot</artifactId>
-            <version>${graphql.spring.boot.starter.version}</version>
+            <version>${blackforestsolutions.graphql.playground.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
