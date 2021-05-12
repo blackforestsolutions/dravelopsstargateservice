@@ -19,9 +19,9 @@ public class BoxServiceTestConfiguration {
      */
     @Value("${boxservice.get.autocomplete.addresses.controller.path}")
     private String autocompleteAddressesPath;
-    @Value("${graphql.playground.tabs[2].variables.text}")
+    @Value("${graphql.playground.tabs.ADDRESS_AUTOCOMPLETION.variables.text}")
     private String text;
-    @Value("${graphql.playground.tabs[2].variables.language}")
+    @Value("${graphql.playground.tabs.ADDRESS_AUTOCOMPLETION.variables.language}")
     private Locale language;
 
     /**
@@ -29,11 +29,11 @@ public class BoxServiceTestConfiguration {
      */
     @Value("${boxservice.get.nearest.addresses.controller.path}")
     private String nearestAddressesPath;
-    @Value("${graphql.playground.tabs[3].variables.longitude}")
+    @Value("${graphql.playground.tabs.NEAREST_ADDRESSES.variables.longitude}")
     private Double longitude;
-    @Value("${graphql.playground.tabs[3].variables.latitude}")
+    @Value("${graphql.playground.tabs.NEAREST_ADDRESSES.variables.latitude}")
     private Double latitude;
-    @Value("${graphql.playground.tabs[3].variables.radiusInKilometers}")
+    @Value("${graphql.playground.tabs.NEAREST_ADDRESSES.variables.radiusInKilometers}")
     private Double radiusInKilometers;
 
 
