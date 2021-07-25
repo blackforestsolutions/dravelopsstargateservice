@@ -16,6 +16,7 @@ import reactor.core.publisher.Flux;
 import java.io.IOException;
 
 import static de.blackforestsolutions.dravelopsdatamodel.objectmothers.JourneyObjectMother.getFurtwangenToWaldkirchJourney;
+import static de.blackforestsolutions.dravelopsdatamodel.objectmothers.JourneyObjectMother.getFurtwangenToWaldkirchWaypointsJourney;
 import static de.blackforestsolutions.dravelopsdatamodel.testutil.TestUtils.getResourceFileAsString;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -35,7 +36,7 @@ class JourneyResolverMockIT {
     @Test
     void test_getJourneysBy_min_parameters_graphql_file_returns_a_correct_journey() throws IOException {
         String expectedJourneyJson = getResourceFileAsString("json/furtwangenToWaldkirchResponse.json");
-        doReturn(Flux.just(getFurtwangenToWaldkirchJourney()))
+        doReturn(Flux.just(getFurtwangenToWaldkirchWaypointsJourney()))
                 .when(backendApiService).getManyBy(any(ApiToken.class), any(ApiToken.class), any(RequestHandlerFunction.class), eq(Journey.class));
 
         GraphQLResponse response = graphQLTestTemplate.postForResource("graphql/get-journeys-query-min-parameters.graphql");
@@ -58,7 +59,7 @@ class JourneyResolverMockIT {
     @Test
     void test_getJourneysBy_max_parameters_graphql_file_returns_a_correct_journey() throws IOException {
         String expectedJourneyJson = getResourceFileAsString("json/furtwangenToWaldkirchResponse.json");
-        doReturn(Flux.just(getFurtwangenToWaldkirchJourney()))
+        doReturn(Flux.just(getFurtwangenToWaldkirchWaypointsJourney()))
                 .when(backendApiService).getManyBy(any(ApiToken.class), any(ApiToken.class), any(RequestHandlerFunction.class), eq(Journey.class));
 
         GraphQLResponse response = graphQLTestTemplate.postForResource("graphql/get-journeys-query-max-parameters.graphql");

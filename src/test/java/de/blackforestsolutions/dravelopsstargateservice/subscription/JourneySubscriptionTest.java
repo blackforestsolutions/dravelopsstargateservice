@@ -17,7 +17,7 @@ import reactor.test.StepVerifier;
 import java.util.concurrent.ExecutionException;
 
 import static de.blackforestsolutions.dravelopsdatamodel.objectmothers.ApiTokenObjectMother.getJourneyUserRequestToken;
-import static de.blackforestsolutions.dravelopsdatamodel.objectmothers.JourneyObjectMother.getFurtwangenToWaldkirchJourney;
+import static de.blackforestsolutions.dravelopsdatamodel.objectmothers.JourneyObjectMother.getFurtwangenToWaldkirchWaypointsJourney;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.*;
@@ -39,13 +39,13 @@ class JourneySubscriptionTest {
                 anyString(),
                 anyBoolean(),
                 anyString())
-        ).thenReturn(Flux.just(getFurtwangenToWaldkirchJourney(), getFurtwangenToWaldkirchJourney()));
+        ).thenReturn(Flux.just(getFurtwangenToWaldkirchWaypointsJourney(), getFurtwangenToWaldkirchWaypointsJourney()));
     }
 
     @Test
     void test_getJourneysBy_userRequestToken_returns_journey() {
         ApiToken testData = getJourneyUserRequestToken();
-        Journey expectedJourney = getFurtwangenToWaldkirchJourney();
+        Journey expectedJourney = getFurtwangenToWaldkirchWaypointsJourney();
 
         Publisher<Journey> result = classUnderTest.getJourneysBy(
                 testData.getDepartureCoordinate().getX(),

@@ -2,6 +2,7 @@ package de.blackforestsolutions.dravelopsstargateservice.service.communicationse
 
 import de.blackforestsolutions.dravelopsdatamodel.ApiToken;
 import de.blackforestsolutions.dravelopsdatamodel.Journey;
+import de.blackforestsolutions.dravelopsdatamodel.Leg;
 import de.blackforestsolutions.dravelopsstargateservice.model.exception.DateTimeParsingException;
 import de.blackforestsolutions.dravelopsstargateservice.model.exception.LanguageParsingException;
 import de.blackforestsolutions.dravelopsstargateservice.service.supportservice.GeocodingService;
@@ -12,7 +13,9 @@ import reactor.core.publisher.Flux;
 
 import java.time.ZonedDateTime;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.Locale;
+import java.util.stream.Collectors;
 
 @Service
 public class JourneyApiServiceImpl implements JourneyApiService {
@@ -48,7 +51,8 @@ public class JourneyApiServiceImpl implements JourneyApiService {
                 extractLocaleFrom(language)
         );
 
-        return backendApiService.getManyBy(apiToken, routePersistenceApiToken, requestTokenHandlerService::mergeJourneyApiTokensWith, Journey.class);
+        return backendApiService.getManyBy(apiToken, routePersistenceApiToken, requestTokenHandlerService::mergeJourneyApiTokensWith, Journey.class)
+                .map(this::convertToJourneyWithWaypoints);
     }
 
     @SuppressWarnings("checkstyle:parameternumber")
@@ -78,5 +82,24 @@ public class JourneyApiServiceImpl implements JourneyApiService {
                 .findFirst()
                 .map(Locale::new)
                 .orElseThrow(LanguageParsingException::new);
+    }
+
+    private Journey convertToJourneyWithWaypoints(Journey oldJourney) {
+        LinkedList<Leg> newLegs = convertToWaypointsLegs(oldJourney.getLegs());
+        return new Journey.JourneyBuilder(oldJourney)
+                .setLegs(newLegs)
+                .build();
+    }
+
+    private LinkedList<Leg> convertToWaypointsLegs(LinkedList<Leg> oldLegs) {
+        return oldLegs.stream()
+                .map(this::convertToLegWithWaypoints)
+                .collect(Collectors.toCollection(LinkedList::new));
+    }
+
+    private Leg convertToLegWithWaypoints(Leg oldLeg) {
+        return new Leg.LegBuilder(oldLeg)
+                .setWaypoints(geocodingService.decodePolylineFrom(oldLeg.getPolyline()))
+                .build();
     }
 }

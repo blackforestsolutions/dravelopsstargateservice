@@ -20,8 +20,10 @@
         <apache.lang-version>2.6</apache.lang-version>
         <lombok.version>1.18.8</lombok.version>
         <graphql.spring.boot.starter.version>11.0.0</graphql.spring.boot.starter.version>
-        <blackforestsolutions.dravelopsdatamodel.version>14.0.0</blackforestsolutions.dravelopsdatamodel.version>
-        <blackforestsolutions.dravelopsgeneratedcontent.version>3.2.3</blackforestsolutions.dravelopsgeneratedcontent.version>
+        <google.maps.services>0.15.0</google.maps.services>
+        <blackforestsolutions.dravelopsdatamodel.version>16.0.1</blackforestsolutions.dravelopsdatamodel.version>
+        <blackforestsolutions.dravelopsgeneratedcontent.version>3.2.3
+        </blackforestsolutions.dravelopsgeneratedcontent.version>
         <blackforestsolutions.graphql.playground.version>12.0.1</blackforestsolutions.graphql.playground.version>
         <!-- Maven test Dependencies -->
         <assertj.version>3.9.0</assertj.version>
@@ -103,6 +105,11 @@
             <artifactId>lombok</artifactId>
             <version>${lombok.version}</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.google.maps</groupId>
+            <artifactId>google-maps-services</artifactId>
+            <version>${google.maps.services}</version>
         </dependency>
         <dependency>
             <groupId>de.blackforestsolutions</groupId>
@@ -274,7 +281,8 @@
                             <excludes>
                                 <!-- configuration exclude -->
                                 <exclude>**/*de/blackforestsolutions/dravelopsstargateservice/configuration/*</exclude>
-                                <exclude>**/*de/blackforestsolutions/dravelopsstargateservice/Application.class</exclude>
+                                <exclude>**/*de/blackforestsolutions/dravelopsstargateservice/Application.class
+                                </exclude>
                             </excludes>
                             <rules>
                                 <rule>
