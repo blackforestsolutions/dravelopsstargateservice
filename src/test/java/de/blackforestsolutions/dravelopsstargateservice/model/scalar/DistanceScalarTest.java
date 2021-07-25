@@ -1,12 +1,15 @@
 package de.blackforestsolutions.dravelopsstargateservice.model.scalar;
 
+import de.blackforestsolutions.dravelopsdatamodel.objectmothers.WaypointsObjectMother;
 import graphql.language.FloatValue;
 import org.junit.jupiter.api.Test;
 import org.springframework.data.geo.Distance;
 
 import java.math.BigDecimal;
+import java.util.LinkedList;
 
 import static de.blackforestsolutions.dravelopsdatamodel.objectmothers.LegObjectMother.getGrosshausbergToFurtwangenIlbenstreetLeg;
+import static de.blackforestsolutions.dravelopsdatamodel.objectmothers.WaypointsObjectMother.getExampleWaypoints;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class DistanceScalarTest {
@@ -15,7 +18,7 @@ class DistanceScalarTest {
 
     @Test
     void test_serialize_distance_returns_correct_distance_in_kilometers() {
-        Distance testDistance = getGrosshausbergToFurtwangenIlbenstreetLeg().getDistanceInKilometers();
+        Distance testDistance = getGrosshausbergToFurtwangenIlbenstreetLeg(getExampleWaypoints()).getDistanceInKilometers();
 
         double result = classUnderTest.serialize(testDistance);
 

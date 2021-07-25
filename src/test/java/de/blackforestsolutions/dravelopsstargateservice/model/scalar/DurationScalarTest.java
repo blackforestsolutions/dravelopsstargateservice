@@ -7,6 +7,7 @@ import java.math.BigInteger;
 import java.time.Duration;
 
 import static de.blackforestsolutions.dravelopsdatamodel.objectmothers.LegObjectMother.getGrosshausbergToFurtwangenIlbenstreetLeg;
+import static de.blackforestsolutions.dravelopsdatamodel.objectmothers.WaypointsObjectMother.getExampleWaypoints;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class DurationScalarTest {
@@ -15,7 +16,7 @@ class DurationScalarTest {
 
     @Test
     void test_serialize_duration_returns_correct_duration_in_minutes() {
-        Duration testDuration = getGrosshausbergToFurtwangenIlbenstreetLeg().getDelayInMinutes();
+        Duration testDuration = getGrosshausbergToFurtwangenIlbenstreetLeg(getExampleWaypoints()).getDelayInMinutes();
 
         long result = classUnderTest.serialize(testDuration);
 

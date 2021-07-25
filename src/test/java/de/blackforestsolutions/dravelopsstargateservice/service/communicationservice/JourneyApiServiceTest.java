@@ -21,6 +21,8 @@ import java.util.concurrent.ExecutionException;
 import static de.blackforestsolutions.dravelopsdatamodel.objectmothers.ApiTokenObjectMother.getConfiguredRoutePersistenceApiToken;
 import static de.blackforestsolutions.dravelopsdatamodel.objectmothers.ApiTokenObjectMother.getJourneyUserRequestToken;
 import static de.blackforestsolutions.dravelopsdatamodel.objectmothers.JourneyObjectMother.getFurtwangenToWaldkirchJourney;
+import static de.blackforestsolutions.dravelopsdatamodel.objectmothers.JourneyObjectMother.getFurtwangenToWaldkirchWaypointsJourney;
+import static de.blackforestsolutions.dravelopsdatamodel.objectmothers.WaypointsObjectMother.getExampleWaypoints;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
@@ -44,12 +46,15 @@ class JourneyApiServiceTest {
         when(geocodingService.extractCoordinateFrom(anyDouble(), anyDouble(), anyString(), anyString()))
                 .thenReturn(getJourneyUserRequestToken().getDepartureCoordinate())
                 .thenReturn(getJourneyUserRequestToken().getArrivalCoordinate());
+
+        when(geocodingService.decodePolylineFrom(anyString()))
+                .thenReturn(getExampleWaypoints());
     }
 
     @Test
     void test_getJourneysBy_userRequestToken_returns_journey() {
         ApiToken testData = getJourneyUserRequestToken();
-        Journey expectedJourney = getFurtwangenToWaldkirchJourney();
+        Journey expectedJourney = getFurtwangenToWaldkirchWaypointsJourney();
 
         Flux<Journey> result = classUnderTest.getJourneysBy(
                 testData.getDepartureCoordinate().getX(),
@@ -76,6 +81,7 @@ class JourneyApiServiceTest {
         ArgumentCaptor<ApiToken> configuredRoutePersistenceApiTokenArg = ArgumentCaptor.forClass(ApiToken.class);
         ArgumentCaptor<Double> longitudeArg = ArgumentCaptor.forClass(Double.class);
         ArgumentCaptor<Double> latitudeArg = ArgumentCaptor.forClass(Double.class);
+        ArgumentCaptor<String> polylineArg = ArgumentCaptor.forClass(String.class);
 
         classUnderTest.getJourneysBy(
                 testDeparture.getX(),
@@ -85,11 +91,12 @@ class JourneyApiServiceTest {
                 testData.getDateTime().toString(),
                 testData.getIsArrivalDateTime(),
                 testData.getLanguage().toString()
-        );
+        ).collectList().block();
 
         InOrder inOrder = inOrder(geocodingService, backendApiService);
         inOrder.verify(geocodingService, times(2)).extractCoordinateFrom(longitudeArg.capture(), latitudeArg.capture(), anyString(), anyString());
         inOrder.verify(backendApiService, times(1)).getManyBy(userRequestArg.capture(), configuredRoutePersistenceApiTokenArg.capture(), any(RequestHandlerFunction.class), eq(Journey.class));
+        inOrder.verify(geocodingService, times(8)).decodePolylineFrom(polylineArg.capture());
         inOrder.verifyNoMoreInteractions();
         assertThat(longitudeArg.getAllValues().size()).isEqualTo(2);
         assertThat(longitudeArg.getAllValues().get(0)).isEqualTo(getJourneyUserRequestToken().getDepartureCoordinate().getX());
@@ -97,6 +104,9 @@ class JourneyApiServiceTest {
         assertThat(latitudeArg.getAllValues().size()).isEqualTo(2);
         assertThat(latitudeArg.getAllValues().get(0)).isEqualTo(getJourneyUserRequestToken().getDepartureCoordinate().getY());
         assertThat(latitudeArg.getAllValues().get(1)).isEqualTo(getJourneyUserRequestToken().getArrivalCoordinate().getY());
+        assertThat(polylineArg.getAllValues().size()).isEqualTo(8);
+        assertThat(polylineArg.getAllValues().get(0)).isEqualTo(getFurtwangenToWaldkirchJourney().getLegs().get(0).getPolyline());
+        assertThat(polylineArg.getAllValues().get(1)).isEqualTo(getFurtwangenToWaldkirchJourney().getLegs().get(1).getPolyline());
         assertThat(userRequestArg.getValue()).isEqualToComparingFieldByFieldRecursively(getJourneyUserRequestToken());
         assertThat(configuredRoutePersistenceApiTokenArg.getValue()).isEqualToComparingFieldByFieldRecursively(getConfiguredRoutePersistenceApiToken());
     }
