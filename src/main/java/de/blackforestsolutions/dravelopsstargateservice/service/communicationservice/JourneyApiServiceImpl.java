@@ -1,8 +1,6 @@
 package de.blackforestsolutions.dravelopsstargateservice.service.communicationservice;
 
-import de.blackforestsolutions.dravelopsdatamodel.ApiToken;
-import de.blackforestsolutions.dravelopsdatamodel.Journey;
-import de.blackforestsolutions.dravelopsdatamodel.Leg;
+import de.blackforestsolutions.dravelopsdatamodel.*;
 import de.blackforestsolutions.dravelopsstargateservice.model.exception.DateTimeParsingException;
 import de.blackforestsolutions.dravelopsstargateservice.model.exception.LanguageParsingException;
 import de.blackforestsolutions.dravelopsstargateservice.service.supportservice.GeocodingService;
@@ -20,6 +18,8 @@ import java.util.stream.Collectors;
 @Service
 public class JourneyApiServiceImpl implements JourneyApiService {
 
+    private static final int ZERO_WALK_STEPS = 0;
+    private static final int ZERO_WAYPOINTS = 0;
     private static final String DEPARTURE_LONGITUDE_FIELD = "departureLongitude";
     private static final String DEPARTURE_LATITUDE_FIELD = "departureLatitude";
     private static final String ARRIVAL_LONGITUDE_FIELD = "arrivalLongitude";
@@ -98,8 +98,22 @@ public class JourneyApiServiceImpl implements JourneyApiService {
     }
 
     private Leg convertToLegWithWaypoints(Leg oldLeg) {
+        LinkedList<Point> waypoints = geocodingService.decodePolylineFrom(oldLeg.getPolyline());
+        LinkedList<WalkStep> walkSteps = addEndpointToLastWalkStep(oldLeg.getWalkSteps(), waypoints);
+
         return new Leg.LegBuilder(oldLeg)
-                .setWaypoints(geocodingService.decodePolylineFrom(oldLeg.getPolyline()))
+                .setWaypoints(waypoints)
+                .setWalkSteps(walkSteps)
                 .build();
+    }
+
+    private LinkedList<WalkStep> addEndpointToLastWalkStep(LinkedList<WalkStep> walkSteps, LinkedList<Point> waypoints) {
+        if (walkSteps.size() > ZERO_WALK_STEPS && waypoints.size() > ZERO_WAYPOINTS) {
+            WalkStep lastWalkStep = new WalkStep.WalkStepBuilder(walkSteps.removeLast())
+                    .setEndPoint(new Point.PointBuilder(waypoints.getLast().getX(), waypoints.getLast().getY()).build())
+                    .build();
+            walkSteps.addLast(lastWalkStep);
+        }
+        return walkSteps;
     }
 }

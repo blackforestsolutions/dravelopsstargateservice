@@ -6,56 +6,13 @@ subscription GetJourneys {
         arrivalLongitude: 0
         dateTime: "2020-09-30T13:00:00+02:00"
     ) {
-        id
         legs {
             departure {
                 name
-                point {
-                    x
-                    y
-                }
-                arrivalTime
-                departureTime
-                platform
             }
             arrival {
                 name
-                point {
-                    x
-                    y
-                }
-                arrivalTime
-                departureTime
-                platform
             }
-            delayInMinutes
-            distanceInKilometers
-            vehicleType
-            waypoints {
-                x
-                y
-            }
-            travelProvider {
-                name
-                url
-            }
-            vehicleNumber
-            vehicleName
-            intermediateStops {
-                name
-                point {
-                    x
-                    y
-                }
-                arrivalTime
-                departureTime
-                platform
-            }
-        }
-        prices {
-            priceType
-            currencyCode
-            smallestCurrencyValue
         }
     }
 }
