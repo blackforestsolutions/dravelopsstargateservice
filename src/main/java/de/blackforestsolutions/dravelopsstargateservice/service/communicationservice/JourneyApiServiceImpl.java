@@ -108,7 +108,7 @@ public class JourneyApiServiceImpl implements JourneyApiService {
     }
 
     private LinkedList<WalkStep> addEndpointToLastWalkStep(LinkedList<WalkStep> walkSteps, LinkedList<Point> waypoints) {
-        if (walkSteps.size() > ZERO_WALK_STEPS && waypoints.size() > ZERO_WAYPOINTS) {
+        if (walkSteps.size() > ZERO_WALK_STEPS && waypoints.size() > ZERO_WAYPOINTS && !walkSteps.getLast().isDestinationPoint()) {
             WalkStep lastWalkStep = new WalkStep.WalkStepBuilder(walkSteps.removeLast())
                     .setEndPoint(new Point.PointBuilder(waypoints.getLast().getX(), waypoints.getLast().getY()).build())
                     .build();

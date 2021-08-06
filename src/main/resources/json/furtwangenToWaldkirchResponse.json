@@ -99,6 +99,23 @@
     "vehicleName" : "",
     "intermediateStops" : [ ],
     "walkSteps" : [ {
+      "streetName" : "Am Großhausberg 8",
+      "distanceInKilometers" : 0.0,
+      "startPoint" : {
+        "x" : 8.210368,
+        "y" : 48.04774
+      },
+      "endPoint" : {
+        "x" : 8.210368,
+        "y" : 48.04774
+      },
+      "walkingDirection" : "DEPART",
+      "compassDirection" : "NORTH",
+      "isStreetNameGenerated" : false,
+      "isOriginPoint" : true,
+      "isDestinationPoint" : false,
+      "circleExit" : ""
+    }, {
       "streetName" : "Am Großhausberg",
       "distanceInKilometers" : 0.12,
       "startPoint" : {
@@ -109,10 +126,11 @@
         "x" : 8.208427,
         "y" : 48.048347
       },
-      "walkingDirection" : "DEPART",
+      "walkingDirection" : "LEFT",
       "compassDirection" : "NORTHWEST",
       "isStreetNameGenerated" : false,
-      "isPlaceOrTrainPlatform" : false,
+      "isOriginPoint" : false,
+      "isDestinationPoint" : false,
       "circleExit" : ""
     }, {
       "streetName" : "B 500 [Hinterzarten - Triberg]",
@@ -128,7 +146,8 @@
       "walkingDirection" : "CIRCLE_CLOCKWISE",
       "compassDirection" : "WEST",
       "isStreetNameGenerated" : false,
-      "isPlaceOrTrainPlatform" : false,
+      "isOriginPoint" : false,
+      "isDestinationPoint" : false,
       "circleExit" : "1"
     }, {
       "streetName" : "Martin-Schmitt-Straße",
@@ -144,7 +163,8 @@
       "walkingDirection" : "SLIGHTLY_LEFT",
       "compassDirection" : "SOUTHWEST",
       "isStreetNameGenerated" : false,
-      "isPlaceOrTrainPlatform" : false,
+      "isOriginPoint" : false,
+      "isDestinationPoint" : false,
       "circleExit" : ""
     }, {
       "streetName" : "Weibert-Mahler-Straße",
@@ -160,7 +180,8 @@
       "walkingDirection" : "RIGHT",
       "compassDirection" : "NORTHWEST",
       "isStreetNameGenerated" : false,
-      "isPlaceOrTrainPlatform" : false,
+      "isOriginPoint" : false,
+      "isDestinationPoint" : false,
       "circleExit" : ""
     }, {
       "streetName" : "Bregstraße",
@@ -176,7 +197,8 @@
       "walkingDirection" : "LEFT",
       "compassDirection" : "WEST",
       "isStreetNameGenerated" : false,
-      "isPlaceOrTrainPlatform" : false,
+      "isOriginPoint" : false,
+      "isDestinationPoint" : false,
       "circleExit" : ""
     } ]
   }, {
@@ -531,7 +553,8 @@
       "walkingDirection" : "DEPART",
       "compassDirection" : "WEST",
       "isStreetNameGenerated" : false,
-      "isPlaceOrTrainPlatform" : false,
+      "isOriginPoint" : false,
+      "isDestinationPoint" : false,
       "circleExit" : ""
     }, {
       "streetName" : "Weg",
@@ -547,7 +570,8 @@
       "walkingDirection" : "SLIGHTLY_LEFT",
       "compassDirection" : "SOUTHWEST",
       "isStreetNameGenerated" : true,
-      "isPlaceOrTrainPlatform" : false,
+      "isOriginPoint" : false,
+      "isDestinationPoint" : false,
       "circleExit" : ""
     }, {
       "streetName" : "Unterfelderweg",
@@ -563,7 +587,8 @@
       "walkingDirection" : "SLIGHTLY_LEFT",
       "compassDirection" : "SOUTH",
       "isStreetNameGenerated" : false,
-      "isPlaceOrTrainPlatform" : false,
+      "isOriginPoint" : false,
+      "isDestinationPoint" : false,
       "circleExit" : ""
     }, {
       "streetName" : "Hansjakobstraße",
@@ -579,7 +604,8 @@
       "walkingDirection" : "RIGHT",
       "compassDirection" : "WEST",
       "isStreetNameGenerated" : false,
-      "isPlaceOrTrainPlatform" : false,
+      "isOriginPoint" : false,
+      "isDestinationPoint" : false,
       "circleExit" : ""
     }, {
       "streetName" : "Erwin-Sick-Straße",
@@ -589,13 +615,31 @@
         "y" : 48.088572
       },
       "endPoint" : {
-        "x" : 7.95054,
-        "y" : 48.08822
+        "x" : 7.949481,
+        "y" : 48.088994
       },
       "walkingDirection" : "LEFT",
       "compassDirection" : "SOUTHEAST",
       "isStreetNameGenerated" : false,
-      "isPlaceOrTrainPlatform" : false,
+      "isOriginPoint" : false,
+      "isDestinationPoint" : false,
+      "circleExit" : ""
+    }, {
+      "streetName" : "Erwin-Sick-Straße 1",
+      "distanceInKilometers" : 0.0,
+      "startPoint" : {
+        "x" : 7.949481,
+        "y" : 48.088994
+      },
+      "endPoint" : {
+        "x" : 7.949481,
+        "y" : 48.088994
+      },
+      "walkingDirection" : "RIGHT",
+      "compassDirection" : "SOUTH",
+      "isStreetNameGenerated" : false,
+      "isOriginPoint" : false,
+      "isDestinationPoint" : true,
       "circleExit" : ""
     } ]
   } ],

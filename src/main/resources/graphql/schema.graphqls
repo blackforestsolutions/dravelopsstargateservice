@@ -74,7 +74,8 @@ type WalkStep {
     walkingDirection: WalkingDirection,
     compassDirection: CompassDirection,
     isStreetNameGenerated: Boolean,
-    isPlaceOrTrainPlatform: Boolean,
+    isOriginPoint: Boolean,
+    isDestinationPoint: Boolean,
     circleExit: String
 }
 

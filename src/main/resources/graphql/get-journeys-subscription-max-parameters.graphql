@@ -67,7 +67,8 @@ subscription GetJourneys {
                 walkingDirection
                 compassDirection
                 isStreetNameGenerated
-                isPlaceOrTrainPlatform
+                isOriginPoint
+                isDestinationPoint
                 circleExit
             }
         }
