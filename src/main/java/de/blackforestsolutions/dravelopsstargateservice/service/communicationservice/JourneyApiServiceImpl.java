@@ -3,6 +3,7 @@ package de.blackforestsolutions.dravelopsstargateservice.service.communicationse
 import de.blackforestsolutions.dravelopsdatamodel.ApiToken;
 import de.blackforestsolutions.dravelopsdatamodel.Journey;
 import de.blackforestsolutions.dravelopsdatamodel.Leg;
+import de.blackforestsolutions.dravelopsdatamodel.Point;
 import de.blackforestsolutions.dravelopsstargateservice.model.exception.DateTimeParsingException;
 import de.blackforestsolutions.dravelopsstargateservice.model.exception.LanguageParsingException;
 import de.blackforestsolutions.dravelopsstargateservice.service.supportservice.GeocodingService;
@@ -98,8 +99,10 @@ public class JourneyApiServiceImpl implements JourneyApiService {
     }
 
     private Leg convertToLegWithWaypoints(Leg oldLeg) {
+        LinkedList<Point> waypoints = geocodingService.decodePolylineFrom(oldLeg.getPolyline());
+
         return new Leg.LegBuilder(oldLeg)
-                .setWaypoints(geocodingService.decodePolylineFrom(oldLeg.getPolyline()))
+                .setWaypoints(waypoints)
                 .build();
     }
 }

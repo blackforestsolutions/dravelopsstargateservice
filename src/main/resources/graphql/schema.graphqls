@@ -37,7 +37,8 @@ type Leg {
     travelProvider: TravelProvider,
     vehicleNumber: String,
     vehicleName: String,
-    intermediateStops: [TravelPoint]
+    intermediateStops: [TravelPoint],
+    walkSteps: [WalkStep]
 }
 
 type Price {
@@ -63,6 +64,19 @@ type TravelPoint {
 type TravelProvider {
     name: String,
     url: URL
+}
+
+type WalkStep {
+    streetName: String,
+    distanceInKilometers: Distance,
+    startPoint: Point,
+    endPoint: Point,
+    walkingDirection: WalkingDirection,
+    compassDirection: CompassDirection,
+    isStreetNameGenerated: Boolean,
+    isOriginPoint: Boolean,
+    isDestinationPoint: Boolean,
+    circleExit: String
 }
 
 type Polygon {
@@ -92,4 +106,31 @@ enum VehicleType {
     FUNICULAR,
     TRANSIT,
     AIRPLANE
+}
+
+enum WalkingDirection {
+    DEPART,
+    HARD_LEFT,
+    LEFT,
+    SLIGHTLY_LEFT,
+    CONTINUE,
+    SLIGHTLY_RIGHT,
+    RIGHT,
+    HARD_RIGHT,
+    CIRCLE_CLOCKWISE,
+    CIRCLE_COUNTERCLOCKWISE,
+    ELEVATOR,
+    UTURN_LEFT,
+    UTURN_RIGHT
+}
+
+enum CompassDirection {
+    NORTH,
+    NORTHEAST,
+    EAST,
+    SOUTHEAST,
+    SOUTH,
+    SOUTHWEST,
+    WEST,
+    NORTHWEST
 }

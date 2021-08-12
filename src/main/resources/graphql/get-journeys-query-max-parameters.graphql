@@ -53,6 +53,24 @@ query GetJourneys {
                 departureTime
                 platform
             }
+            walkSteps {
+                streetName
+                distanceInKilometers
+                startPoint {
+                    x
+                    y
+                }
+                endPoint {
+                    x
+                    y
+                }
+                walkingDirection
+                compassDirection
+                isStreetNameGenerated
+                isOriginPoint
+                isDestinationPoint
+                circleExit
+            }
         }
         prices {
             priceType

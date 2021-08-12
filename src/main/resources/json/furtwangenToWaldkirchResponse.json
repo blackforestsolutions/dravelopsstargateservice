@@ -97,7 +97,110 @@
     "travelProvider" : null,
     "vehicleNumber" : "",
     "vehicleName" : "",
-    "intermediateStops" : [ ]
+    "intermediateStops" : [ ],
+    "walkSteps" : [ {
+      "streetName" : "Am Großhausberg 8",
+      "distanceInKilometers" : 0.0,
+      "startPoint" : {
+        "x" : 8.210368,
+        "y" : 48.04774
+      },
+      "endPoint" : {
+        "x" : 8.210368,
+        "y" : 48.04774
+      },
+      "walkingDirection" : "DEPART",
+      "compassDirection" : "NORTH",
+      "isStreetNameGenerated" : false,
+      "isOriginPoint" : true,
+      "isDestinationPoint" : false,
+      "circleExit" : ""
+    }, {
+      "streetName" : "Am Großhausberg",
+      "distanceInKilometers" : 0.12,
+      "startPoint" : {
+        "x" : 8.21001,
+        "y" : 48.04834
+      },
+      "endPoint" : {
+        "x" : 8.208427,
+        "y" : 48.048347
+      },
+      "walkingDirection" : "LEFT",
+      "compassDirection" : "NORTHWEST",
+      "isStreetNameGenerated" : false,
+      "isOriginPoint" : false,
+      "isDestinationPoint" : false,
+      "circleExit" : ""
+    }, {
+      "streetName" : "B 500 [Hinterzarten - Triberg]",
+      "distanceInKilometers" : 0.35,
+      "startPoint" : {
+        "x" : 8.208427,
+        "y" : 48.048347
+      },
+      "endPoint" : {
+        "x" : 8.203926,
+        "y" : 48.047521
+      },
+      "walkingDirection" : "CIRCLE_CLOCKWISE",
+      "compassDirection" : "WEST",
+      "isStreetNameGenerated" : false,
+      "isOriginPoint" : false,
+      "isDestinationPoint" : false,
+      "circleExit" : "1"
+    }, {
+      "streetName" : "Martin-Schmitt-Straße",
+      "distanceInKilometers" : 0.102,
+      "startPoint" : {
+        "x" : 8.203926,
+        "y" : 48.047521
+      },
+      "endPoint" : {
+        "x" : 8.202655,
+        "y" : 48.047183
+      },
+      "walkingDirection" : "SLIGHTLY_LEFT",
+      "compassDirection" : "SOUTHWEST",
+      "isStreetNameGenerated" : false,
+      "isOriginPoint" : false,
+      "isDestinationPoint" : false,
+      "circleExit" : ""
+    }, {
+      "streetName" : "Weibert-Mahler-Straße",
+      "distanceInKilometers" : 0.187,
+      "startPoint" : {
+        "x" : 8.202655,
+        "y" : 48.047183
+      },
+      "endPoint" : {
+        "x" : 8.201638,
+        "y" : 48.048698
+      },
+      "walkingDirection" : "RIGHT",
+      "compassDirection" : "NORTHWEST",
+      "isStreetNameGenerated" : false,
+      "isOriginPoint" : false,
+      "isDestinationPoint" : false,
+      "circleExit" : ""
+    }, {
+      "streetName" : "Bregstraße",
+      "distanceInKilometers" : 0.219,
+      "startPoint" : {
+        "x" : 8.201638,
+        "y" : 48.048698
+      },
+      "endPoint" : {
+        "x" : 7.95054,
+        "y" : 48.08822
+      },
+      "walkingDirection" : "LEFT",
+      "compassDirection" : "WEST",
+      "isStreetNameGenerated" : false,
+      "isOriginPoint" : false,
+      "isDestinationPoint" : false,
+      "circleExit" : ""
+    } ]
   }, {
     "departure" : {
       "name" : "Furtwangen Ilbenstraße",
@@ -216,7 +319,8 @@
       "arrivalTime" : "2020-09-30T13:52:00+02:00",
       "departureTime" : "2020-09-30T13:52:00+02:00",
       "platform" : ""
-    } ]
+    } ],
+    "walkSteps" : [ ]
   }, {
     "departure" : {
       "name" : "Bleibach SEV",
@@ -335,7 +439,8 @@
       "arrivalTime" : "2020-09-30T14:26:00+02:00",
       "departureTime" : "2020-09-30T14:26:00+02:00",
       "platform" : ""
-    } ]
+    } ],
+    "walkSteps" : [ ]
   }, {
     "departure" : {
       "name" : "Waldkirch Kastelberghalle",
@@ -433,7 +538,110 @@
     "travelProvider" : null,
     "vehicleNumber" : "",
     "vehicleName" : "",
-    "intermediateStops" : [ ]
+    "intermediateStops" : [ ],
+    "walkSteps" : [ {
+      "streetName" : "Freiburger Straße",
+      "distanceInKilometers" : 0.067,
+      "startPoint" : {
+        "x" : 7.95294,
+        "y" : 48.090477
+      },
+      "endPoint" : {
+        "x" : 7.952065,
+        "y" : 48.090344
+      },
+      "walkingDirection" : "DEPART",
+      "compassDirection" : "WEST",
+      "isStreetNameGenerated" : false,
+      "isOriginPoint" : false,
+      "isDestinationPoint" : false,
+      "circleExit" : ""
+    }, {
+      "streetName" : "Weg",
+      "distanceInKilometers" : 0.089,
+      "startPoint" : {
+        "x" : 7.952065,
+        "y" : 48.090344
+      },
+      "endPoint" : {
+        "x" : 7.951626,
+        "y" : 48.08983
+      },
+      "walkingDirection" : "SLIGHTLY_LEFT",
+      "compassDirection" : "SOUTHWEST",
+      "isStreetNameGenerated" : true,
+      "isOriginPoint" : false,
+      "isDestinationPoint" : false,
+      "circleExit" : ""
+    }, {
+      "streetName" : "Unterfelderweg",
+      "distanceInKilometers" : 0.11,
+      "startPoint" : {
+        "x" : 7.951626,
+        "y" : 48.08983
+      },
+      "endPoint" : {
+        "x" : 7.951876,
+        "y" : 48.088853
+      },
+      "walkingDirection" : "SLIGHTLY_LEFT",
+      "compassDirection" : "SOUTH",
+      "isStreetNameGenerated" : false,
+      "isOriginPoint" : false,
+      "isDestinationPoint" : false,
+      "circleExit" : ""
+    }, {
+      "streetName" : "Hansjakobstraße",
+      "distanceInKilometers" : 0.131,
+      "startPoint" : {
+        "x" : 7.951876,
+        "y" : 48.088853
+      },
+      "endPoint" : {
+        "x" : 7.950172,
+        "y" : 48.088572
+      },
+      "walkingDirection" : "RIGHT",
+      "compassDirection" : "WEST",
+      "isStreetNameGenerated" : false,
+      "isOriginPoint" : false,
+      "isDestinationPoint" : false,
+      "circleExit" : ""
+    }, {
+      "streetName" : "Erwin-Sick-Straße",
+      "distanceInKilometers" : 0.048,
+      "startPoint" : {
+        "x" : 7.950172,
+        "y" : 48.088572
+      },
+      "endPoint" : {
+        "x" : 7.949481,
+        "y" : 48.088994
+      },
+      "walkingDirection" : "LEFT",
+      "compassDirection" : "SOUTHEAST",
+      "isStreetNameGenerated" : false,
+      "isOriginPoint" : false,
+      "isDestinationPoint" : false,
+      "circleExit" : ""
+    }, {
+      "streetName" : "Erwin-Sick-Straße 1",
+      "distanceInKilometers" : 0.0,
+      "startPoint" : {
+        "x" : 7.949481,
+        "y" : 48.088994
+      },
+      "endPoint" : {
+        "x" : 7.949481,
+        "y" : 48.088994
+      },
+      "walkingDirection" : "RIGHT",
+      "compassDirection" : "SOUTH",
+      "isStreetNameGenerated" : false,
+      "isOriginPoint" : false,
+      "isDestinationPoint" : true,
+      "circleExit" : ""
+    } ]
   } ],
   "prices" : [ {
     "priceType" : "REGULAR",
