@@ -21,7 +21,7 @@
         <lombok.version>1.18.8</lombok.version>
         <graphql.spring.boot.starter.version>11.0.0</graphql.spring.boot.starter.version>
         <google.maps.services>0.15.0</google.maps.services>
-        <blackforestsolutions.dravelopsdatamodel.version>16.4.2</blackforestsolutions.dravelopsdatamodel.version>
+        <blackforestsolutions.dravelopsdatamodel.version>16.4.6</blackforestsolutions.dravelopsdatamodel.version>
         <blackforestsolutions.dravelopsgeneratedcontent.version>3.5.5</blackforestsolutions.dravelopsgeneratedcontent.version>
         <blackforestsolutions.graphql.playground.version>12.0.1</blackforestsolutions.graphql.playground.version>
         <!-- Maven test Dependencies -->
@@ -42,6 +42,10 @@
     </properties>
 
     <repositories>
+        <repository>
+            <id>github</id>
+            <url>https://maven.pkg.github.com/blackforestsolutions/*</url>
+        </repository>
         <repository>
             <id>spring-milestones</id>
             <name>Spring Milestones</name>
