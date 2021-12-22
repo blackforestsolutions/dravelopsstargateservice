@@ -6,13 +6,8 @@ scalar URL
 
 type Query {
     getJourneysBy(
-        departureLongitude: Float!,
-        departureLatitude: Float!,
-        arrivalLongitude: Float!,
-        arrivalLatitude: Float!,
-        dateTime: String!,
-        isArrivalDateTime: Boolean = true,
-        language: String = "de"
+        departureLongitude: Float!, departureLatitude: Float!, arrivalLongitude: Float!, arrivalLatitude: Float!,
+        dateTime: String!, isArrivalDateTime: Boolean = true, language: String = "de"
     ): [Journey]
 
     getAutocompleteAddressesBy(text: String!, language: String = "de"): [TravelPoint]
@@ -28,13 +23,8 @@ type Query {
 
 type Subscription {
     getJourneysBy(
-        departureLongitude: Float!,
-        departureLatitude: Float!,
-        arrivalLongitude: Float!,
-        arrivalLatitude: Float!,
-        dateTime: String!,
-        isArrivalDateTime: Boolean = true,
-        language: String = "de"
+        departureLongitude: Float!, departureLatitude: Float!, arrivalLongitude: Float!, arrivalLatitude: Float!,
+        dateTime: String!, isArrivalDateTime: Boolean = true, language: String = "de"
     ): Journey
 }
 
