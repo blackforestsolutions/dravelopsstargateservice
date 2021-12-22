@@ -55,11 +55,6 @@ type Price {
     smallestCurrencyValue: Int
 }
 
-type Point {
-    x: Float,
-    y: Float
-}
-
 type TravelPoint {
     name: String,
     point: Point,
@@ -67,6 +62,11 @@ type TravelPoint {
     departureTime: ZonedDateTime,
     platform: String
     distanceInKilometers: Distance
+}
+
+type Point {
+    x: Float,
+    y: Float
 }
 
 type TravelProvider {
