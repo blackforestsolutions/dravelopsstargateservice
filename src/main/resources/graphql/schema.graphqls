@@ -27,8 +27,15 @@ type Query {
 }
 
 type Subscription {
-    """Language param use ISO 639-1"""
-    getJourneysBy(departureLongitude: Float!, departureLatitude: Float!, arrivalLongitude: Float!, arrivalLatitude: Float!, dateTime: String!, isArrivalDateTime: Boolean = true, language: String = "de"): Journey
+    getJourneysBy(
+        departureLongitude: Float!,
+        departureLatitude: Float!,
+        arrivalLongitude: Float!,
+        arrivalLatitude: Float!,
+        dateTime: String!,
+        isArrivalDateTime: Boolean = true,
+        language: String = "de"
+    ): Journey
 }
 
 
