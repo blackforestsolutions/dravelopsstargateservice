@@ -5,34 +5,13 @@ scalar ZonedDateTime
 scalar URL
 
 type Query {
-    getJourneysBy(
-        departureLongitude: Float!,
-        departureLatitude: Float!,
-        arrivalLongitude: Float!,
-        arrivalLatitude: Float!,
-        dateTime: String!,
-        isArrivalDateTime: Boolean = true,
-        language: String = "de"
-    ): [Journey]
+    getJourneysBy(departureLongitude: Float!, departureLatitude: Float!, arrivalLongitude: Float!, arrivalLatitude: Float!, dateTime: String!, isArrivalDateTime: Boolean = true, language: String = "de"): [Journey]
 
-    getAutocompleteAddressesBy(
-        text: String!,
-        language: String = "de"
-     ): [TravelPoint]
+    getAutocompleteAddressesBy(text: String!, language: String = "de"): [TravelPoint]
 
-    getNearestAddressesBy(
-        longitude: Float!,
-        latitude: Float!,
-        radiusInKilometers: Float = 1,
-        language: String = "de"
-    ): [TravelPoint]
+    getNearestAddressesBy(longitude: Float!, latitude: Float!, radiusInKilometers: Float = 1, language: String = "de"): [TravelPoint]
 
-    getNearestStationsBy(
-        longitude: Float!,
-        latitude: Float!,
-        radiusInKilometers: Float = 1,
-        language: String = "de"
-    ): [TravelPoint]
+    getNearestStationsBy(longitude: Float!, latitude: Float!, radiusInKilometers: Float = 1, language: String = "de"): [TravelPoint]
 
     getAllStations: [TravelPoint]
 
