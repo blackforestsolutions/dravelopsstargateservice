@@ -1,7 +1,5 @@
 scalar Duration
-scalar Distance
 scalar Currency
-scalar ZonedDateTime
 scalar URL
 
 type Query {
@@ -54,6 +52,9 @@ type Price {
     currencyCode: Currency,
     smallestCurrencyValue: Int
 }
+
+scalar Distance
+scalar ZonedDateTime
 
 type TravelPoint {
     name: String,
