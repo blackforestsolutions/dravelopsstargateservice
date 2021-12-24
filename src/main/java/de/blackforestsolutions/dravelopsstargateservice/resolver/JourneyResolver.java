@@ -20,7 +20,15 @@ public class JourneyResolver implements GraphQLQueryResolver {
     }
 
     @SuppressWarnings("checkstyle:parameternumber")
-    public CompletableFuture<List<Journey>> getJourneysBy(double departureLongitude, double departureLatitude, double arrivalLongitude, double arrivalLatitude, String dateTime, boolean isArrivalDateTime, String language) {
+    public CompletableFuture<List<Journey>> getJourneysBy(
+            double departureLongitude,
+            double departureLatitude,
+            double arrivalLongitude,
+            double arrivalLatitude,
+            String dateTime,
+            boolean isArrivalDateTime,
+            String language
+    ) {
         return journeyApiService.getJourneysBy(
                 departureLongitude,
                 departureLatitude,
