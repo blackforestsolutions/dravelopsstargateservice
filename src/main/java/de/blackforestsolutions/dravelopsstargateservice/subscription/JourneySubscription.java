@@ -19,7 +19,15 @@ public class JourneySubscription implements GraphQLSubscriptionResolver {
     }
 
     @SuppressWarnings("checkstyle:parameternumber")
-    public Publisher<Journey> getJourneysBy(double departureLongitude, double departureLatitude, double arrivalLongitude, double arrivalLatitude, String dateTime, boolean isArrivalDateTime, String language) {
+    public Publisher<Journey> getJourneysBy(
+            double departureLongitude,
+            double departureLatitude,
+            double arrivalLongitude,
+            double arrivalLatitude,
+            String dateTime,
+            boolean isArrivalDateTime,
+            String language
+    ) {
         return journeyApiService.getJourneysBy(
                 departureLongitude,
                 departureLatitude,
