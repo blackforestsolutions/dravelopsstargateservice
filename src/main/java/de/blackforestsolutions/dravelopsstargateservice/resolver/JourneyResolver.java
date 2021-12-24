@@ -39,5 +39,4 @@ public class JourneyResolver implements GraphQLQueryResolver {
                 language
         ).collectList().toFuture();
     }
-
 }
